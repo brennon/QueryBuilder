@@ -1,0 +1,3 @@
+[submodule "ObjCMongoDB"]
+	path = ObjCMongoDB
+	url = https://github.com/paulmelnikow/ObjCMongoDB.git
