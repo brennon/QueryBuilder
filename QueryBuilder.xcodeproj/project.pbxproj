@@ -15,6 +15,38 @@
 		3AB3E9021A1A3601004A9691 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3AB3E9011A1A3601004A9691 /* Images.xcassets */; };
 		3AB3E9051A1A3601004A9691 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AB3E9031A1A3601004A9691 /* LaunchScreen.xib */; };
 		3AB3E9111A1A3602004A9691 /* QueryBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9101A1A3602004A9691 /* QueryBuilderTests.swift */; };
+		3AB3E9821A1A3C80004A9691 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E96C1A1A39E7004A9691 /* bson.c */; };
+		3AB3E9831A1A3C80004A9691 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E96E1A1A39E7004A9691 /* encoding.c */; };
+		3AB3E9841A1A3C80004A9691 /* env.c in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9701A1A39E7004A9691 /* env.c */; };
+		3AB3E9851A1A3C80004A9691 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9741A1A39E7004A9691 /* md5.c */; };
+		3AB3E9861A1A3C80004A9691 /* mongo.c in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9761A1A39E7004A9691 /* mongo.c */; };
+		3AB3E9871A1A3C80004A9691 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9781A1A39E7004A9691 /* numbers.c */; };
+		3AB3E9A11A1A3CA4004A9691 /* BSON_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E98A1A1A3CA4004A9691 /* BSON_Helper.m */; };
+		3AB3E9A21A1A3CA4004A9691 /* BSONDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E98E1A1A3CA4004A9691 /* BSONDecoder.m */; };
+		3AB3E9A31A1A3CA4004A9691 /* BSONDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9901A1A3CA4004A9691 /* BSONDocument.m */; };
+		3AB3E9A41A1A3CA4004A9691 /* BSONEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9921A1A3CA4004A9691 /* BSONEncoder.m */; };
+		3AB3E9A51A1A3CA4004A9691 /* BSONIterator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9941A1A3CA4004A9691 /* BSONIterator.m */; };
+		3AB3E9A61A1A3CA4004A9691 /* BSONTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9961A1A3CA4004A9691 /* BSONTypes.m */; };
+		3AB3E9A71A1A3CA4004A9691 /* NSData+BSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9981A1A3CA4004A9691 /* NSData+BSONAdditions.m */; };
+		3AB3E9A81A1A3CA4004A9691 /* NSDictionary+BSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E99A1A1A3CA4004A9691 /* NSDictionary+BSONAdditions.m */; };
+		3AB3E9A91A1A3CA4004A9691 /* NSManagedObject+BSONCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E99C1A1A3CA4004A9691 /* NSManagedObject+BSONCoding.m */; };
+		3AB3E9AA1A1A3CA4004A9691 /* NSString+BSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E99E1A1A3CA4004A9691 /* NSString+BSONAdditions.m */; };
+		3AB3E9AB1A1A3CA4004A9691 /* ObjCBSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9A01A1A3CA4004A9691 /* ObjCBSON.m */; };
+		3AB3E9AF1A1A3CCC004A9691 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9AE1A1A3CCC004A9691 /* OrderedDictionary.m */; };
+		3AB3E9CB1A1A3CDF004A9691 /* Mongo_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9B21A1A3CDF004A9691 /* Mongo_Helper.m */; };
+		3AB3E9CC1A1A3CDF004A9691 /* MongoConnection+Diagnostics.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9B51A1A3CDF004A9691 /* MongoConnection+Diagnostics.m */; };
+		3AB3E9CD1A1A3CDF004A9691 /* MongoConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9B71A1A3CDF004A9691 /* MongoConnection.m */; };
+		3AB3E9CE1A1A3CDF004A9691 /* MongoCursor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9B91A1A3CDF004A9691 /* MongoCursor.m */; };
+		3AB3E9CF1A1A3CDF004A9691 /* MongoDBCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9BB1A1A3CDF004A9691 /* MongoDBCollection.m */; };
+		3AB3E9D01A1A3CDF004A9691 /* MongoFindRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9BD1A1A3CDF004A9691 /* MongoFindRequest.m */; };
+		3AB3E9D11A1A3CDF004A9691 /* MongoKeyedPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9BF1A1A3CDF004A9691 /* MongoKeyedPredicate.m */; };
+		3AB3E9D21A1A3CDF004A9691 /* MongoPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9C11A1A3CDF004A9691 /* MongoPredicate.m */; };
+		3AB3E9D31A1A3CDF004A9691 /* MongoTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9C31A1A3CDF004A9691 /* MongoTypes.m */; };
+		3AB3E9D41A1A3CDF004A9691 /* MongoUpdateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9C51A1A3CDF004A9691 /* MongoUpdateRequest.m */; };
+		3AB3E9D51A1A3CDF004A9691 /* MongoWriteConcern.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9C71A1A3CDF004A9691 /* MongoWriteConcern.m */; };
+		3AB3E9D61A1A3CDF004A9691 /* NSArray+MongoAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9C91A1A3CDF004A9691 /* NSArray+MongoAdditions.m */; };
+		3AB3E9D81A1A3DC9004A9691 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AB3E9D71A1A3DC9004A9691 /* CoreGraphics.framework */; };
+		3AB3E9DF1A1A45E4004A9691 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9DE1A1A45E4004A9691 /* Collection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +72,76 @@
 		3AB3E90A1A1A3602004A9691 /* QueryBuilderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QueryBuilderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AB3E90F1A1A3602004A9691 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3AB3E9101A1A3602004A9691 /* QueryBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryBuilderTests.swift; sourceTree = "<group>"; };
+		3AB3E96A1A1A39E7004A9691 /* bcon.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bcon.c; sourceTree = "<group>"; };
+		3AB3E96B1A1A39E7004A9691 /* bcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bcon.h; sourceTree = "<group>"; };
+		3AB3E96C1A1A39E7004A9691 /* bson.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bson.c; sourceTree = "<group>"; };
+		3AB3E96D1A1A39E7004A9691 /* bson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bson.h; sourceTree = "<group>"; };
+		3AB3E96E1A1A39E7004A9691 /* encoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = encoding.c; sourceTree = "<group>"; };
+		3AB3E96F1A1A39E7004A9691 /* encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encoding.h; sourceTree = "<group>"; };
+		3AB3E9701A1A39E7004A9691 /* env.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = env.c; sourceTree = "<group>"; };
+		3AB3E9711A1A39E7004A9691 /* env.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = env.h; sourceTree = "<group>"; };
+		3AB3E9721A1A39E7004A9691 /* gridfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridfs.c; sourceTree = "<group>"; };
+		3AB3E9731A1A39E7004A9691 /* gridfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gridfs.h; sourceTree = "<group>"; };
+		3AB3E9741A1A39E7004A9691 /* md5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5.c; sourceTree = "<group>"; };
+		3AB3E9751A1A39E7004A9691 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
+		3AB3E9761A1A39E7004A9691 /* mongo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongo.c; sourceTree = "<group>"; };
+		3AB3E9771A1A39E7004A9691 /* mongo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongo.h; sourceTree = "<group>"; };
+		3AB3E9781A1A39E7004A9691 /* numbers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = numbers.c; sourceTree = "<group>"; };
+		3AB3E9891A1A3CA4004A9691 /* BSON_Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSON_Helper.h; sourceTree = "<group>"; };
+		3AB3E98A1A1A3CA4004A9691 /* BSON_Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSON_Helper.m; sourceTree = "<group>"; };
+		3AB3E98B1A1A3CA4004A9691 /* BSON_PrivateInterfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSON_PrivateInterfaces.h; sourceTree = "<group>"; };
+		3AB3E98C1A1A3CA4004A9691 /* BSONCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONCoding.h; sourceTree = "<group>"; };
+		3AB3E98D1A1A3CA4004A9691 /* BSONDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONDecoder.h; sourceTree = "<group>"; };
+		3AB3E98E1A1A3CA4004A9691 /* BSONDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONDecoder.m; sourceTree = "<group>"; };
+		3AB3E98F1A1A3CA4004A9691 /* BSONDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONDocument.h; sourceTree = "<group>"; };
+		3AB3E9901A1A3CA4004A9691 /* BSONDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONDocument.m; sourceTree = "<group>"; };
+		3AB3E9911A1A3CA4004A9691 /* BSONEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONEncoder.h; sourceTree = "<group>"; };
+		3AB3E9921A1A3CA4004A9691 /* BSONEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONEncoder.m; sourceTree = "<group>"; };
+		3AB3E9931A1A3CA4004A9691 /* BSONIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONIterator.h; sourceTree = "<group>"; };
+		3AB3E9941A1A3CA4004A9691 /* BSONIterator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONIterator.m; sourceTree = "<group>"; };
+		3AB3E9951A1A3CA4004A9691 /* BSONTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONTypes.h; sourceTree = "<group>"; };
+		3AB3E9961A1A3CA4004A9691 /* BSONTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONTypes.m; sourceTree = "<group>"; };
+		3AB3E9971A1A3CA4004A9691 /* NSData+BSONAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+BSONAdditions.h"; sourceTree = "<group>"; };
+		3AB3E9981A1A3CA4004A9691 /* NSData+BSONAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+BSONAdditions.m"; sourceTree = "<group>"; };
+		3AB3E9991A1A3CA4004A9691 /* NSDictionary+BSONAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+BSONAdditions.h"; sourceTree = "<group>"; };
+		3AB3E99A1A1A3CA4004A9691 /* NSDictionary+BSONAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+BSONAdditions.m"; sourceTree = "<group>"; };
+		3AB3E99B1A1A3CA4004A9691 /* NSManagedObject+BSONCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+BSONCoding.h"; sourceTree = "<group>"; };
+		3AB3E99C1A1A3CA4004A9691 /* NSManagedObject+BSONCoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+BSONCoding.m"; sourceTree = "<group>"; };
+		3AB3E99D1A1A3CA4004A9691 /* NSString+BSONAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+BSONAdditions.h"; sourceTree = "<group>"; };
+		3AB3E99E1A1A3CA4004A9691 /* NSString+BSONAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+BSONAdditions.m"; sourceTree = "<group>"; };
+		3AB3E99F1A1A3CA4004A9691 /* ObjCBSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCBSON.h; sourceTree = "<group>"; };
+		3AB3E9A01A1A3CA4004A9691 /* ObjCBSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjCBSON.m; sourceTree = "<group>"; };
+		3AB3E9AD1A1A3CCC004A9691 /* OrderedDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrderedDictionary.h; sourceTree = "<group>"; };
+		3AB3E9AE1A1A3CCC004A9691 /* OrderedDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderedDictionary.m; sourceTree = "<group>"; };
+		3AB3E9B11A1A3CDF004A9691 /* Mongo_Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mongo_Helper.h; sourceTree = "<group>"; };
+		3AB3E9B21A1A3CDF004A9691 /* Mongo_Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mongo_Helper.m; sourceTree = "<group>"; };
+		3AB3E9B31A1A3CDF004A9691 /* Mongo_PrivateInterfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mongo_PrivateInterfaces.h; sourceTree = "<group>"; };
+		3AB3E9B41A1A3CDF004A9691 /* MongoConnection+Diagnostics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MongoConnection+Diagnostics.h"; sourceTree = "<group>"; };
+		3AB3E9B51A1A3CDF004A9691 /* MongoConnection+Diagnostics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MongoConnection+Diagnostics.m"; sourceTree = "<group>"; };
+		3AB3E9B61A1A3CDF004A9691 /* MongoConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoConnection.h; sourceTree = "<group>"; };
+		3AB3E9B71A1A3CDF004A9691 /* MongoConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoConnection.m; sourceTree = "<group>"; };
+		3AB3E9B81A1A3CDF004A9691 /* MongoCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoCursor.h; sourceTree = "<group>"; };
+		3AB3E9B91A1A3CDF004A9691 /* MongoCursor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoCursor.m; sourceTree = "<group>"; };
+		3AB3E9BA1A1A3CDF004A9691 /* MongoDBCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoDBCollection.h; sourceTree = "<group>"; };
+		3AB3E9BB1A1A3CDF004A9691 /* MongoDBCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoDBCollection.m; sourceTree = "<group>"; };
+		3AB3E9BC1A1A3CDF004A9691 /* MongoFindRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoFindRequest.h; sourceTree = "<group>"; };
+		3AB3E9BD1A1A3CDF004A9691 /* MongoFindRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoFindRequest.m; sourceTree = "<group>"; };
+		3AB3E9BE1A1A3CDF004A9691 /* MongoKeyedPredicate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoKeyedPredicate.h; sourceTree = "<group>"; };
+		3AB3E9BF1A1A3CDF004A9691 /* MongoKeyedPredicate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoKeyedPredicate.m; sourceTree = "<group>"; };
+		3AB3E9C01A1A3CDF004A9691 /* MongoPredicate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoPredicate.h; sourceTree = "<group>"; };
+		3AB3E9C11A1A3CDF004A9691 /* MongoPredicate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoPredicate.m; sourceTree = "<group>"; };
+		3AB3E9C21A1A3CDF004A9691 /* MongoTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoTypes.h; sourceTree = "<group>"; };
+		3AB3E9C31A1A3CDF004A9691 /* MongoTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoTypes.m; sourceTree = "<group>"; };
+		3AB3E9C41A1A3CDF004A9691 /* MongoUpdateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoUpdateRequest.h; sourceTree = "<group>"; };
+		3AB3E9C51A1A3CDF004A9691 /* MongoUpdateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoUpdateRequest.m; sourceTree = "<group>"; };
+		3AB3E9C61A1A3CDF004A9691 /* MongoWriteConcern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoWriteConcern.h; sourceTree = "<group>"; };
+		3AB3E9C71A1A3CDF004A9691 /* MongoWriteConcern.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoWriteConcern.m; sourceTree = "<group>"; };
+		3AB3E9C81A1A3CDF004A9691 /* NSArray+MongoAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MongoAdditions.h"; sourceTree = "<group>"; };
+		3AB3E9C91A1A3CDF004A9691 /* NSArray+MongoAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MongoAdditions.m"; sourceTree = "<group>"; };
+		3AB3E9CA1A1A3CDF004A9691 /* ObjCMongoDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB.h; sourceTree = "<group>"; };
+		3AB3E9D71A1A3DC9004A9691 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3AB3E9DB1A1A3F5C004A9691 /* QueryBuilder-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QueryBuilder-Bridging-Header.h"; sourceTree = "<group>"; };
+		3AB3E9DE1A1A45E4004A9691 /* Collection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AB3E9D81A1A3DC9004A9691 /* CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +166,7 @@
 		3AB3E8E81A1A3601004A9691 = {
 			isa = PBXGroup;
 			children = (
+				3AB3E9DD1A1A4548004A9691 /* ObjCMongoDB */,
 				3AB3E8F31A1A3601004A9691 /* QueryBuilder */,
 				3AB3E90D1A1A3602004A9691 /* QueryBuilderTests */,
 				3AB3E8F21A1A3601004A9691 /* Products */,
@@ -85,10 +189,12 @@
 				3AB3E8F81A1A3601004A9691 /* GameScene.sks */,
 				3AB3E8FA1A1A3601004A9691 /* GameScene.swift */,
 				3AB3E8FC1A1A3601004A9691 /* GameViewController.swift */,
-				3AB3E8FE1A1A3601004A9691 /* Main.storyboard */,
 				3AB3E9011A1A3601004A9691 /* Images.xcassets */,
 				3AB3E9031A1A3601004A9691 /* LaunchScreen.xib */,
+				3AB3E8FE1A1A3601004A9691 /* Main.storyboard */,
+				3AB3E9DC1A1A4531004A9691 /* Frameworks */,
 				3AB3E8F41A1A3601004A9691 /* Supporting Files */,
+				3AB3E9DE1A1A45E4004A9691 /* Collection.swift */,
 			);
 			path = QueryBuilder;
 			sourceTree = "<group>";
@@ -97,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				3AB3E8F51A1A3601004A9691 /* Info.plist */,
+				3AB3E9DB1A1A3F5C004A9691 /* QueryBuilder-Bridging-Header.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -116,6 +223,124 @@
 				3AB3E90F1A1A3602004A9691 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3AB3E9691A1A39E7004A9691 /* mongo-c-driver */ = {
+			isa = PBXGroup;
+			children = (
+				3AB3E96A1A1A39E7004A9691 /* bcon.c */,
+				3AB3E96B1A1A39E7004A9691 /* bcon.h */,
+				3AB3E96C1A1A39E7004A9691 /* bson.c */,
+				3AB3E96D1A1A39E7004A9691 /* bson.h */,
+				3AB3E96E1A1A39E7004A9691 /* encoding.c */,
+				3AB3E96F1A1A39E7004A9691 /* encoding.h */,
+				3AB3E9701A1A39E7004A9691 /* env.c */,
+				3AB3E9711A1A39E7004A9691 /* env.h */,
+				3AB3E9721A1A39E7004A9691 /* gridfs.c */,
+				3AB3E9731A1A39E7004A9691 /* gridfs.h */,
+				3AB3E9741A1A39E7004A9691 /* md5.c */,
+				3AB3E9751A1A39E7004A9691 /* md5.h */,
+				3AB3E9761A1A39E7004A9691 /* mongo.c */,
+				3AB3E9771A1A39E7004A9691 /* mongo.h */,
+				3AB3E9781A1A39E7004A9691 /* numbers.c */,
+			);
+			name = "mongo-c-driver";
+			path = "ObjCMongoDB/mongo-c-driver/src";
+			sourceTree = "<group>";
+		};
+		3AB3E9881A1A3CA4004A9691 /* BSON */ = {
+			isa = PBXGroup;
+			children = (
+				3AB3E9891A1A3CA4004A9691 /* BSON_Helper.h */,
+				3AB3E98A1A1A3CA4004A9691 /* BSON_Helper.m */,
+				3AB3E98B1A1A3CA4004A9691 /* BSON_PrivateInterfaces.h */,
+				3AB3E98C1A1A3CA4004A9691 /* BSONCoding.h */,
+				3AB3E98D1A1A3CA4004A9691 /* BSONDecoder.h */,
+				3AB3E98E1A1A3CA4004A9691 /* BSONDecoder.m */,
+				3AB3E98F1A1A3CA4004A9691 /* BSONDocument.h */,
+				3AB3E9901A1A3CA4004A9691 /* BSONDocument.m */,
+				3AB3E9911A1A3CA4004A9691 /* BSONEncoder.h */,
+				3AB3E9921A1A3CA4004A9691 /* BSONEncoder.m */,
+				3AB3E9931A1A3CA4004A9691 /* BSONIterator.h */,
+				3AB3E9941A1A3CA4004A9691 /* BSONIterator.m */,
+				3AB3E9951A1A3CA4004A9691 /* BSONTypes.h */,
+				3AB3E9961A1A3CA4004A9691 /* BSONTypes.m */,
+				3AB3E9971A1A3CA4004A9691 /* NSData+BSONAdditions.h */,
+				3AB3E9981A1A3CA4004A9691 /* NSData+BSONAdditions.m */,
+				3AB3E9991A1A3CA4004A9691 /* NSDictionary+BSONAdditions.h */,
+				3AB3E99A1A1A3CA4004A9691 /* NSDictionary+BSONAdditions.m */,
+				3AB3E99B1A1A3CA4004A9691 /* NSManagedObject+BSONCoding.h */,
+				3AB3E99C1A1A3CA4004A9691 /* NSManagedObject+BSONCoding.m */,
+				3AB3E99D1A1A3CA4004A9691 /* NSString+BSONAdditions.h */,
+				3AB3E99E1A1A3CA4004A9691 /* NSString+BSONAdditions.m */,
+				3AB3E99F1A1A3CA4004A9691 /* ObjCBSON.h */,
+				3AB3E9A01A1A3CA4004A9691 /* ObjCBSON.m */,
+			);
+			name = BSON;
+			path = ObjCMongoDB/BSON;
+			sourceTree = "<group>";
+		};
+		3AB3E9AC1A1A3CCC004A9691 /* OrderedDictionary */ = {
+			isa = PBXGroup;
+			children = (
+				3AB3E9AD1A1A3CCC004A9691 /* OrderedDictionary.h */,
+				3AB3E9AE1A1A3CCC004A9691 /* OrderedDictionary.m */,
+			);
+			name = OrderedDictionary;
+			path = ObjCMongoDB/OrderedDictionary;
+			sourceTree = "<group>";
+		};
+		3AB3E9B01A1A3CDF004A9691 /* Mongo */ = {
+			isa = PBXGroup;
+			children = (
+				3AB3E9B11A1A3CDF004A9691 /* Mongo_Helper.h */,
+				3AB3E9B21A1A3CDF004A9691 /* Mongo_Helper.m */,
+				3AB3E9B31A1A3CDF004A9691 /* Mongo_PrivateInterfaces.h */,
+				3AB3E9B41A1A3CDF004A9691 /* MongoConnection+Diagnostics.h */,
+				3AB3E9B51A1A3CDF004A9691 /* MongoConnection+Diagnostics.m */,
+				3AB3E9B61A1A3CDF004A9691 /* MongoConnection.h */,
+				3AB3E9B71A1A3CDF004A9691 /* MongoConnection.m */,
+				3AB3E9B81A1A3CDF004A9691 /* MongoCursor.h */,
+				3AB3E9B91A1A3CDF004A9691 /* MongoCursor.m */,
+				3AB3E9BA1A1A3CDF004A9691 /* MongoDBCollection.h */,
+				3AB3E9BB1A1A3CDF004A9691 /* MongoDBCollection.m */,
+				3AB3E9BC1A1A3CDF004A9691 /* MongoFindRequest.h */,
+				3AB3E9BD1A1A3CDF004A9691 /* MongoFindRequest.m */,
+				3AB3E9BE1A1A3CDF004A9691 /* MongoKeyedPredicate.h */,
+				3AB3E9BF1A1A3CDF004A9691 /* MongoKeyedPredicate.m */,
+				3AB3E9C01A1A3CDF004A9691 /* MongoPredicate.h */,
+				3AB3E9C11A1A3CDF004A9691 /* MongoPredicate.m */,
+				3AB3E9C21A1A3CDF004A9691 /* MongoTypes.h */,
+				3AB3E9C31A1A3CDF004A9691 /* MongoTypes.m */,
+				3AB3E9C41A1A3CDF004A9691 /* MongoUpdateRequest.h */,
+				3AB3E9C51A1A3CDF004A9691 /* MongoUpdateRequest.m */,
+				3AB3E9C61A1A3CDF004A9691 /* MongoWriteConcern.h */,
+				3AB3E9C71A1A3CDF004A9691 /* MongoWriteConcern.m */,
+				3AB3E9C81A1A3CDF004A9691 /* NSArray+MongoAdditions.h */,
+				3AB3E9C91A1A3CDF004A9691 /* NSArray+MongoAdditions.m */,
+				3AB3E9CA1A1A3CDF004A9691 /* ObjCMongoDB.h */,
+			);
+			name = Mongo;
+			path = ObjCMongoDB/Mongo;
+			sourceTree = "<group>";
+		};
+		3AB3E9DC1A1A4531004A9691 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3AB3E9D71A1A3DC9004A9691 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3AB3E9DD1A1A4548004A9691 /* ObjCMongoDB */ = {
+			isa = PBXGroup;
+			children = (
+				3AB3E9B01A1A3CDF004A9691 /* Mongo */,
+				3AB3E9AC1A1A3CCC004A9691 /* OrderedDictionary */,
+				3AB3E9881A1A3CA4004A9691 /* BSON */,
+				3AB3E9691A1A39E7004A9691 /* mongo-c-driver */,
+			);
+			name = ObjCMongoDB;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,9 +444,40 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AB3E9871A1A3C80004A9691 /* numbers.c in Sources */,
+				3AB3E9D51A1A3CDF004A9691 /* MongoWriteConcern.m in Sources */,
+				3AB3E9A81A1A3CA4004A9691 /* NSDictionary+BSONAdditions.m in Sources */,
+				3AB3E9A51A1A3CA4004A9691 /* BSONIterator.m in Sources */,
+				3AB3E9D01A1A3CDF004A9691 /* MongoFindRequest.m in Sources */,
+				3AB3E9D31A1A3CDF004A9691 /* MongoTypes.m in Sources */,
+				3AB3E9A21A1A3CA4004A9691 /* BSONDecoder.m in Sources */,
+				3AB3E9861A1A3C80004A9691 /* mongo.c in Sources */,
+				3AB3E9851A1A3C80004A9691 /* md5.c in Sources */,
+				3AB3E9D21A1A3CDF004A9691 /* MongoPredicate.m in Sources */,
+				3AB3E9D11A1A3CDF004A9691 /* MongoKeyedPredicate.m in Sources */,
+				3AB3E9D61A1A3CDF004A9691 /* NSArray+MongoAdditions.m in Sources */,
+				3AB3E9CB1A1A3CDF004A9691 /* Mongo_Helper.m in Sources */,
 				3AB3E8FB1A1A3601004A9691 /* GameScene.swift in Sources */,
+				3AB3E9A41A1A3CA4004A9691 /* BSONEncoder.m in Sources */,
+				3AB3E9AA1A1A3CA4004A9691 /* NSString+BSONAdditions.m in Sources */,
+				3AB3E9831A1A3C80004A9691 /* encoding.c in Sources */,
+				3AB3E9A71A1A3CA4004A9691 /* NSData+BSONAdditions.m in Sources */,
+				3AB3E9CE1A1A3CDF004A9691 /* MongoCursor.m in Sources */,
+				3AB3E9821A1A3C80004A9691 /* bson.c in Sources */,
+				3AB3E9841A1A3C80004A9691 /* env.c in Sources */,
+				3AB3E9AB1A1A3CA4004A9691 /* ObjCBSON.m in Sources */,
+				3AB3E9A11A1A3CA4004A9691 /* BSON_Helper.m in Sources */,
+				3AB3E9A61A1A3CA4004A9691 /* BSONTypes.m in Sources */,
+				3AB3E9CC1A1A3CDF004A9691 /* MongoConnection+Diagnostics.m in Sources */,
 				3AB3E8FD1A1A3601004A9691 /* GameViewController.swift in Sources */,
+				3AB3E9A31A1A3CA4004A9691 /* BSONDocument.m in Sources */,
+				3AB3E9D41A1A3CDF004A9691 /* MongoUpdateRequest.m in Sources */,
+				3AB3E9CD1A1A3CDF004A9691 /* MongoConnection.m in Sources */,
+				3AB3E9AF1A1A3CCC004A9691 /* OrderedDictionary.m in Sources */,
+				3AB3E9DF1A1A45E4004A9691 /* Collection.swift in Sources */,
 				3AB3E8F71A1A3601004A9691 /* AppDelegate.swift in Sources */,
+				3AB3E9CF1A1A3CDF004A9691 /* MongoDBCollection.m in Sources */,
+				3AB3E9A91A1A3CA4004A9691 /* NSManagedObject+BSONCoding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,6 +605,7 @@
 				INFOPLIST_FILE = QueryBuilder/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/QueryBuilder-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -359,6 +616,7 @@
 				INFOPLIST_FILE = QueryBuilder/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/QueryBuilder-Bridging-Header.h";
 			};
 			name = Release;
 		};

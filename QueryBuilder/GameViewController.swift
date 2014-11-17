@@ -44,6 +44,10 @@ class GameViewController: UIViewController {
             
             skView.presentScene(scene)
         }
+        
+        // Setup collection for Trial documents
+        var trials = Collection(name: "trials", inDatabase: "eim")
+        trials.enumerateFieldNames()
     }
 
     override func shouldAutorotate() -> Bool {
