@@ -140,7 +140,7 @@
 		3AB3E9C91A1A3CDF004A9691 /* NSArray+MongoAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MongoAdditions.m"; sourceTree = "<group>"; };
 		3AB3E9CA1A1A3CDF004A9691 /* ObjCMongoDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB.h; sourceTree = "<group>"; };
 		3AB3E9D71A1A3DC9004A9691 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		3AB3E9DB1A1A3F5C004A9691 /* QueryBuilder-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QueryBuilder-Bridging-Header.h"; sourceTree = "<group>"; };
+		3AB3E9DB1A1A3F5C004A9691 /* QueryBuilder-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "QueryBuilder-Bridging-Header.h"; path = "QueryBuilder/QueryBuilder-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		3AB3E9DE1A1A45E4004A9691 /* Collection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -245,7 +245,7 @@
 				3AB3E9781A1A39E7004A9691 /* numbers.c */,
 			);
 			name = "mongo-c-driver";
-			path = "ObjCMongoDB/mongo-c-driver/src";
+			path = "mongo-c-driver/src";
 			sourceTree = "<group>";
 		};
 		3AB3E9881A1A3CA4004A9691 /* BSON */ = {
@@ -276,8 +276,7 @@
 				3AB3E99F1A1A3CA4004A9691 /* ObjCBSON.h */,
 				3AB3E9A01A1A3CA4004A9691 /* ObjCBSON.m */,
 			);
-			name = BSON;
-			path = ObjCMongoDB/BSON;
+			path = BSON;
 			sourceTree = "<group>";
 		};
 		3AB3E9AC1A1A3CCC004A9691 /* OrderedDictionary */ = {
@@ -286,8 +285,7 @@
 				3AB3E9AD1A1A3CCC004A9691 /* OrderedDictionary.h */,
 				3AB3E9AE1A1A3CCC004A9691 /* OrderedDictionary.m */,
 			);
-			name = OrderedDictionary;
-			path = ObjCMongoDB/OrderedDictionary;
+			path = OrderedDictionary;
 			sourceTree = "<group>";
 		};
 		3AB3E9B01A1A3CDF004A9691 /* Mongo */ = {
@@ -320,8 +318,7 @@
 				3AB3E9C91A1A3CDF004A9691 /* NSArray+MongoAdditions.m */,
 				3AB3E9CA1A1A3CDF004A9691 /* ObjCMongoDB.h */,
 			);
-			name = Mongo;
-			path = ObjCMongoDB/Mongo;
+			path = Mongo;
 			sourceTree = "<group>";
 		};
 		3AB3E9DC1A1A4531004A9691 /* Frameworks */ = {
@@ -340,7 +337,7 @@
 				3AB3E9881A1A3CA4004A9691 /* BSON */,
 				3AB3E9691A1A39E7004A9691 /* mongo-c-driver */,
 			);
-			name = ObjCMongoDB;
+			path = ObjCMongoDB;
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
