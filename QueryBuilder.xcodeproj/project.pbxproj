@@ -341,7 +341,7 @@
 				3AB3E9691A1A39E7004A9691 /* mongo-c-driver */,
 			);
 			name = ObjCMongoDB;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -673,6 +673,7 @@
 				3AB3E9161A1A3602004A9691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3AB3E9171A1A3602004A9691 /* Build configuration list for PBXNativeTarget "QueryBuilderTests" */ = {
 			isa = XCConfigurationList;
@@ -681,6 +682,7 @@
 				3AB3E9191A1A3602004A9691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

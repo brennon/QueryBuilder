@@ -9,8 +9,8 @@
 import Foundation
 
 struct MongoCredentials {
-    let hostname = "db0.musicsensorsemotion.com"
-    let port = "27017"
+    let hostname = "localhost"
+    let port = "28017"
     var url: String {
         get {
             return "\(self.hostname):\(self.port)"
@@ -46,19 +46,36 @@ class Collection {
         var qualifiedName = "\(database).\(name)"
 //        println(qualifiedName)
         var collection: MongoDBCollection = dbConn.collectionWithName(qualifiedName)
-//        var documentsCount = collection.countWithPredicate(MongoPredicate(), error: &error)
-//        
-//        var serverStatus = collection.lastOperationDictionary()
-//        println(serverStatus)
-//        
-//        println("count: \(documentsCount)")
         
-//        var total: Int = 0
-//        while let document = documentsCursor.nextObject() {
+        error = nil
+        // Mongo predicate for finding one
+//        let findRequest = MongoFindRequest()
+//        findRequest.limitResults = 2
+//        let documentCursor = collection.cursorForFindRequest(findRequest, error: &error)
+        let document = collection.findOneWithError(&error)
+        
+        if let error = error {
+            println("Error getting document: \(error.description)")
+        } else {
+            println("Got document from collection \(qualifiedName)")
+        }
+        
+//        while let document : BSONDocument = documentCursor?.nextObject() {
 //            total++
-//            println(document)
+
+            // Iterate over document keys
+            let iterator = document.iterator()
+
+            while iterator.hasMore() {
+                iterator.next()
+                println("\(iterator.keyPathComponents())")
+            }
+        
+            // If fields doesn't yet contain this key, add it
+//            let fieldsArray = Array(fields.keys)
+//            if find(
 //        }
-//        
+//
 //        println("total objects: \(total)")
     }
 }
