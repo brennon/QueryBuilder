@@ -109,21 +109,16 @@ class TouchNodeMap: Printable, SequenceType {
         touchNodeMap = Dictionary<UITouch, Dictionary<String, AnyObject>>()
     }
     
-    func generate() -> GeneratorOf<UITouch> {
+    func generate() -> GeneratorOf<(UITouch, SKNode)> {
         var index = 0
         
-        return GeneratorOf<UITouch> {
+        return GeneratorOf<(UITouch, SKNode)> {
             if index < self.touchNodeMap.keys.array.count {
                 let key = self.touchNodeMap.keys.array[index++]
-                let subdictionary = self.touchNodeMap[key]!
-                let touchValue: UITouch = subdictionary[self.touchKey]
-//                let nodeValue = subdictionary[self.nodeKey]
-//                return (touchValue, nodeValue)
-//                let key = self.touchNodeMap.keys.array[index]
-//                index++
-//                let entry = self.touchNodeMap[key][touchKey]
-//                let node = entry[nodeKey]
-//                return (touch, node)
+                let subdictionary: Dictionary<String, AnyObject> = self.touchNodeMap[key]!
+                let touchValue = subdictionary[self.touchKey] as UITouch
+                let nodeValue = subdictionary[self.nodeKey] as SKNode
+                return (touchValue, nodeValue)
             } else {
                 return nil
             }
@@ -178,10 +173,6 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     
     func handleMultiplePan(recognizer: MultiplePanGestureRecognizer) {
         
-//        println("numberOfTouches: \(recognizer.numberOfTouches())")
-//
-//        for i in recognizer.
-//        
         switch recognizer.state {
         case .Began, .Changed:
             
@@ -195,45 +186,23 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
                 if let node = getChildNodeForTouch(touch) {
                     
                     // If so, add it to the touchNodeMap
-                    
-//                    if find(currentlyPanningTouches, touch) == nil {
-//                        currentlyPanningTouches.append(touch)
-//                    }
-                    
                     touchNodeMap.add(touch, withNode: node)
                 }
             }
             
             // Iterate over currentlyPanningTouches and move nodes accordingly
-            for touch in touchNodeMap {
+            for (touch, node) in touchNodeMap {
                 
-                println("touch: \(touch)")
-                
-//                let hash = touch.hash
-//                let hashValue = touch.hashValue
-//                
-//                let node = getChildNodeForTouch(touch)!
-//                
-//                let location = touch.locationInNode(self)
-//                let previousLocation = touch.previousLocationInNode(self)
-//                let deltaX = location.x - previousLocation.x
-//                let deltaY = location.y - previousLocation.y
-//                node.position = CGPointMake(node.position.x + deltaX, node.position.y + deltaY)
-//                println("delta: \(CGPointMake(deltaX, deltaY))")
+                let location = touch.locationInNode(self)
+                let previousLocation = touch.previousLocationInNode(self)
+                let deltaX = location.x - previousLocation.x
+                let deltaY = location.y - previousLocation.y
+                node.position = CGPointMake(node.position.x + deltaX, node.position.y + deltaY)
             }
             
         default:
             touchNodeMap.empty()
         }
-        
-//        if recognizer.state == .Began {
-//
-//        } else if recognizer.state == .Changed {
-//            let touchLocation = recognizer.locationInView(view)
-//            println("\(touchLocation)")
-//        } else if recognizer.state == .Ended {
-//            
-//        }
     }
     
     func getChildNodeForTouch(touch: UITouch) -> SKNode? {
