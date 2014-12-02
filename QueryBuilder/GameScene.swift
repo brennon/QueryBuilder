@@ -8,35 +8,80 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+let BoxWidth : CGFloat = 200
+let BoxHeight : CGFloat = 50
+let BoxCornerRadius : CGFloat = 10
+let BoxBorderWidth : CGFloat = 2
+
+class GameScene: SKScene, UIGestureRecognizerDelegate {
+    
+    var rectangleA: SKShapeNode!
+    var rectangleB: SKShapeNode!
+    
+    var panRecognizer: MultiplePanGestureRecognizer!
+    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!";
-        myLabel.fontSize = 65;
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
         
-        self.addChild(myLabel)
+        rectangleA = SKShapeNode(rectOfSize: CGSizeMake(BoxWidth, BoxHeight), cornerRadius: BoxCornerRadius)
+        rectangleA.position = CGPoint(x: CGRectGetMidX(frame) / 2, y:CGRectGetMidY(frame))
+        rectangleA.fillColor = SKColor.yellowColor()
+        rectangleA.strokeColor = SKColor.blackColor()
+        rectangleA.lineWidth = BoxBorderWidth
+        addChild(rectangleA)
+        
+        rectangleB = SKShapeNode(rectOfSize: CGSizeMake(BoxWidth, BoxHeight), cornerRadius: BoxCornerRadius)
+        rectangleB.position = CGPoint(x: (CGRectGetMidX(frame) / 2) * 3, y:CGRectGetMidY(frame))
+        rectangleB.fillColor = SKColor.yellowColor()
+        rectangleB.strokeColor = SKColor.blackColor()
+        rectangleB.lineWidth = BoxBorderWidth
+        addChild(rectangleB)
+        
+        // Add pan gesture recognizer to the view
+        panRecognizer = MultiplePanGestureRecognizer(target: self, action: "handleMultiplePan:")
+        panRecognizer.delegate = self
+        view.addGestureRecognizer(panRecognizer)
+        
+//        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
+//        myLabel.text = "Hello, World!";
+//        myLabel.fontSize = 65;
+        
+//        self.addChild(myLabel)
     }
     
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
-        /* Called when a touch begins */
+    func handleMultiplePan(recognizer: MultiplePanGestureRecognizer) {
         
-        for touch: AnyObject in touches {
-            let location = touch.locationInNode(self)
+//        println("numberOfTouches: \(recognizer.numberOfTouches())")
+//
+//        for i in recognizer.
+//        
+        switch recognizer.state {
+        case .Began:
+            println(".Began")
             
-            let sprite = SKSpriteNode(imageNamed:"Spaceship")
+        case .Changed:
+//            println(".Changed")
+            // Iterate over recognizer's currentTouches
+            for (i, _) in enumerate(recognizer.currentTouches) {
+                
+                let touch = recognizer.currentTouches[i] as UITouch
+//                println("touch: \(touch)")
+            }
             
-            sprite.xScale = 0.5
-            sprite.yScale = 0.5
-            sprite.position = location
-            
-            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-            
-            sprite.runAction(SKAction.repeatActionForever(action))
-            
-            self.addChild(sprite)
+//        case .Ended:
+//            println(".Ended")
+        default:
+            break
         }
+        
+//        if recognizer.state == .Began {
+//
+//        } else if recognizer.state == .Changed {
+//            let touchLocation = recognizer.locationInView(view)
+//            println("\(touchLocation)")
+//        } else if recognizer.state == .Ended {
+//            
+//        }
     }
    
     override func update(currentTime: CFTimeInterval) {

@@ -49,9 +49,9 @@ class GameViewController: UIViewController {
         var trials = Collection(name: "trials", inDatabase: "eim")
         trials.enumerateFieldNames(1)
         trials.enumerateFieldNames(10)
-        trials.enumerateFieldNames(100)
-        trials.enumerateFieldNames(1000)
-        trials.enumerateFieldNames(10000)
+//        trials.enumerateFieldNames(100)
+//        trials.enumerateFieldNames(1000)
+//        trials.enumerateFieldNames(10000)
     }
 
     override func shouldAutorotate() -> Bool {

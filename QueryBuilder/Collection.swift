@@ -74,6 +74,7 @@ class Collection {
 
     // Iterate over documents in collections and build a list of field names
     func enumerateFieldNames(limit: Int) {
+//        let p : MongoKeyedPredicate = MongoKeyedPredicate
         
 //        println("Enumerating field names")
         let start = NSDate()
