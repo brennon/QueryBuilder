@@ -136,7 +136,7 @@ class MultiplePanGestureRecognizer: UIGestureRecognizer {
         
         super.reset()
         
-        println("reset")
+//        println("reset")
         
         // Clear current touches array
         currentTouches = []

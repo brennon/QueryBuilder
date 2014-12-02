@@ -18,7 +18,7 @@ import SpriteKit
 class TouchNodeMap: Printable, SequenceType {
     
     /// Dictionary to hold mappings
-    private var touchNodeMap = Dictionary<UITouch, Dictionary<String, AnyObject>>()
+    private var touchNodeMap = Dictionary<UITouch, SKNode>()
     private let touchKey = "touch"
     private let nodeKey = "node"
     
@@ -38,10 +38,7 @@ class TouchNodeMap: Printable, SequenceType {
         let index = touchNodeMap.indexForKey(touch)
         
         if index == nil {
-            var subdictionary = Dictionary<String, AnyObject>()
-            subdictionary[touchKey] = touch
-            subdictionary[nodeKey] = node
-            touchNodeMap[touch] = subdictionary
+            touchNodeMap[touch] = node
         }
     }
     
@@ -53,10 +50,8 @@ class TouchNodeMap: Printable, SequenceType {
     func remove(touch: UITouch) {
         
         // Check for touch in map
-        let index = touchNodeMap.indexForKey(touch)
-        
-        if index != nil {
-            touchNodeMap.removeAtIndex(index!)
+        if let index = touchNodeMap.indexForKey(touch) {
+            touchNodeMap.removeAtIndex(index)
         }
     }
 
@@ -71,15 +66,9 @@ class TouchNodeMap: Printable, SequenceType {
     func nodeForTouch(touch: UITouch) -> SKNode? {
         
         // Check for touch in map
-        let index = touchNodeMap.indexForKey(touch)
-        
-        if index != nil {
+        if let index = touchNodeMap.indexForKey(touch) {
             
-            let mapEntry = touchNodeMap[touch]!
-            let nodeEntry: AnyObject? = mapEntry[nodeKey]
-            
-            // If we found a node
-            return nodeEntry! as? SKNode
+            return touchNodeMap[touch]
         }
         
         return nil
@@ -95,19 +84,22 @@ class TouchNodeMap: Printable, SequenceType {
     */
     func touchExistsInMap(touch: UITouch) -> Bool {
         
-        if (touchNodeMap.indexForKey(touch) != nil) {
-            return true
-        } else {
-            return false
-        }
+        return touchNodeMap.indexForKey(touch) != nil
     }
     
     /**
         Remove all entries from the map
     */
     func empty() {
-        touchNodeMap = Dictionary<UITouch, Dictionary<String, AnyObject>>()
+        touchNodeMap = Dictionary<UITouch, SKNode>()
     }
+    
+    /**
+        Find the most recent touch in the map, along with its associated node
+    */
+//    func mostRecentTouchAndNode() -> (UITouch, SKNode) {
+//        
+//    }
     
     func generate() -> GeneratorOf<(UITouch, SKNode)> {
         var index = 0
@@ -115,10 +107,8 @@ class TouchNodeMap: Printable, SequenceType {
         return GeneratorOf<(UITouch, SKNode)> {
             if index < self.touchNodeMap.keys.array.count {
                 let key = self.touchNodeMap.keys.array[index++]
-                let subdictionary: Dictionary<String, AnyObject> = self.touchNodeMap[key]!
-                let touchValue = subdictionary[self.touchKey] as UITouch
-                let nodeValue = subdictionary[self.nodeKey] as SKNode
-                return (touchValue, nodeValue)
+                let value = self.touchNodeMap[key]!
+                return (key, value)
             } else {
                 return nil
             }
