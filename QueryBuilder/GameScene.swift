@@ -8,6 +8,131 @@
 
 import SpriteKit
 
+// MARK: TouchNodeMap
+
+/**
+    `TouchNodeMap` is a class that associates touches with nodes. This is useful,
+    for instance, when tracking multiple touches and maintaining a relationship
+    between each touch and a particular node.
+*/
+class TouchNodeMap: Printable, SequenceType {
+    
+    /// Dictionary to hold mappings
+    private var touchNodeMap = Dictionary<UITouch, Dictionary<String, AnyObject>>()
+    private let touchKey = "touch"
+    private let nodeKey = "node"
+    
+    var description: String {
+        return "TouchNodeMap: \(touchNodeMap)"
+    }
+    
+    /**
+        Add a `UITouch`/`SKNode` pair to the map
+    
+        :param: touch The `UITouch` to add to the map
+        :param: withNode The `SKNode` to associate with the `UITouch` in `touch`
+    */
+    func add(touch: UITouch, withNode node: SKNode) {
+        
+        // Check for touch in map
+        let index = touchNodeMap.indexForKey(touch)
+        
+        if index == nil {
+            var subdictionary = Dictionary<String, AnyObject>()
+            subdictionary[touchKey] = touch
+            subdictionary[nodeKey] = node
+            touchNodeMap[touch] = subdictionary
+        }
+    }
+    
+    /**
+        Remove a `UITouch` and its associated node from the map
+    
+        :param: touch The `UITouch` to be removed from the map
+    */
+    func remove(touch: UITouch) {
+        
+        // Check for touch in map
+        let index = touchNodeMap.indexForKey(touch)
+        
+        if index != nil {
+            touchNodeMap.removeAtIndex(index!)
+        }
+    }
+
+    /**
+        Retrieve the `SKNode` associated with a particular touch in the map
+
+        :param: touch The `UITouch` for which an `SKNode` should be returned
+
+        :returns: An `SKNode?`. `nil` is returned when no matching `UITouch` was
+            found in the map.
+    */
+    func nodeForTouch(touch: UITouch) -> SKNode? {
+        
+        // Check for touch in map
+        let index = touchNodeMap.indexForKey(touch)
+        
+        if index != nil {
+            
+            let mapEntry = touchNodeMap[touch]!
+            let nodeEntry: AnyObject? = mapEntry[nodeKey]
+            
+            // If we found a node
+            return nodeEntry! as? SKNode
+        }
+        
+        return nil
+    }
+    
+    /**
+        Determine if a touch is already stored in the map
+    
+        :param: touch The `UITouch` for which to check the map
+    
+        :returns: Returns `true` if the `UITouch` was found in the map, `false`
+            otherwise.
+    */
+    func touchExistsInMap(touch: UITouch) -> Bool {
+        
+        if (touchNodeMap.indexForKey(touch) != nil) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    /**
+        Remove all entries from the map
+    */
+    func empty() {
+        touchNodeMap = Dictionary<UITouch, Dictionary<String, AnyObject>>()
+    }
+    
+    func generate() -> GeneratorOf<UITouch> {
+        var index = 0
+        
+        return GeneratorOf<UITouch> {
+            if index < self.touchNodeMap.keys.array.count {
+                let key = self.touchNodeMap.keys.array[index++]
+                let subdictionary = self.touchNodeMap[key]!
+                let touchValue: UITouch = subdictionary[self.touchKey]
+//                let nodeValue = subdictionary[self.nodeKey]
+//                return (touchValue, nodeValue)
+//                let key = self.touchNodeMap.keys.array[index]
+//                index++
+//                let entry = self.touchNodeMap[key][touchKey]
+//                let node = entry[nodeKey]
+//                return (touch, node)
+            } else {
+                return nil
+            }
+        }
+    }
+}
+
+// MARK: GameScene
+
 let BoxWidth : CGFloat = 200
 let BoxHeight : CGFloat = 50
 let BoxCornerRadius : CGFloat = 10
@@ -19,6 +144,8 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     var rectangleB: SKShapeNode!
     
     var panRecognizer: MultiplePanGestureRecognizer!
+    var currentlyPanningTouches: Array<UITouch> = []
+    var touchNodeMap = TouchNodeMap()
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -56,22 +183,47 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
 //        for i in recognizer.
 //        
         switch recognizer.state {
-        case .Began:
-            println(".Began")
+        case .Began, .Changed:
             
-        case .Changed:
-//            println(".Changed")
-            // Iterate over recognizer's currentTouches
-            for (i, _) in enumerate(recognizer.currentTouches) {
+            // Empty currentlyPanningTouches
+            currentlyPanningTouches = []
+            
+            // Iterate over the recognizer's currentTouches
+            for touch in recognizer.currentTouches {
                 
-                let touch = recognizer.currentTouches[i] as UITouch
-//                println("touch: \(touch)")
+                // Is it over a child node of the scene?
+                if let node = getChildNodeForTouch(touch) {
+                    
+                    // If so, add it to the touchNodeMap
+                    
+//                    if find(currentlyPanningTouches, touch) == nil {
+//                        currentlyPanningTouches.append(touch)
+//                    }
+                    
+                    touchNodeMap.add(touch, withNode: node)
+                }
             }
             
-//        case .Ended:
-//            println(".Ended")
+            // Iterate over currentlyPanningTouches and move nodes accordingly
+            for touch in touchNodeMap {
+                
+                println("touch: \(touch)")
+                
+//                let hash = touch.hash
+//                let hashValue = touch.hashValue
+//                
+//                let node = getChildNodeForTouch(touch)!
+//                
+//                let location = touch.locationInNode(self)
+//                let previousLocation = touch.previousLocationInNode(self)
+//                let deltaX = location.x - previousLocation.x
+//                let deltaY = location.y - previousLocation.y
+//                node.position = CGPointMake(node.position.x + deltaX, node.position.y + deltaY)
+//                println("delta: \(CGPointMake(deltaX, deltaY))")
+            }
+            
         default:
-            break
+            touchNodeMap.empty()
         }
         
 //        if recognizer.state == .Began {
@@ -83,8 +235,16 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
 //            
 //        }
     }
+    
+    func getChildNodeForTouch(touch: UITouch) -> SKNode? {
+        let node = nodeAtPoint(touch.locationInNode(self))
+        
+        return node == self ? nil : node
+    }
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+        
+        super.update(currentTime)
     }
 }
