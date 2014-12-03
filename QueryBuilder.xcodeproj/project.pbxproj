@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		3A084C281A2E70C300DB83E0 /* TouchNodeMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */; };
 		3A98D0BD1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */; };
+		3AADCBA71A2F8AA90047CA95 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AADCBA61A2F8AA90047CA95 /* Constants.swift */; };
+		3AADCBA91A2F98020047CA95 /* PredicateTileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */; };
 		3AB3E8F71A1A3601004A9691 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E8F61A1A3601004A9691 /* AppDelegate.swift */; };
 		3AB3E8F91A1A3601004A9691 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3AB3E8F81A1A3601004A9691 /* GameScene.sks */; };
 		3AB3E8FB1A1A3601004A9691 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E8FA1A1A3601004A9691 /* GameScene.swift */; };
@@ -64,6 +66,8 @@
 /* Begin PBXFileReference section */
 		3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchNodeMap.swift; sourceTree = "<group>"; };
 		3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplePanGestureRecognizer.swift; sourceTree = "<group>"; };
+		3AADCBA61A2F8AA90047CA95 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PredicateTileNode.swift; sourceTree = "<group>"; };
 		3AB3E8F11A1A3601004A9691 /* QueryBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QueryBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AB3E8F51A1A3601004A9691 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3AB3E8F61A1A3601004A9691 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -201,6 +205,8 @@
 				3AB3E9DE1A1A45E4004A9691 /* Collection.swift */,
 				3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */,
 				3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */,
+				3AADCBA61A2F8AA90047CA95 /* Constants.swift */,
+				3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */,
 			);
 			path = QueryBuilder;
 			sourceTree = "<group>";
@@ -455,6 +461,7 @@
 				3AB3E9D01A1A3CDF004A9691 /* MongoFindRequest.m in Sources */,
 				3AB3E9D31A1A3CDF004A9691 /* MongoTypes.m in Sources */,
 				3AB3E9A21A1A3CA4004A9691 /* BSONDecoder.m in Sources */,
+				3AADCBA91A2F98020047CA95 /* PredicateTileNode.swift in Sources */,
 				3AB3E9861A1A3C80004A9691 /* mongo.c in Sources */,
 				3AB3E9851A1A3C80004A9691 /* md5.c in Sources */,
 				3AB3E9D21A1A3CDF004A9691 /* MongoPredicate.m in Sources */,
@@ -483,6 +490,7 @@
 				3A084C281A2E70C300DB83E0 /* TouchNodeMap.swift in Sources */,
 				3A98D0BD1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift in Sources */,
 				3AB3E9CF1A1A3CDF004A9691 /* MongoDBCollection.m in Sources */,
+				3AADCBA71A2F8AA90047CA95 /* Constants.swift in Sources */,
 				3AB3E9A91A1A3CA4004A9691 /* NSManagedObject+BSONCoding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
