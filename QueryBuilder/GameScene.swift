@@ -8,19 +8,17 @@
 
 import SpriteKit
 
+/*!
+    The `GameScene` is the main scene in the application.
+*/
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    
-    // MARK: Constants
-    
-    let BoxWidth : CGFloat = 200
-    let BoxHeight : CGFloat = 50
-    let BoxCornerRadius : CGFloat = 10
-    let BoxBorderWidth : CGFloat = 2
     
     // MARK: Instance Variables
     
     var panRecognizer: MultiplePanGestureRecognizer!
     var touchNodeMap = TouchNodeMap()
+    var propertyTiles = Array<PredicateTileNode>()
+    var trayNode = PropertyTrayNode()
     
     // MARK: Initializers
     
@@ -29,11 +27,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addTestPredicateNodes()
         
         // Add pan gesture recognizer to the view
-        panRecognizer = MultiplePanGestureRecognizer(
-            target: self,
-            action: "handleMultiplePan:"
-        )
-        view.addGestureRecognizer(panRecognizer)
+//        panRecognizer = MultiplePanGestureRecognizer(
+//            target: self,
+//            action: "handleMultiplePan:"
+//        )
+//        view.addGestureRecognizer(panRecognizer)
         
         // Setup physics
         physicsWorld.gravity = CGVectorMake(0, 0)
@@ -41,21 +39,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Enabled debugging display
         debuggingDisplay(true)
+        
+        addPropertyTray()
+    }
+    
+    func useCollection(collection: Collection) {
+        
+        // Remove the current PropetyTrayNode, if it exists
+        trayNode.removeFromParent()
+        
+        // Create a new PropertyTrayNode
+        trayNode = PropertyTrayNode(collection: collection)
+        
+        addChild(trayNode)
     }
     
     // MARK: SKPhysicsContactDelegate
     
     func didBeginContact(contact: SKPhysicsContact!) {
         println("didBeginContact:")
+        
+//        let settingsPopoverController = SettingsViewPopoverController()
+        
+//        settingsPopoverController.presentPopoverFromRect(CGRectMake(frame.origin.x, 100, 100, 100), inView: self.view!, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
     }
     
     func didEndContact(contact: SKPhysicsContact!) {
         println("didEndContact:")
     }
     
+    func addSettingsButton() {
+        
+    }
+    
     // MARK: Testing/Debugging
     
-    /**
+    /*!
         Enables/disables the display of all stock debugging information.
 
         :param: enabled If `true`, diplay of debugging information is enabled. 
@@ -71,25 +90,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         view?.showsQuadCount = enabled
     }
     
-    /**
+    /*!
         Adds several test `PredicateTileNode`s to the scene.
     */
     func addTestPredicateNodes() {
-        var rectangleA = PredicateTileNode()
+        var rectangleA = PredicateTileNode(label: "rectangleA")
         rectangleA.position = CGPoint(
             x: CGRectGetMidX(frame) / 2,
             y: CGRectGetMidY(frame)
         )
         addChild(rectangleA)
         
-        var rectangleB = PredicateTileNode()
+        var rectangleB = PredicateTileNode(label: "rectangleB")
         rectangleB.position = CGPoint(
             x: (CGRectGetMidX(frame) / 2) * 3,
             y:CGRectGetMidY(frame)
         )
         addChild(rectangleB)
         
-        var rectangleC = PredicateTileNode()
+        var rectangleC = PredicateTileNode(label: "rectangleC")
         rectangleC.position = CGPoint(
             x: CGRectGetMidX(frame),
             y: CGRectGetMidY(frame) + (CGRectGetHeight(frame) / 4)
@@ -97,9 +116,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(rectangleC)
     }
     
+    func addPropertiesToPropertyTray() {
+        
+    }
+    
+    func addPropertyTray() {
+        
+//        let tileA = PredicateTileNode(label: "id")
+//        let tileB = PredicateTileNode(label: "gender")
+//        let tileC = PredicateTileNode(label: "a really long property name")
+//
+//        let padding: CGFloat = 10
+//        
+//        propertyTiles.append(tileA)
+//        propertyTiles.append(tileB)
+//        propertyTiles.append(tileC)
+//        
+//        // Calculate height
+//        var totalHeight = CGFloat(propertyTiles.count) * tileA.size.height // Add height of tiles to total height
+//        totalHeight += CGFloat(propertyTiles.count - 1) * padding // Add padding to total height
+//        totalHeight += 2 * padding
+//        
+//        let totalWidth = BoxWidth + (2 * padding)
+//        
+//        let trayNode = SKShapeNode(rectOfSize: CGSizeMake(totalWidth, totalHeight))
+//        trayNode.fillColor = UIColor.greenColor()
+//        trayNode.position = CGPointZero
+        
+//        trayNode.addPropertyNode(tileA)
+//        trayNode.addPropertyNode(tileB)
+//        trayNode.addPropertyNode(tileC)
+        
+        addChild(trayNode)
+    }
+    
     // MARK: Pan Gesture Handling
     
-    /**
+    /*!
         Track multiple pan gestures in the scene.
     
         There is no way to add a `UIGestureRecognizer` to individual `SKNode`s, 
@@ -164,7 +217,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // MARK: Node Manipulation
     
-    /**
+    /*!
         Moves all nodes with a given name to a new layer (z-position).
     
         :param: name The name of the nodes to move.
@@ -178,7 +231,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    /**
+    /*!
         Get a child `SKNode` in the scene that is under a touch.
 
         This method will return only a child node in the scene, not the scene

@@ -51,6 +51,9 @@
 		3AB3E9D61A1A3CDF004A9691 /* NSArray+MongoAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9C91A1A3CDF004A9691 /* NSArray+MongoAdditions.m */; };
 		3AB3E9D81A1A3DC9004A9691 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AB3E9D71A1A3DC9004A9691 /* CoreGraphics.framework */; };
 		3AB3E9DF1A1A45E4004A9691 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3E9DE1A1A45E4004A9691 /* Collection.swift */; };
+		3AC745E81A31815F00C16776 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC745E71A31815F00C16776 /* SettingsViewController.swift */; };
+		3AC745EA1A3182D200C16776 /* SettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AC745E91A3182D200C16776 /* SettingsView.xib */; };
+		3AE5E9271A358F29002E6813 /* PropertyTrayNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE5E9261A358F29002E6813 /* PropertyTrayNode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,6 +153,9 @@
 		3AB3E9D71A1A3DC9004A9691 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		3AB3E9DB1A1A3F5C004A9691 /* QueryBuilder-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "QueryBuilder-Bridging-Header.h"; path = "QueryBuilder/QueryBuilder-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		3AB3E9DE1A1A45E4004A9691 /* Collection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
+		3AC745E71A31815F00C16776 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		3AC745E91A3182D200C16776 /* SettingsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsView.xib; sourceTree = "<group>"; };
+		3AE5E9261A358F29002E6813 /* PropertyTrayNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyTrayNode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +177,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A8DB8A71A384E8400DA353E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3AB3E8F81A1A3601004A9691 /* GameScene.sks */,
+				3AB3E9011A1A3601004A9691 /* Images.xcassets */,
+				3AB3E9031A1A3601004A9691 /* LaunchScreen.xib */,
+				3AB3E8FE1A1A3601004A9691 /* Main.storyboard */,
+				3AC745E91A3182D200C16776 /* SettingsView.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		3AB3E8E81A1A3601004A9691 = {
 			isa = PBXGroup;
 			children = (
@@ -194,19 +212,18 @@
 			isa = PBXGroup;
 			children = (
 				3AB3E8F61A1A3601004A9691 /* AppDelegate.swift */,
-				3AB3E8F81A1A3601004A9691 /* GameScene.sks */,
+				3AB3E9DE1A1A45E4004A9691 /* Collection.swift */,
+				3AADCBA61A2F8AA90047CA95 /* Constants.swift */,
 				3AB3E8FA1A1A3601004A9691 /* GameScene.swift */,
 				3AB3E8FC1A1A3601004A9691 /* GameViewController.swift */,
-				3AB3E9011A1A3601004A9691 /* Images.xcassets */,
-				3AB3E9031A1A3601004A9691 /* LaunchScreen.xib */,
-				3AB3E8FE1A1A3601004A9691 /* Main.storyboard */,
+				3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */,
+				3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */,
+				3AE5E9261A358F29002E6813 /* PropertyTrayNode.swift */,
+				3AC745E71A31815F00C16776 /* SettingsViewController.swift */,
+				3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */,
 				3AB3E9DC1A1A4531004A9691 /* Frameworks */,
 				3AB3E8F41A1A3601004A9691 /* Supporting Files */,
-				3AB3E9DE1A1A45E4004A9691 /* Collection.swift */,
-				3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */,
-				3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */,
-				3AADCBA61A2F8AA90047CA95 /* Constants.swift */,
-				3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */,
+				3A8DB8A71A384E8400DA353E /* Resources */,
 			);
 			path = QueryBuilder;
 			sourceTree = "<group>";
@@ -434,6 +451,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3AB3E9051A1A3601004A9691 /* LaunchScreen.xib in Resources */,
+				3AC745EA1A3182D200C16776 /* SettingsView.xib in Resources */,
 				3AB3E9021A1A3601004A9691 /* Images.xcassets in Resources */,
 				3AB3E8F91A1A3601004A9691 /* GameScene.sks in Resources */,
 				3AB3E9001A1A3601004A9691 /* Main.storyboard in Resources */,
@@ -477,6 +495,7 @@
 				3AB3E9821A1A3C80004A9691 /* bson.c in Sources */,
 				3AB3E9841A1A3C80004A9691 /* env.c in Sources */,
 				3AB3E9AB1A1A3CA4004A9691 /* ObjCBSON.m in Sources */,
+				3AC745E81A31815F00C16776 /* SettingsViewController.swift in Sources */,
 				3AB3E9A11A1A3CA4004A9691 /* BSON_Helper.m in Sources */,
 				3AB3E9A61A1A3CA4004A9691 /* BSONTypes.m in Sources */,
 				3AB3E9CC1A1A3CDF004A9691 /* MongoConnection+Diagnostics.m in Sources */,
@@ -489,6 +508,7 @@
 				3AB3E8F71A1A3601004A9691 /* AppDelegate.swift in Sources */,
 				3A084C281A2E70C300DB83E0 /* TouchNodeMap.swift in Sources */,
 				3A98D0BD1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift in Sources */,
+				3AE5E9271A358F29002E6813 /* PropertyTrayNode.swift in Sources */,
 				3AB3E9CF1A1A3CDF004A9691 /* MongoDBCollection.m in Sources */,
 				3AADCBA71A2F8AA90047CA95 /* Constants.swift in Sources */,
 				3AB3E9A91A1A3CA4004A9691 /* NSManagedObject+BSONCoding.m in Sources */,

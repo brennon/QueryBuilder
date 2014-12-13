@@ -17,5 +17,14 @@ enum SceneNodeCategories: UInt32 {
     case PredicateTile = 1
 }
 
+extension UIColor {
+    
+    class func trayBorderColor() -> UIColor {
+        
+        return UIColor.darkGrayColor()
+    }
+}
+
 // MARK: SKNode names
+
 let PredicateTileNodeName = "tile-predicate"
