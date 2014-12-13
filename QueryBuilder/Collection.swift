@@ -219,10 +219,12 @@ class Collection {
                         
                         var subdictionary = NSMutableDictionary()
                         
-                        fields.setValue(subdictionary, forKeyPath: expandedKey)
+                        parentDictionary.setValue(subdictionary, forKeyPath: expandedKey)
+                        
+                        var embeddedDocument = iterator.embeddedDocumentValue()
                     
                         enumerateFieldsInDocument(
-                            iterator.embeddedDocumentValue(),
+                            embeddedDocument,
                             atPath: expandedKey,
                             withParentDictionary: subdictionary
                         )
@@ -234,7 +236,7 @@ class Collection {
                         
                         if existingDict == nil {
                             
-                            fields.setValue(NSMutableDictionary(), forKeyPath: expandedKey)
+                            parentDictionary.setValue(NSMutableDictionary(), forKeyPath: expandedKey)
                             
                             // Add keypath to master list
                             let index = find(allKeyPaths, expandedKey)
@@ -404,6 +406,7 @@ class Collection {
                             
                         default:
                             println("Didn't handle values for \(keyPath)")
+                            println("First entry in array: \(filteredResult[0])")
                         }
                     }
                 }
