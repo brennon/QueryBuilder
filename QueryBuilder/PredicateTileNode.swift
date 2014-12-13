@@ -28,7 +28,7 @@ class PredicateTileNode: TileNode {
         }
         userData?.setValue(label, forKey: "label")
         
-        // Create and add label node
+        // Create, configure, and add label node as child node
         labelNode = SKLabelNode(text: label)
         labelNode!.position = CGPointZero
         labelNode!.fontName = "HelveticaNeue-CondensedBold"
@@ -44,7 +44,14 @@ class PredicateTileNode: TileNode {
     }
     
     /**
-        Implements a handler for moving tiles around the scene.
+        Tells the receiver when one or more fingers associated with an event 
+        move within a view or window. Specifically, this implementation 
+        implements a handler for dragging tiles around the scene.
+    
+        :param: touches A set of UITouch instances that represent the touches 
+            that are moving during the event represented by event.
+        :param: event An object representing the event to which the touches 
+            belong.
     */
     override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
         
@@ -59,6 +66,7 @@ class PredicateTileNode: TileNode {
             let deltaX = currentLocation.x - previousLocation.x
             let deltaY = currentLocation.y - previousLocation.y
             
+            // Move the node accordingly
             position.x += deltaX
             position.y += deltaY
         }
