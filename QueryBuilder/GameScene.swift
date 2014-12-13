@@ -9,7 +9,11 @@
 import SpriteKit
 
 /*!
-    The `GameScene` is the main scene in the application.
+    The `GameScene` is the main scene in the application. It coordinates the 
+    main actors in the scene: the sandbox (general work area), the 
+    `PropertyTrayNode` that holds `PropertyTile`s for use in building queries, 
+    and the `CompletedQueryNode` where query predicates are placed for use in 
+    the constructed query.
 */
 class GameScene: SKScene, SKPhysicsContactDelegate {
     

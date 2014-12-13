@@ -49,7 +49,8 @@ class GameViewController: UIViewController {
             
             // Setup Collection for Trial documents
             trials = Collection(name: "trials", inDatabase: "eim")
-            trials.enumerateFieldNames(1)
+            trials.enumerateFieldNames(0)
+            trials.getDistinctValuesForAllFields()
             
             // Add the Collection to the scene
             scene.useCollection(trials)

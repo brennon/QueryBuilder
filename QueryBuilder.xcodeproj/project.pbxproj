@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3A084C281A2E70C300DB83E0 /* TouchNodeMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */; };
+		3A4CE7A11A3C1F4800E68A92 /* PropertyTrayTileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4CE7A01A3C1F4800E68A92 /* PropertyTrayTileNode.swift */; };
 		3A98D0BD1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */; };
 		3AADCBA71A2F8AA90047CA95 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AADCBA61A2F8AA90047CA95 /* Constants.swift */; };
 		3AADCBA91A2F98020047CA95 /* PredicateTileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */; };
@@ -68,6 +69,7 @@
 
 /* Begin PBXFileReference section */
 		3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchNodeMap.swift; sourceTree = "<group>"; };
+		3A4CE7A01A3C1F4800E68A92 /* PropertyTrayTileNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyTrayTileNode.swift; sourceTree = "<group>"; };
 		3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplePanGestureRecognizer.swift; sourceTree = "<group>"; };
 		3AADCBA61A2F8AA90047CA95 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PredicateTileNode.swift; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 				3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */,
 				3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */,
 				3AE5E9261A358F29002E6813 /* PropertyTrayNode.swift */,
+				3A4CE7A01A3C1F4800E68A92 /* PropertyTrayTileNode.swift */,
 				3AC745E71A31815F00C16776 /* SettingsViewController.swift */,
 				3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */,
 				3AB3E9DC1A1A4531004A9691 /* Frameworks */,
@@ -482,6 +485,7 @@
 				3AADCBA91A2F98020047CA95 /* PredicateTileNode.swift in Sources */,
 				3AB3E9861A1A3C80004A9691 /* mongo.c in Sources */,
 				3AB3E9851A1A3C80004A9691 /* md5.c in Sources */,
+				3A4CE7A11A3C1F4800E68A92 /* PropertyTrayTileNode.swift in Sources */,
 				3AB3E9D21A1A3CDF004A9691 /* MongoPredicate.m in Sources */,
 				3AB3E9D11A1A3CDF004A9691 /* MongoKeyedPredicate.m in Sources */,
 				3AB3E9D61A1A3CDF004A9691 /* NSArray+MongoAdditions.m in Sources */,

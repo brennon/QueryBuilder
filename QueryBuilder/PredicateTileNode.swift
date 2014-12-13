@@ -8,11 +8,6 @@
 
 import SpriteKit
 
-let BoxWidth : CGFloat = 100
-let BoxHeight : CGFloat = 50
-let BoxCornerRadius : CGFloat = 10
-let BoxBorderWidth : CGFloat = 2
-
 /**
     A `PredicateTileNode` is a visual representation of a predicate in a
     MongoDB query. A `PredicateTileNode` can also be used to represent 
@@ -39,40 +34,6 @@ class PredicateTileNode: SKSpriteNode {
         
         println("\(userData)")
         
-        // Create and add label node
-        if let labelText = userData?.valueForKey("label") as? String {
-            println("creating label")
-            let labelNode = SKLabelNode(text: labelText)
-            labelNode.position = CGPointZero
-            labelNode.fontName = "HelveticaNeue-CondensedBold"
-            labelNode.fontColor = UIColor.whiteColor()
-            labelNode.verticalAlignmentMode = .Center
-            labelNode.fontSize = calculateFontSize(labelText)
-            addChild(labelNode)
-        }
-    }
-    
-    /**
-        Assigns the node's sprite, name, and userData given the provided field,
-        and configures its physics.
-    */
-    convenience init(field: String,
-        collection: String,
-        fieldDict: [String: AnyObject]) {
-        
-        self.init()
-            
-        userData = NSMutableDictionary()
-        
-        // Add field as a property of userData
-        userData?.setValue(fieldDict, forKey: "field")
-            
-        // Add label to userData
-        userData?.setValue(collection, forKey: "collection")
-        
-        // Add label to userData
-        userData?.setValue(field, forKey: "label")
-            
         // Create and add label node
         if let labelText = userData?.valueForKey("label") as? String {
             println("creating label")

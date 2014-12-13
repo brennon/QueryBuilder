@@ -90,63 +90,89 @@ class Collection {
     
     let collectionName: String
     let databaseName: String
-    var fields: Dictionary<String, Dictionary<String, AnyObject>>
+    let connection: MongoConnection!
+    var fields = NSMutableDictionary()
+    var allKeyPaths = [String]()
     
     init(name: String, inDatabase: String) {
         
         collectionName = name
         databaseName = inDatabase
-        fields = [String: [String: AnyObject]]()
-    }
-
-    // Iterate over documents in a collection and build a dict of fields
-    func enumerateFieldNames(limit: Int) {
-        
-        let start = NSDate()
         
         let dbHelper = DatabaseHelper()
         dbHelper.authenticateToDatabase()
         
+        connection = dbHelper.connection
+    }
+
+    /**
+        Iterate over documents in a collection and build a dict of fields.
+    
+        :param: limit Limit the numer of documents to examine when building the 
+            dict of fields. If `limit` is 0, all documents will be examined.
+    */
+    func enumerateFieldNames(limit: Int) {
+        
+        let start = NSDate()
+        
+        
+        
         // Get collection for this collection's name
         let qualifiedName = "\(databaseName).\(collectionName)"
-        let collection: MongoDBCollection = dbHelper.connection!.collectionWithName(qualifiedName)
+        let collection: MongoDBCollection =
+            connection.collectionWithName(qualifiedName)
         
         // Error object for database operations
         var error : NSError? = nil
         error = nil
         
-        // Mongo predicate for finding alimited number of documents
+        // Mongo predicate for finding documents
         let findRequest = MongoFindRequest()
-        findRequest.limitResults = Int32(limit)
+        
+        // If a limit > 0 was specified, use it
+        if limit > 0 {
+            findRequest.limitResults = Int32(limit)
+        }
+        
+        // Get a cursor for the request
         let cursor = collection.cursorForFindRequest(findRequest, error: &error)
 
         if let error = error {
             println("Error performing find request: \(error.description)")
         }
         
-        error = nil
-        
-        let document = collection.findOneWithError(&error)
-
-        if let error = error {
-            println("Error getting document: \(error.description)")
-        }
-        
         // Iterate over documents
         var total : Int = 0
         while let document : BSONDocument = cursor?.nextObject() {
+            
             total++
-
-            enumerateFieldsInDocument(document, atPath: "")
+            
+            // Add the fields in this document to the fields dictionary
+            enumerateFieldsInDocument(
+                document,
+                atPath: "",
+                withParentDictionary: fields
+            )
         }
         
         let end = NSDate()
         let timeInterval = end.timeIntervalSinceDate(start)
         
-        println("Enumerated fields from \(total) documents in \(timeInterval) seconds")
+        print("Enumerated fields from \(total) documents ")
+        println("in \(timeInterval) seconds")
     }
     
-    func enumerateFieldsInDocument(document: BSONDocument, atPath: String) {
+    /**
+        Enumerates the fields in a specific document using a keyPath as context.
+    
+        :param: document The `BSONDocument` for which to enumerate fields.
+        :param: atPath The keyPath to use as context. This is used when storing 
+            the field in the `fields` dictionary.
+    */
+    func enumerateFieldsInDocument(
+        document: BSONDocument,
+        atPath path: String,
+        withParentDictionary parentDictionary: NSMutableDictionary) {
         
         // Regex for property names (only word characters)
         let regex = NSRegularExpression(
@@ -178,33 +204,44 @@ class Collection {
                     var expandedKey: String
                     
                     // Build dot-delimited key path
-                    if atPath != "" {
+                    if path != "" {
                         
-                        expandedKey = "\(atPath).\(key)"
+                        expandedKey = "\(path).\(key)"
+                        
                     } else {
+                        
                         expandedKey = key
+                        
                     }
                     
-                    // If this is a subdocument
-                    if iterator.isEmbeddedDocument() {
-                    
-                        enumerateFieldsInDocument(iterator.embeddedDocumentValue(), atPath: expandedKey)
-                    
-                    } else if iterator.isArray() {
+                    // If this is a subdocument or an array
+                    if iterator.isEmbeddedDocument() || iterator.isArray() {
                         
-                        enumerateFieldsInDocument(iterator.embeddedDocumentValue(), atPath: expandedKey)
+                        var subdictionary = NSMutableDictionary()
+                        
+                        fields.setValue(subdictionary, forKeyPath: expandedKey)
+                    
+                        enumerateFieldsInDocument(
+                            iterator.embeddedDocumentValue(),
+                            atPath: expandedKey,
+                            withParentDictionary: subdictionary
+                        )
                     
                     // Otherwise, store the key
                     } else {
                         
-                        let index = fields.indexForKey(expandedKey)
+                        let existingDict = fields.valueForKeyPath(expandedKey) as? NSMutableDictionary
                         
-                        if index == nil {
+                        if existingDict == nil {
                             
-                            fields[expandedKey] = Dictionary<String, AnyObject>()
+                            fields.setValue(NSMutableDictionary(), forKeyPath: expandedKey)
                             
-                            // Get distinct values for this path
-                            getDistinctValuesForField(expandedKey)
+                            // Add keypath to master list
+                            let index = find(allKeyPaths, expandedKey)
+                            
+                            if index == nil {
+                                allKeyPaths.append(expandedKey)
+                            }
                         }
                     }
                 }
@@ -212,11 +249,15 @@ class Collection {
         }
     }
     
-    func getDistinctValuesForField(keyPath: String) {
+    func getDistinctValuesForAllFields() {
         
-        // Connect to database
-        let dbHelper = DatabaseHelper()
-        dbHelper.authenticateToDatabase()
+        for keyPath in allKeyPaths {
+            
+            getDistinctValuesForField(keyPath)
+        }
+    }
+    
+    func getDistinctValuesForField(keyPath: String) {
         
         // Build command for getting distinct values for a field
         let commandDictionary = [
@@ -225,18 +266,24 @@ class Collection {
         
         var error: NSError?
         
+        let integerRegex = NSRegularExpression(
+            pattern: "^\\d+$",
+            options: nil,
+            error: nil
+        )!
+        
         // If command is successful
-        if let result = dbHelper.connection?.runCommandWithDictionary(
+        if let result = connection.runCommandWithDictionary(
             commandDictionary,
             onDatabaseName: databaseName,
             error: &error) {
-            
+
             // If returned result has a 'values' property
             if result.indexForKey("values") != nil {
-                
+
                 // If values is an array
                 if result["values"] is [AnyObject] {
-                    
+
                     let resultArray = result["values"] as [AnyObject]
                     
                     // If array has at least one entry
@@ -246,9 +293,6 @@ class Collection {
                         var filteredResult = resultArray.filter {
                             !($0 is NSNull)
                         }
-                        
-                        // Get a copy of the current inner dictionary
-                        var currentInnerDict: [String: AnyObject] = fields[keyPath]!
                         
                         // Switch on the first entry in the array
                         switch filteredResult[0] {
@@ -264,41 +308,54 @@ class Collection {
                             }
                             
                             // Assign casted array to main dict
-                            currentInnerDict["values"] = stringArray
-                            currentInnerDict["type"] = "string"
-                            fields[keyPath] = currentInnerDict
+                            fields.setValue(stringArray, forKeyPath: "\(keyPath).values")
+                            fields.setValue("string", forKeyPath: "\(keyPath).type")
+                            fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
                             
                         case let resultInteger as Int:
                             
-                            // Cast array to [Int] and sort it
-                            var intArray = filteredResult as [Int]
+                            // Test for Int vs Double
+                            let asString = filteredResult[0].stringValue
                             
-                            intArray.sort {
-                                $0 < $1
+                            let intMatches = integerRegex.numberOfMatchesInString(
+                                asString,
+                                options: nil,
+                                range: NSMakeRange(0, countElements(asString))
+                            )
+                            
+                            // If it was an Integer
+                            if intMatches == 1 {
+                                
+                                // Cast array to [Int] and sort it
+                                var intArray = filteredResult as [Int]
+                                
+                                intArray.sort {
+                                    $0 < $1
+                                }
+                                
+                                // Assign casted array to main dict
+                                fields.setValue(intArray, forKeyPath: "\(keyPath).values")
+                                fields.setValue(intArray.first, forKeyPath: "\(keyPath).min")
+                                fields.setValue(intArray.last, forKeyPath: "\(keyPath).max")
+                                fields.setValue("numeric", forKeyPath: "\(keyPath).type")
+                                fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
+                                
+                            } else {
+                                
+                                // Cast array to [Double] and sort it
+                                var doubleArray = filteredResult as [Double]
+                                
+                                doubleArray.sort {
+                                    $0 < $1
+                                }
+                                
+                                // Assign casted array to main dict
+                                fields.setValue(doubleArray, forKeyPath: "\(keyPath).values")
+                                fields.setValue(doubleArray.first, forKeyPath: "\(keyPath).min")
+                                fields.setValue(doubleArray.last, forKeyPath: "\(keyPath).max")
+                                fields.setValue("numeric", forKeyPath: "\(keyPath).type")
+                                fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
                             }
-                            
-                            // Assign casted array to main dict
-                            currentInnerDict["values"] = intArray
-                            currentInnerDict["min"] = intArray.first
-                            currentInnerDict["max"] = intArray.last
-                            currentInnerDict["type"] = "numeric"
-                            fields[keyPath] = currentInnerDict
-                            
-                        case let resultDouble as Double:
-                            
-                            // Cast array to [Double] and sort it
-                            var doubleArray = filteredResult as [Double]
-                            
-                            doubleArray.sort {
-                                $0 < $1
-                            }
-                            
-                            // Assign casted array to main dict
-                            currentInnerDict["values"] = doubleArray
-                            currentInnerDict["min"] = doubleArray.first
-                            currentInnerDict["max"] = doubleArray.last
-                            currentInnerDict["type"] = "numeric"
-                            fields[keyPath] = currentInnerDict
                             
                         case let resultBool as Bool:
                             
@@ -306,10 +363,10 @@ class Collection {
                             var boolArray = filteredResult as [Bool]
                             
                             // Assign casted array to main dict
-                            currentInnerDict["values"] = boolArray
-                            currentInnerDict["type"] = "boolean"
-                            fields[keyPath] = currentInnerDict
-                            
+                            fields.setValue(boolArray, forKeyPath: "\(keyPath).values")
+                            fields.setValue("boolean", forKeyPath: "\(keyPath).type")
+                            fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
+
                         case let resultBSONObjectId as BSONObjectID:
                             
                             // Create a sorted array of string representations
@@ -325,21 +382,25 @@ class Collection {
                             }
                             
                             // Assign casted array to main dict
-                            currentInnerDict["values"] = stringArray
-                            currentInnerDict["type"] = "string"
-                            fields[keyPath] = currentInnerDict
-                            
+                            fields.setValue(stringArray, forKeyPath: "\(keyPath).values")
+                            fields.setValue("string", forKeyPath: "\(keyPath).type")
+                            fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
+
                         case let resultDate as NSDate:
                             
                             // Cast array to [NSDate]
                             var dateArray = filteredResult as [NSDate]
                             
+                            dateArray.sort {
+                                $0.timeIntervalSinceDate($1) < 1 ? true : false
+                            }
+                            
                             // Assign casted array to main dict
-                            currentInnerDict["values"] = dateArray
-                            currentInnerDict["min"] = dateArray.first
-                            currentInnerDict["max"] = dateArray.last
-                            currentInnerDict["type"] = "datetime"
-                            fields[keyPath] = currentInnerDict
+                            fields.setValue(dateArray, forKeyPath: "\(keyPath).values")
+                            fields.setValue(dateArray.first, forKeyPath: "\(keyPath).min")
+                            fields.setValue(dateArray.last, forKeyPath: "\(keyPath).max")
+                            fields.setValue("datetime", forKeyPath: "\(keyPath).type")
+                            fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
                             
                         default:
                             println("Didn't handle values for \(keyPath)")

@@ -11,7 +11,7 @@ import SpriteKit
 class PropertyTrayNode: SKNode {
     
     var borderNode: SKShapeNode!
-    var propertyNodes = [PredicateTileNode]()
+    var propertyNodes = [PropertyTrayTileNode]()
     let propertyNodePadding: CGFloat = 10
     
     convenience init(collection: Collection) {
@@ -19,16 +19,21 @@ class PropertyTrayNode: SKNode {
         self.init()
         
         // Iterate over Collection fields and add PredicateTileNodes for each
-        for field in collection.fields.keys {
-            println("field: \(field)")
-            
-            if let dict = collection.fields[field] {
-             
-                var newNode = PredicateTileNode(field: field, collection: collection.collectionName, fieldDict: dict)
-                
-                addPropertyNode(newNode)
-            }
-        }
+        
+//        println("fields: \(collection.fields)")
+        addBorderNode()
+        
+        buildTilesFromDictionary(collection.fields, forField: "", withParentTile: nil)
+//        for field in collection.fields.allKeys {
+//            println("field: \(field)")
+//        
+//            if let dict = collection.fields[field] {
+//             
+//                var newNode = PredicateTileNode(field: field, collection: collection.collectionName, fieldDict: dict)
+//                
+//                addPropertyNode(newNode)
+//            }
+//        }
     }
     
     override init() {
@@ -52,7 +57,51 @@ class PropertyTrayNode: SKNode {
 //        physicsBody?.contactTestBitMask = SceneNodeCategories.PredicateTile.rawValue
         
         // Add border node
-        addBorderNode()
+//        addBorderNode()
+    }
+    
+    func buildTilesFromDictionary(
+        dictionary: NSMutableDictionary,
+        forField field: String,
+        withParentTile parentTile: PropertyTrayTileNode?) {
+        
+        // If dictionary has a values key, add it to the parentTile
+        if let values: AnyObject = dictionary.valueForKey("values") {
+            
+            parentTile?.propertyDict = dictionary
+        }
+        
+        // Otherwise, send the contained dictionary back to this method
+        else {
+            
+            let allKeys = dictionary.allKeys
+
+            for key in dictionary.allKeys {
+                
+                var actualParentTile = parentTile
+                
+                let keyString = key as String
+
+                let subdictionary =
+                    dictionary.objectForKey(key)! as NSMutableDictionary
+                
+                // If there is no parent tile, this is a top-level tile
+                if parentTile == nil {
+                    actualParentTile = PropertyTrayTileNode(label: keyString)
+                    addPropertyNode(actualParentTile!)
+                } else {
+                    let newParentTile = PropertyTrayTileNode(label: keyString)
+                    actualParentTile!.childTiles.append(newParentTile)
+                    actualParentTile = newParentTile
+                }
+
+                buildTilesFromDictionary(
+                    subdictionary,
+                    forField: keyString,
+                    withParentTile: actualParentTile
+                )
+            }
+        }
     }
     
     func addBorderNode() {
@@ -66,7 +115,7 @@ class PropertyTrayNode: SKNode {
         addChild(borderNode)
     }
     
-    func addPropertyNode(propertyNode: PredicateTileNode) {
+    func addPropertyNode(propertyNode: PropertyTrayTileNode) {
         
         propertyNodes.append(propertyNode)
         

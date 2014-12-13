@@ -28,3 +28,9 @@ extension UIColor {
 // MARK: SKNode names
 
 let PredicateTileNodeName = "tile-predicate"
+
+
+let BoxWidth : CGFloat = 100
+let BoxHeight : CGFloat = 50
+let BoxCornerRadius : CGFloat = 10
+let BoxBorderWidth : CGFloat = 2
