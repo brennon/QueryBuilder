@@ -6,31 +6,38 @@
 //  Copyright (c) 2014 Brennon Bortz. All rights reserved.
 //
 
+// MARK: Layers
+
 enum SceneLayer: CGFloat {
-    case Background = 0
+    case Background     = 0
     case PredicateTiles
     case Foreground
 }
 
+// MARK: Collision / Contact Categories
+
 enum SceneNodeCategories: UInt32 {
-    case None = 0
-    case PredicateTile = 1
+    case None           = 0
+    case PredicateTile  = 1
 }
 
-extension UIColor {
-    
-    class func trayBorderColor() -> UIColor {
-        
-        return UIColor.darkGrayColor()
-    }
-}
+// MARK: Colors
 
-// MARK: SKNode names
+let PropertyTrayBorderColor = UIColor.darkGrayColor()
+let TileLabelFontColor      = UIColor.whiteColor()
+
+// MARK: Node Names
 
 let PredicateTileNodeName = "tile-predicate"
 
+// MARK: Dimensions
 
-let BoxWidth : CGFloat = 100
-let BoxHeight : CGFloat = 50
-let BoxCornerRadius : CGFloat = 10
-let BoxBorderWidth : CGFloat = 2
+let TileWidth:          CGFloat = 100
+let TileHeight:         CGFloat = 50
+let TileSize                    = CGSizeMake(TileWidth, TileHeight)
+let TileCornerRadius:   CGFloat = 10
+let TileBorderWidth:    CGFloat = 2
+
+// MARK: Fonts
+
+let TileLabelFontName = "HelveticaNeue-CondensedBold"

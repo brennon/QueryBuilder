@@ -111,7 +111,7 @@ class PropertyTrayNode: SKNode {
         // Calculate rect for border
         borderNode = SKShapeNode()
         borderNode.position = CGPointMake(0, 0)
-        borderNode.strokeColor = UIColor.trayBorderColor()
+        borderNode.strokeColor = PropertyTrayBorderColor
         addChild(borderNode)
     }
     

@@ -1,5 +1,5 @@
 //
-//  PropertyTrayTileNode.swift
+//  TileNode.swift
 //  QueryBuilder
 //
 //  Created by Brennon Bortz on 12/13/14.
@@ -8,55 +8,63 @@
 
 import SpriteKit
 
-class PropertyTrayTileNode: SKSpriteNode {
+/**
+    Superclass for 'tile' nodes used to represent document properties,
+    predicates, etc.
+*/
+class TileNode: SKSpriteNode {
     
-    var propertyDict: NSMutableDictionary?
-//    var label: String
-    var childTiles = [PropertyTrayTileNode]()
+    var labelNode: SKLabelNode?
     
+    /**
+        Convenience initializer that adds a label to the tile node.
+    
+        :param: label The string to use for the label for the tile node.
+    */
     convenience init(label: String) {
         
         self.init()
         
-//        self.label = label
-        
         // Create and add label node
-//        if let labelText = propertyDict?.valueForKey("label") as? String {
-            println("creating label")
-            let labelNode = SKLabelNode(text: label)
-            labelNode.position = CGPointZero
-            labelNode.fontName = "HelveticaNeue-CondensedBold"
-            labelNode.fontColor = UIColor.whiteColor()
-            labelNode.verticalAlignmentMode = .Center
-            labelNode.fontSize = calculateFontSize(label)
-            addChild(labelNode)
-//        } else {
-//            println("propertyDict: \(propertyDict)")
-//        }
+        labelNode = SKLabelNode(text: label)
+        labelNode!.position = CGPointZero
+        labelNode!.fontName = TileLabelFontName
+        labelNode!.fontColor = TileLabelFontColor
+        labelNode!.verticalAlignmentMode = .Center
+        labelNode!.fontSize = calculateFontSize(label)
+        addChild(labelNode!)
     }
     
     override init() {
         
         // Initialize properties
-        propertyDict = NSMutableDictionary()
+        let headerTexture =
+            SKTexture(imageNamed: "Predicate Tile Header (Flat)")
         
-        let headerTexture = SKTexture(imageNamed: "Predicate Tile Header (Flat)")
-        
-        super.init(texture: headerTexture, color: UIColor.clearColor(), size: TileSize)
+        super.init(
+            texture: headerTexture,
+            color: UIColor.clearColor(),
+            size: CGSizeMake(TileWidth, TileHeight)
+        )
         
         centerRect = CGRectMake(0.0, 24.0/50.0, 1.0, 2.0/50.0)
         position = CGPointZero
-        name = PredicateTileNodeName
         zPosition = SceneLayer.PredicateTiles.rawValue
         
-        physicsBody = SKPhysicsBody(rectangleOfSize: size, center: CGPointZero)
-        physicsBody?.categoryBitMask = SceneNodeCategories.PredicateTile.rawValue
+        physicsBody = SKPhysicsBody(
+            rectangleOfSize: size,
+            center: CGPointZero
+        )
+        
+        physicsBody?.categoryBitMask =
+            SceneNodeCategories.PredicateTile.rawValue
         physicsBody?.collisionBitMask = SceneNodeCategories.None.rawValue
-        physicsBody?.contactTestBitMask = SceneNodeCategories.PredicateTile.rawValue
+        physicsBody?.contactTestBitMask =
+            SceneNodeCategories.PredicateTile.rawValue
         
         userInteractionEnabled = true
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
