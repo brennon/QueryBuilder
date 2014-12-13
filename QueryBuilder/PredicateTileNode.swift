@@ -32,8 +32,8 @@ class PredicateTileNode: TileNode {
         // Create, configure, and add label node as child node
         labelNode = SKLabelNode(text: label)
         labelNode!.position = CGPointZero
-        labelNode!.fontName = "HelveticaNeue-CondensedBold"
-        labelNode!.fontColor = UIColor.whiteColor()
+        labelNode!.fontName = TileLabelFontName
+        labelNode!.fontColor = TileLabelFontColor
         labelNode!.verticalAlignmentMode = .Center
         labelNode!.fontSize = calculateFontSize(label)
         addChild(labelNode!)
