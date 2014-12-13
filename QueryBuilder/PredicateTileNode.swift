@@ -10,13 +10,14 @@ import SpriteKit
 
 /**
     A `PredicateTileNode` is a visual representation of a predicate in a
-    MongoDB query. A `PredicateTileNode` can also be used to represent 
-    properties of MongoDB documents.
+    MongoDB query.
  */
 class PredicateTileNode: TileNode {
     
     /**
         Assigns the node's sprite and name, and configures its physics.
+        
+        :param: label The string to use for the tile's label.
     */
     init(label: String) {
         
