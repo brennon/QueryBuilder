@@ -87,18 +87,22 @@ class PropertyTrayNode: SKNode {
                 
                 // If there is no parent tile, this is a top-level tile
                 if parentTile == nil {
+                    
                     actualParentTile = PropertyTrayTileNode(label: keyString)
                     addPropertyNode(actualParentTile!)
+                    
                 } else {
+                    
                     let newParentTile = PropertyTrayTileNode(label: keyString)
                     actualParentTile!.childTiles.append(newParentTile)
                     actualParentTile = newParentTile
+                    
                 }
 
                 buildTilesFromDictionary(
                     subdictionary,
                     forField: keyString,
-                    withParentTile: actualParentTile
+                    withParentTile: actualParentTile!
                 )
             }
         }

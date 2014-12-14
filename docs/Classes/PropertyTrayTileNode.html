@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>DatabaseHelper Class Reference</title>
+    <title>PropertyTrayTileNode Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/github_syntax_highlighting.css" />
     <meta charset='utf-8'>
@@ -9,7 +9,7 @@
     <script src="../js/jazzy.js" defer></script>
   </head>
   <body id="reference" class="Swift">
-    <a title="DatabaseHelper Class Reference"></a>
+    <a title="PropertyTrayTileNode Class Reference"></a>
     <header>
       <div class="content-wrapper">
         <p class="header-text"><a href="../index.html"> Docs</a> (23% documented)</p>
@@ -20,7 +20,7 @@
         <p id="hierarchial_navigation">
         <a href="../index.html" id="design_resources_link"> Reference</a>
         <img id="carat" src="../img/carat.png" height="10px" width="6px" />
-        DatabaseHelper Class Reference
+        PropertyTrayTileNode Class Reference
         </p>
       </div>
     </section>
@@ -101,10 +101,10 @@
       <div class="rubber-band-gap"></div>
       <article class="chapter">
       <a name="/"></a>
-        <h1 class="chapter-name">DatabaseHelper</h1>
+        <h1 class="chapter-name">PropertyTrayTileNode</h1>
         <section>
           <section class="section">
-            <p class="para">The <code>DatabaseHelper</code> contains helper methods to work in conjunction with  the <code>MongoCredentials</code> struct to connect to a MongoDB instance, to  authenticate against it, etc.</p>
+            <p class="para">A <code>PropertyTrayTileNode</code> is a visual representation of a property/field in a MongoDB document.</p>
           </section>
           <section class="section task-group-section">
             <div class="task-group">
@@ -117,8 +117,8 @@
                 <li class="item symbol">
                   <div class="task-group-term">
                     <code>
-                    <a name="/s:vC12QueryBuilder14DatabaseHelper10connectionGSqCSo15MongoConnection_">
-                    <a class="x-instance-method Swift" href="#/s:vC12QueryBuilder14DatabaseHelper10connectionGSqCSo15MongoConnection_">connection</a>
+                    <a name="/s:vC12QueryBuilder20PropertyTrayTileNode12propertyDictGSqCSo19NSMutableDictionary_">
+                    <a class="x-instance-method Swift" href="#/s:vC12QueryBuilder20PropertyTrayTileNode12propertyDictGSqCSo19NSMutableDictionary_">propertyDict</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -126,7 +126,7 @@
                     <section class="section instance-method">
                       <div class="pointy-thing"></div>
                       <div class="abstract">
-                        <p class="para">The <code>MongoConnection</code> opened and maintained by a <code>DatabaseHelper</code>.</p>
+                        <p class="para">The dictionary for the field that this node represents, as configured by a <code>Collection</code></p>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -134,7 +134,7 @@
                         <div class="Swift">
                           <p class="aside-title">Swift</p>
                           <p class="para">
-                          <code>let connection: MongoConnection?</code>
+                          <code>var propertyDict: NSMutableDictionary?</code>
                           </p>
                         </div>
                       </div>
@@ -144,8 +144,8 @@
                 <li class="item symbol">
                   <div class="task-group-term">
                     <code>
-                    <a name="/s:FC12QueryBuilder14DatabaseHelper22authenticateToDatabaseFS0_FT_Sb">
-                    <a class="x-instance-method Swift" href="#/s:FC12QueryBuilder14DatabaseHelper22authenticateToDatabaseFS0_FT_Sb">authenticateToDatabase()</a>
+                    <a name="/s:vC12QueryBuilder20PropertyTrayTileNode10childTilesGSaS0__">
+                    <a class="x-instance-method Swift" href="#/s:vC12QueryBuilder20PropertyTrayTileNode10childTilesGSaS0__">childTiles</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -153,25 +153,7 @@
                     <section class="section instance-method">
                       <div class="pointy-thing"></div>
                       <div class="abstract">
-                        <p class="para">Undocumented</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item symbol">
-                  <div class="task-group-term">
-                    <code>
-                    <a name="/s:FC12QueryBuilder14DatabaseHelpercFMS0_FT_S0_">
-                    <a class="x-instance-method Swift" href="#/s:FC12QueryBuilder14DatabaseHelpercFMS0_FT_S0_">init()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointy-thing-container"></div>
-                    <section class="section instance-method">
-                      <div class="pointy-thing"></div>
-                      <div class="abstract">
-                        <p class="para">Opens a connection to the database described by <code>MongoCredentials</code>.</p>
-                        <a href="Classes/DatabaseHelper/init().html" class="see-more">See more</a>
+                        <p class="para">The subproperties of the field that this node represents, as a  an array of <code>PropertyTrayTileNode</code>s.</p>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -179,9 +161,56 @@
                         <div class="Swift">
                           <p class="aside-title">Swift</p>
                           <p class="para">
-                          <code>init()</code>
+                          <code>var childTiles: [(PropertyTrayTileNode)]</code>
                           </p>
                         </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item symbol">
+                  <div class="task-group-term">
+                    <code>
+                    <a name="/s:FC12QueryBuilder20PropertyTrayTileNodecFMS0_FT5labelSS_S0_">
+                    <a class="x-instance-method Swift" href="#/s:FC12QueryBuilder20PropertyTrayTileNodecFMS0_FT5labelSS_S0_">init(label:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointy-thing-container"></div>
+                    <section class="section instance-method">
+                      <div class="pointy-thing"></div>
+                      <div class="abstract">
+                        <p class="para">Assigns the node&rsquo;s sprite and name, and configures its physics.</p>
+                        <a href="Classes/PropertyTrayTileNode/init(label:).html" class="see-more">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+            
+                        <div class="Swift">
+                          <p class="aside-title">Swift</p>
+                          <p class="para">
+                          <code>init(label: String)</code>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="parameters">
+                        <h4>Parameters</h4>
+                        <table class="graybox" border="0" cellspacing="0" cellpadding="5">
+                          <tbody>
+                            <tr>
+                              <td scope="row">
+                                <code>
+                                <em class="term">label</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div class="definition">
+                                  <p class="para">The string to use for the tile&rsquo;s label.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>

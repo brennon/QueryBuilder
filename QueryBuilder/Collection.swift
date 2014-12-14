@@ -93,6 +93,7 @@ class Collection {
     let connection: MongoConnection!
     var fields = NSMutableDictionary()
     var allKeyPaths = [String]()
+    var keyPathSet = Set<String>()
     
     init(name: String, inDatabase: String) {
         
@@ -162,6 +163,118 @@ class Collection {
         println("in \(timeInterval) seconds")
     }
     
+    func enumerateFieldNamesV2(limit: Int) {
+        
+        let start = NSDate()
+        
+        // Get collection for this collection's name
+        let qualifiedName = "\(databaseName).\(collectionName)"
+        let collection: MongoDBCollection =
+        connection.collectionWithName(qualifiedName)
+        
+        // Error object for database operations
+        var error : NSError? = nil
+        error = nil
+        
+        // Mongo predicate for finding documents
+        let findRequest = MongoFindRequest()
+        
+        // If a limit > 0 was specified, use it
+        if limit > 0 {
+            findRequest.limitResults = Int32(limit)
+        }
+        
+        // Get a cursor for the request
+        let cursor = collection.cursorForFindRequest(findRequest, error: &error)
+        
+        if let error = error {
+            println("Error performing find request: \(error.description)")
+        }
+        
+        // Iterate over documents
+        var total : Int = 0
+        while let document : BSONDocument = cursor?.nextObject() {
+            
+            total++
+            
+            // Add the fields in this document to the fields dictionary
+            enumerateFieldsInDocumentV2(
+                document,
+                atPath: ""
+            )
+        }
+        
+        let end = NSDate()
+        let timeInterval = end.timeIntervalSinceDate(start)
+        
+        print("Enumerated fields from \(total) documents ")
+        println("in \(timeInterval) seconds")
+    }
+    
+    func enumerateFieldsInDocumentV2(
+        document: BSONDocument,
+        atPath path: String) {
+            
+        // Regex for property names (only word characters)
+        let regex = NSRegularExpression(
+            pattern: "^[a-zA-Z0-9_]+$",
+            options: nil,
+            error: nil
+        )
+        
+        // Iterate over document keys
+        let iterator = document.iterator()
+        
+        while iterator.hasMore() {
+            
+            // Get next field
+            iterator.next()
+            
+            if let key = iterator.key() {
+                
+                // Count number of regex matches
+                var matchCount = regex!.numberOfMatchesInString(
+                    key,
+                    options: nil,
+                    range: NSMakeRange(0, countElements(key))
+                )
+                
+                // If we have one match
+                if matchCount == 1 {
+                    
+                    var expandedKeyPath: String
+                    
+                    // Build dot-delimited key path
+                    if path != "" {
+                        
+                        expandedKeyPath = "\(path).\(key)"
+                        
+                    } else {
+                        
+                        expandedKeyPath = key
+                        
+                    }
+                    
+                    // Add keyPath to set
+                    keyPathSet.add(expandedKeyPath)
+                    
+                    // If this is a subdocument or an array, add the keypath 
+                    // and then recurse on the subdocument
+                    if iterator.isEmbeddedDocument() || iterator.isArray() {
+                        
+                        var embeddedDocument = iterator.embeddedDocumentValue()
+                        
+                        enumerateFieldsInDocumentV2(
+                            embeddedDocument,
+                            atPath: expandedKeyPath
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    
     /**
         Enumerates the fields in a specific document using a keyPath as context.
     
@@ -219,7 +332,7 @@ class Collection {
                         
                         var subdictionary = NSMutableDictionary()
                         
-                        parentDictionary.setValue(subdictionary, forKeyPath: expandedKey)
+                        fields.setValue(subdictionary, forKeyPath: expandedKey)
                         
                         var embeddedDocument = iterator.embeddedDocumentValue()
                     
@@ -236,7 +349,7 @@ class Collection {
                         
                         if existingDict == nil {
                             
-                            parentDictionary.setValue(NSMutableDictionary(), forKeyPath: expandedKey)
+                            fields.setValue(NSMutableDictionary(), forKeyPath: expandedKey)
                             
                             // Add keypath to master list
                             let index = find(allKeyPaths, expandedKey)
@@ -410,6 +523,12 @@ class Collection {
                         }
                     }
                 }
+            
+            // Otherwise, there was no 'values' property, so delete this
+            // dictionary
+//            } else {
+//                
+//                fields.setValue(nil, forKeyPath: keyPath)
             }
         }
     }

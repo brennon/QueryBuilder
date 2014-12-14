@@ -12,14 +12,13 @@
     <a title="PredicateTileNode Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p class="header-text"><a href="../index.html">QueryBuilder Docs</a> (17% documented)</p>
-        <p id="header-links"><a href="http://github.com/brennon/QueryBuilder.git"><img id="header-icon" src="../img/gh.png" height="16px" width="16px" />View on GitHub</a></p>
+        <p class="header-text"><a href="../index.html"> Docs</a> (23% documented)</p>
       </div>
     </header>
     <section id="valence">
       <div class="content-wrapper">
         <p id="hierarchial_navigation">
-        <a href="../index.html" id="design_resources_link">QueryBuilder Reference</a>
+        <a href="../index.html" id="design_resources_link"> Reference</a>
         <img id="carat" src="../img/carat.png" height="10px" width="6px" />
         PredicateTileNode Class Reference
         </p>
@@ -35,7 +34,13 @@
                 <a href="../Classes/PredicateTileNode.html">PredicateTileNode</a>
               </li>
               <li class="nav-chapter">
+                <a href="../Classes/PropertyTrayTileNode.html">PropertyTrayTileNode</a>
+              </li>
+              <li class="nav-chapter">
                 <a href="../Classes.html#/s:C12QueryBuilder9GameScene">GameScene</a>
+              </li>
+              <li class="nav-chapter">
+                <a href="../Classes/TileNode.html">TileNode</a>
               </li>
               <li class="nav-chapter">
                 <a href="../Classes/DatabaseHelper.html">DatabaseHelper</a>
@@ -52,6 +57,9 @@
           <a href="../Instance Methods.html">Instance Methods</a>
             <ul class="nav-chapters">
               <li class="nav-chapter">
+                <a href="../Instance Methods.html#/s:FC12QueryBuilder9GameScene17handleMultiplePanFS0_FCS_28MultiplePanGestureRecognizerT_">handleMultiplePan(_:)</a>
+              </li>
+              <li class="nav-chapter">
                 <a href="../Instance Methods.html#/s:FC12QueryBuilder9GameScene20getChildNodeForTouchFS0_FCSo7UITouchGSqCSo6SKNode_">getChildNodeForTouch(_:)</a>
               </li>
               <li class="nav-chapter">
@@ -64,7 +72,18 @@
                 <a href="../Instance Methods.html#/s:FC12QueryBuilder9GameScene17moveNodesWithNameFS0_FTSS7toLayerOS_10SceneLayer_T_">moveNodesWithName(_:toLayer:)</a>
               </li>
               <li class="nav-chapter">
-                <a href="../Instance Methods.html#/s:FC12QueryBuilder9GameScene17handleMultiplePanFS0_FCS_28MultiplePanGestureRecognizerT_">handleMultiplePan(_:)</a>
+                <a href="../Instance Methods.html#/s:FC12QueryBuilder10Collection19enumerateFieldNamesFS0_FSiT_">enumerateFieldNames(_:)</a>
+              </li>
+              <li class="nav-chapter">
+                <a href="../Instance Methods.html#/s:FC12QueryBuilder10Collection25enumerateFieldsInDocumentFS0_FTCSo12BSONDocument6atPathSS20withParentDictionaryCSo19NSMutableDictionary_T_">enumerateFieldsInDocument(_:atPath:withParentDictionary:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="part-name tasks">
+          <a href="../Instance Variables.html">Instance Variables</a>
+            <ul class="nav-chapters">
+              <li class="nav-chapter">
+                <a href="../Instance Variables.html#/s:vC12QueryBuilder18GameViewController6trialsGSQCS_10Collection_">trials</a>
               </li>
             </ul>
           </li>
@@ -85,7 +104,7 @@
         <h1 class="chapter-name">PredicateTileNode</h1>
         <section>
           <section class="section">
-            <p class="para">A <code>PredicateTileNode</code> is a visual representation of a predicate in a MongoDB query. A <code>PredicateTileNode</code> can also be used to represent  properties of MongoDB documents.</p>
+            <p class="para">A <code>PredicateTileNode</code> is a visual representation of a predicate in a MongoDB query.</p>
           </section>
           <section class="section task-group-section">
             <div class="task-group">
@@ -98,33 +117,6 @@
                 <li class="item symbol">
                   <div class="task-group-term">
                     <code>
-                    <a name="/s:vC12QueryBuilder17PredicateTileNode14headerTileSizeVSC6CGSize">
-                    <a class="x-instance-method Swift" href="#/s:vC12QueryBuilder17PredicateTileNode14headerTileSizeVSC6CGSize">headerTileSize</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointy-thing-container"></div>
-                    <section class="section instance-method">
-                      <div class="pointy-thing"></div>
-                      <div class="abstract">
-                        <p class="para">The size of the <code>PredicateTileNode</code>.</p>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-            
-                        <div class="Swift">
-                          <p class="aside-title">Swift</p>
-                          <p class="para">
-                          <code>let headerTileSize: CGSize</code>
-                          </p>
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item symbol">
-                  <div class="task-group-term">
-                    <code>
                     <a name="/s:FC12QueryBuilder17PredicateTileNodecFMS0_FT5labelSS_S0_">
                     <a class="x-instance-method Swift" href="#/s:FC12QueryBuilder17PredicateTileNodecFMS0_FT5labelSS_S0_">init(label:)</a>
                     </code>
@@ -134,7 +126,7 @@
                     <section class="section instance-method">
                       <div class="pointy-thing"></div>
                       <div class="abstract">
-                        <p class="para">The default initializer. Assigns the node&rsquo;s sprite and name, and  configures its physics.</p>
+                        <p class="para">Assigns the node&rsquo;s sprite and name, and configures its physics.</p>
                         <a href="Classes/PredicateTileNode/init(label:).html" class="see-more">See more</a>
                       </div>
                       <div class="declaration">
@@ -143,9 +135,86 @@
                         <div class="Swift">
                           <p class="aside-title">Swift</p>
                           <p class="para">
-                          <code>convenience init(label: String)</code>
+                          <code>init(label: String)</code>
                           </p>
                         </div>
+                      </div>
+                      <div class="parameters">
+                        <h4>Parameters</h4>
+                        <table class="graybox" border="0" cellspacing="0" cellpadding="5">
+                          <tbody>
+                            <tr>
+                              <td scope="row">
+                                <code>
+                                <em class="term">label</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div class="definition">
+                                  <p class="para">The string to use for the tile&rsquo;s label.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item symbol">
+                  <div class="task-group-term">
+                    <code>
+                    <a name="/s:FC12QueryBuilder17PredicateTileNode12touchesMovedFS0_FTCSo5NSSet9withEventCSo7UIEvent_T_">
+                    <a class="x-instance-method Swift" href="#/s:FC12QueryBuilder17PredicateTileNode12touchesMovedFS0_FTCSo5NSSet9withEventCSo7UIEvent_T_">touchesMoved(_:withEvent:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointy-thing-container"></div>
+                    <section class="section instance-method">
+                      <div class="pointy-thing"></div>
+                      <div class="abstract">
+                        <p class="para">Tells the receiver when one or more fingers associated with an event  move within a view or window. Specifically, this implementation  implements a handler for dragging tiles around the scene.</p>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+            
+                        <div class="Swift">
+                          <p class="aside-title">Swift</p>
+                          <p class="para">
+                          <code>override func touchesMoved(touches: NSSet, withEvent event: UIEvent)</code>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="parameters">
+                        <h4>Parameters</h4>
+                        <table class="graybox" border="0" cellspacing="0" cellpadding="5">
+                          <tbody>
+                            <tr>
+                              <td scope="row">
+                                <code>
+                                <em class="term">touches</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div class="definition">
+                                  <p class="para">A set of UITouch instances that represent the touches  that are moving during the event represented by event.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td scope="row">
+                                <code>
+                                <em class="term">event</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div class="definition">
+                                  <p class="para">An object representing the event to which the touches  belong.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -155,7 +224,7 @@
           </section>
         </section>
         <section id="footer">
-          <p class="copyright">&copy; 2014 <a class="link" href="" target="_blank" rel="external">Brennon Bortz</a>. All rights reserved. (Last updated: 2014-12-10)</p>
+          <p class="copyright">&copy; 2014 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2014-12-13)</p>
           <p class="copyright">Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.0.15</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

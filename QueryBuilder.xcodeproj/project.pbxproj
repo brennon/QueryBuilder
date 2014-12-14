@@ -10,6 +10,7 @@
 		3A084C281A2E70C300DB83E0 /* TouchNodeMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */; };
 		3A4CE7A11A3C1F4800E68A92 /* PropertyTrayTileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4CE7A01A3C1F4800E68A92 /* PropertyTrayTileNode.swift */; };
 		3A4CE7A31A3CAF0F00E68A92 /* TileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4CE7A21A3CAF0F00E68A92 /* TileNode.swift */; };
+		3A4CE7A51A3E482B00E68A92 /* Set.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4CE7A41A3E482B00E68A92 /* Set.swift */; };
 		3A98D0BD1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */; };
 		3AADCBA71A2F8AA90047CA95 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AADCBA61A2F8AA90047CA95 /* Constants.swift */; };
 		3AADCBA91A2F98020047CA95 /* PredicateTileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */; };
@@ -72,6 +73,7 @@
 		3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchNodeMap.swift; sourceTree = "<group>"; };
 		3A4CE7A01A3C1F4800E68A92 /* PropertyTrayTileNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyTrayTileNode.swift; sourceTree = "<group>"; };
 		3A4CE7A21A3CAF0F00E68A92 /* TileNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TileNode.swift; sourceTree = "<group>"; };
+		3A4CE7A41A3E482B00E68A92 /* Set.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Set.swift; sourceTree = "<group>"; };
 		3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplePanGestureRecognizer.swift; sourceTree = "<group>"; };
 		3AADCBA61A2F8AA90047CA95 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PredicateTileNode.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */,
 				3AE5E9261A358F29002E6813 /* PropertyTrayNode.swift */,
 				3A4CE7A01A3C1F4800E68A92 /* PropertyTrayTileNode.swift */,
+				3A4CE7A41A3E482B00E68A92 /* Set.swift */,
 				3AC745E71A31815F00C16776 /* SettingsViewController.swift */,
 				3A4CE7A21A3CAF0F00E68A92 /* TileNode.swift */,
 				3A084C271A2E70C300DB83E0 /* TouchNodeMap.swift */,
@@ -481,6 +484,7 @@
 				3AB3E9871A1A3C80004A9691 /* numbers.c in Sources */,
 				3AB3E9D51A1A3CDF004A9691 /* MongoWriteConcern.m in Sources */,
 				3AB3E9A81A1A3CA4004A9691 /* NSDictionary+BSONAdditions.m in Sources */,
+				3A4CE7A51A3E482B00E68A92 /* Set.swift in Sources */,
 				3AB3E9A51A1A3CA4004A9691 /* BSONIterator.m in Sources */,
 				3AB3E9D01A1A3CDF004A9691 /* MongoFindRequest.m in Sources */,
 				3AB3E9D31A1A3CDF004A9691 /* MongoTypes.m in Sources */,

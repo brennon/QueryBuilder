@@ -17,6 +17,10 @@ class PropertyTrayTileNode: TileNode {
     /// The dictionary for the field that this node represents, as configured
     /// by a `Collection`
     var propertyDict: NSMutableDictionary?
+    var tapCount: Int = 0
+    var tapTimeWindow = 0.5
+    var tapBegin = NSDate()
+    var tileExpanded = false
     
     /// The subproperties of the field that this node represents, as a 
     /// an array of `PropertyTrayTileNode`s.
@@ -39,6 +43,37 @@ class PropertyTrayTileNode: TileNode {
         labelNode!.verticalAlignmentMode = .Center
         labelNode!.fontSize = calculateFontSize(label)
         addChild(labelNode!)
+    }
+    
+    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+        
+        // Was it a single touch?
+        if touches.count == 1 {
+            
+            // Start the tap timer
+            tapBegin = NSDate()
+        }
+    }
+    
+    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
+        
+        // Was it a single touch?
+        if touches.count == 1 {
+            
+            // Did the touch end within the tap time window?
+            let tapDuration = NSDate().timeIntervalSinceDate(tapBegin)
+            
+            if tapDuration <= tapTimeWindow {
+                
+                handleSingleTap(touches.anyObject() as UITouch)
+            }
+        }
+    }
+    
+    func handleSingleTap(touch: UITouch) {
+        
+        // Expand direct children tiles
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
