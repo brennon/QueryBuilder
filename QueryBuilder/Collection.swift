@@ -13,8 +13,8 @@ import Foundation
     a MongoDB database.
 */
 struct MongoCredentials {
-    static let hostname = "localhost"
-    static let port = "28017"
+    static let hostname = "db0.musicsensorsemotion.com"
+    static let port = "27017"
     static let authenticationDatabase = "eim"
     static let authenticationUsername = "eim"
     static let authenticationPassword = "eim"
@@ -141,7 +141,7 @@ class Collection {
         }
         
         // Iterate over documents
-        var total : Int = 0
+        var total: Int = 0
         while let document : BSONDocument = cursor?.nextObject() {
             
             total++
@@ -159,9 +159,17 @@ class Collection {
         print("Enumerated fields from \(total) documents ")
         println("in \(timeInterval) seconds")
         
-        buildBaseDictionaryForKeyPaths()
+        println("key paths: \(keyPathSet.items())")
         
-        println("fields: \(fields)")
+        buildBaseDictionaryForKeyPaths()
+        filterLeafKeyPaths()
+    }
+    
+    func filterLeafKeyPaths() {
+        // Get copy of key paths
+//        var keyPaths = keyPathSet.items()
+//        var keyPathsToRemove = [String]
+//        
     }
     
     /**
