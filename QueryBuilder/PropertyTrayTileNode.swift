@@ -44,7 +44,16 @@ class PropertyTrayTileNode: TileNode {
         labelNode!.fontSize = calculateFontSize(label)
         addChild(labelNode!)
     }
+
+    /**
+        Tells the receiver when one or more fingers touch down in a view or 
+        window.
     
+        :param: touches A set of `UITouch` instances that represent the touches 
+            for the starting phase of the event represented by `event`.
+        :param: event An object representing the event to which the touches 
+            belong.
+    */
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         
         // Was it a single touch?

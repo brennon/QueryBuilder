@@ -6,30 +6,23 @@
 //  Copyright (c) 2014 Brennon Bortz. All rights reserved.
 //
 
-class Set<T: Equatable> {
+class Set<T where T: Comparable, T: Hashable> {
     
-    private var array = Array<T>()
+    private var dict = Dictionary<T, Bool>()
     
     func add(item: T) {
-        
-        let index = find(array, item)
-        
-        if index == nil {
-            
-            array.append(item)
-        }
+        dict[item] = true
     }
-    
+
     func remove(item: T) {
-        
-        if let index = find(array, item) {
-            
-            array.removeAtIndex(index)
+        if let index = dict.indexForKey(item) {
+            dict.removeAtIndex(index)
         }
     }
     
-    func itemArray() -> Array<T> {
-        
-        return array
+    func items() -> [T] {
+        return dict.keys.array.sorted {
+            $0 < $1
+        }
     }
 }

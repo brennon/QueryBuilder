@@ -69,10 +69,9 @@ class PropertyTrayNode: SKNode {
         if let values: AnyObject = dictionary.valueForKey("values") {
             
             parentTile?.propertyDict = dictionary
-        }
         
         // Otherwise, send the contained dictionary back to this method
-        else {
+        } else {
             
             let allKeys = dictionary.allKeys
 

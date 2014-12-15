@@ -49,16 +49,8 @@ class GameViewController: UIViewController {
             
             // Setup Collection for Trial documents
             trials = Collection(name: "trials", inDatabase: "eim")
-            trials.enumerateFieldNames(0)
+            trials.enumerateFieldNames(2)
             trials.getDistinctValuesForAllFields()
-            
-            trials.enumerateFieldNamesV2(10)
-            
-            let sortedKeyPaths = trials.keyPathSet.itemArray().sorted {
-                $0 < $1
-            }
-            
-            println("all keyPaths: \(sortedKeyPaths)")
             
             // Add the Collection to the scene
             scene.useCollection(trials)
