@@ -22,7 +22,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var panRecognizer: MultiplePanGestureRecognizer!
     var touchNodeMap = TouchNodeMap()
     var propertyTiles = Array<PredicateTileNode>()
-    var trayNode = PropertyTrayNode()
+    var trayNode: PropertyTrayNode?
+    var collection: Collection?
     
     // MARK: Initializers
     
@@ -43,19 +44,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Enabled debugging display
         debuggingDisplay(true)
-        
-        addPropertyTray()
     }
     
+    
     func useCollection(collection: Collection) {
-        
-        // Remove the current PropetyTrayNode, if it exists
-        trayNode.removeFromParent()
-        
-        // Create a new PropertyTrayNode
-        trayNode = PropertyTrayNode(collection: collection)
-        
-        addChild(trayNode)
+        replacePropertyTray(collection)
     }
     
     // MARK: SKPhysicsContactDelegate
@@ -120,38 +113,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(rectangleC)
     }
     
-    func addPropertiesToPropertyTray() {
+    func replacePropertyTray(collection: Collection) {
+            
+        // Remove the current PropetyTrayNode, if it exists
+        trayNode?.removeFromParent()
         
-    }
-    
-    func addPropertyTray() {
+        // Create a new PropertyTrayNode
+        trayNode = PropertyTrayNode(collection: collection)
+        trayNode!.position = CGPointMake(0, size.height / 2)
         
-//        let tileA = PredicateTileNode(label: "id")
-//        let tileB = PredicateTileNode(label: "gender")
-//        let tileC = PredicateTileNode(label: "a really long property name")
-//
-//        let padding: CGFloat = 10
-//        
-//        propertyTiles.append(tileA)
-//        propertyTiles.append(tileB)
-//        propertyTiles.append(tileC)
-//        
-//        // Calculate height
-//        var totalHeight = CGFloat(propertyTiles.count) * tileA.size.height // Add height of tiles to total height
-//        totalHeight += CGFloat(propertyTiles.count - 1) * padding // Add padding to total height
-//        totalHeight += 2 * padding
-//        
-//        let totalWidth = BoxWidth + (2 * padding)
-//        
-//        let trayNode = SKShapeNode(rectOfSize: CGSizeMake(totalWidth, totalHeight))
-//        trayNode.fillColor = UIColor.greenColor()
-//        trayNode.position = CGPointZero
-        
-//        trayNode.addPropertyNode(tileA)
-//        trayNode.addPropertyNode(tileB)
-//        trayNode.addPropertyNode(tileC)
-        
-        addChild(trayNode)
+        addChild(trayNode!)
     }
     
     // MARK: Pan Gesture Handling

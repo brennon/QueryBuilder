@@ -9,22 +9,6 @@
 import UIKit
 import SpriteKit
 
-extension SKNode {
-    class func unarchiveFromFile(file : NSString) -> SKNode? {
-        if let path = NSBundle.mainBundle().pathForResource(file, ofType: "sks") {
-            var sceneData = NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe, error: nil)!
-            var archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
-            
-            archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
-            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as GameScene
-            archiver.finishDecoding()
-            return scene
-        } else {
-            return nil
-        }
-    }
-}
-
 class GameViewController: UIViewController {
     
     /// The `Collection` associated with this run of the app
@@ -33,30 +17,29 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
-            // Configure the view.
-            let skView = self.view as SKView
-            skView.showsFPS = true
-            skView.showsNodeCount = true
-            
-            /* Sprite Kit applies additional optimizations to improve rendering performance */
-            skView.ignoresSiblingOrder = true
-            
-            /* Set the scale mode to scale to fit the window */
-            scene.scaleMode = .AspectFill
-            
-            skView.presentScene(scene)
-            
-            // Setup Collection for Trial documents
-            trials = Collection(name: "trials", inDatabase: "eim")
-            trials.enumerateFieldNames(10)
-            trials.getDistinctValuesForAllFields()
-            
-            println("key paths: \(trials.keyPathSet)")
-            
-            // Add the Collection to the scene
-            scene.useCollection(trials)
-        }
+        let scene = GameScene(size: CGSizeMake(1024, 768))
+        scene.backgroundColor = SceneBackgroundColor
+        
+        // Configure the view.
+        let skView = self.view as SKView
+        skView.showsFPS = true
+        skView.showsNodeCount = true
+        
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = true
+        
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .AspectFill
+        
+        skView.presentScene(scene)
+        
+        // Setup Collection for Trial documents
+        trials = Collection(name: "trials", inDatabase: "eim")
+        trials.enumerateFieldNames(5)
+        trials.getDistinctValuesForAllFields()
+        
+        // Add the Collection to the scene
+        scene.useCollection(trials)
     }
 
     override func shouldAutorotate() -> Bool {

@@ -86,6 +86,12 @@ class DatabaseHelper {
     }
 }
 
+extension String {
+    func isPrefixOf(longerString: String) -> Bool {
+        return longerString =~ "\(self)\\.+"
+    }
+}
+
 class Collection {
     
     let collectionName: String
@@ -163,13 +169,34 @@ class Collection {
         
         buildBaseDictionaryForKeyPaths()
         filterLeafKeyPaths()
+        
+        println("key paths: \(keyPathSet.items())")
     }
     
     func filterLeafKeyPaths() {
+        
         // Get copy of key paths
-//        var keyPaths = keyPathSet.items()
-//        var keyPathsToRemove = [String]
-//        
+        var keyPaths = keyPathSet.items()
+        var keyPathsToRemove = [String]()
+        
+        // Iterate over key paths
+        for keyPath in keyPaths {
+            
+            // Key paths are in alphabetical order. If a key path that comes 
+            // first is a prefix of any of the remaining key paths, add it to 
+            // the list of key paths to remove.
+            let suffixes = keyPaths.filter {
+                return keyPath.isPrefixOf($0)
+            }
+            
+            if suffixes.count > 0 {
+                keyPathsToRemove.append(keyPath)
+            }
+        }
+        
+        for keyPath in keyPathsToRemove {
+            keyPathSet.remove(keyPath)
+        }
     }
     
     /**

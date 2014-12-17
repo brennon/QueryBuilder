@@ -10,54 +10,34 @@ import SpriteKit
 
 class PropertyTrayNode: SKNode {
     
-    var borderNode: SKShapeNode!
+    var containerNode: SKSpriteNode!
     var propertyNodes = [PropertyTrayTileNode]()
     let propertyNodePadding: CGFloat = 10
     
-    convenience init(collection: Collection) {
-        
-        self.init()
-        
-        // Iterate over Collection fields and add PredicateTileNodes for each
-        
-//        println("fields: \(collection.fields)")
-        addBorderNode()
-        
-        buildTilesFromDictionary(collection.fields, forField: "", withParentTile: nil)
-//        for field in collection.fields.allKeys {
-//            println("field: \(field)")
-//        
-//            if let dict = collection.fields[field] {
-//             
-//                var newNode = PredicateTileNode(field: field, collection: collection.collectionName, fieldDict: dict)
-//                
-//                addPropertyNode(newNode)
-//            }
-//        }
-    }
-    
-    override init() {
+    /**
+        Designated initializer. Builds the `PropertyTrayNode` with 
+        `PropertyTrayTileNodes` constructed from the collection of tiles 
+        represented by the `fields` dictionary in a `Collection`.
+
+        :param: collection The `Collection` to use to build the 
+            `PropertyTrayTileNodes`.
+    */
+    init(collection: Collection) {
         
         super.init()
         
-//        let headerTexture = SKTexture(imageNamed: "Predicate Tile Header (Flat)")
+        // Position the main node
+        position = CGPointZero
         
-//        super.init(texture: headerTexture, color: UIColor.clearColor(), size: headerTileSize)
+        // Add container node
+        addContainerNode()
         
-//        centerRect = CGRectMake(0.0, 24.0/50.0, 1.0, 2.0/50.0)
-//        position = CGPointZero
-//        name = PredicateTileNodeName
-//        zPosition = SceneLayer.PredicateTiles.rawValue
-        
-//        physicsBody = SKPhysicsBody(rectangleOfSize: size, center: CGPointZero)
-//        physicsBody?.affectedByGravity = false
-//        physicsBody?.dynamic = true
-//        physicsBody?.categoryBitMask = SceneNodeCategories.PredicateTile.rawValue
-//        physicsBody?.collisionBitMask = SceneNodeCategories.None.rawValue
-//        physicsBody?.contactTestBitMask = SceneNodeCategories.PredicateTile.rawValue
-        
-        // Add border node
-//        addBorderNode()
+        // Build PropertyTrayTileNodes from dictionary in collection
+//        buildTilesFromDictionary(
+//            collection.fields,
+//            forField: "",
+//            withParentTile: nil
+//        )
     }
     
     func buildTilesFromDictionary(
@@ -73,9 +53,14 @@ class PropertyTrayNode: SKNode {
         // Otherwise, send the contained dictionary back to this method
         } else {
             
-            let allKeys = dictionary.allKeys
+            // Get all keys from dicitonary and sort in reverse order
+            var allKeys = dictionary.allKeys as [String]
+            allKeys.sort {
+                $1 < $0
+            }
 
-            for key in dictionary.allKeys {
+            // Iterate over keys
+            for key in allKeys {
                 
                 var actualParentTile = parentTile
                 
@@ -107,15 +92,25 @@ class PropertyTrayNode: SKNode {
         }
     }
     
-    func addBorderNode() {
+    func addContainerNode() {
         
-        let borderTexture = SKTexture(imageNamed: "Border")
+        containerNode = SKSpriteNode(
+            color: PropertyTrayContainerColor,
+            size: CGSizeMake(100, 600)
+        )
+        containerNode.anchorPoint = CGPointMake(0, 0.5)
+        addChild(containerNode)
+        addHandleNode()
+    }
+    
+    func addHandleNode() {
         
-        // Calculate rect for border
-        borderNode = SKShapeNode()
-        borderNode.position = CGPointMake(0, 0)
-        borderNode.strokeColor = PropertyTrayBorderColor
-        addChild(borderNode)
+        let handleNode = SKSpriteNode(color: UIColor.greenColor(), size: CGSizeMake(20, 60))
+        handleNode.anchorPoint = CGPointMake(0, 0.5)
+        handleNode.position = CGPointMake(containerNode.size.width, 0)
+        containerNode.addChild(handleNode)
+        
+        containerNode.runAction(SKAction.resizeToHeight(100, duration: 10))
     }
     
     func addPropertyNode(propertyNode: PropertyTrayTileNode) {
@@ -124,7 +119,7 @@ class PropertyTrayNode: SKNode {
         
         growBorder()
         
-        borderNode.addChild(propertyNode)
+        containerNode.addChild(propertyNode)
         
         positionPropertyNodes()
     }
@@ -144,7 +139,7 @@ class PropertyTrayNode: SKNode {
         
         // Create new rect for border
         let borderRect = CGRectMake(0, 0, propertyNodes[0].size.width + (2 * propertyNodePadding), propertiesHeight)
-        borderNode.path = CGPathCreateWithRoundedRect(borderRect, 10, 10, nil)
+//        borderNode.path = CGPathCreateWithRoundedRect(borderRect, 10, 10, nil)
     }
     
     func positionPropertyNodes() {

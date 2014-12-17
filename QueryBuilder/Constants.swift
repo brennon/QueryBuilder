@@ -23,8 +23,10 @@ enum SceneNodeCategories: UInt32 {
 
 // MARK: Colors
 
-let PropertyTrayBorderColor = UIColor.darkGrayColor()
-let TileLabelFontColor      = UIColor.whiteColor()
+let PropertyTrayContainerColor  = UIColor.lightGrayColor()
+let PropertyTrayBorderColor     = UIColor.darkGrayColor()
+let TileLabelFontColor          = UIColor.whiteColor()
+let SceneBackgroundColor        = UIColor(white: 0.9, alpha: 1.0)
 
 // MARK: Node Names
 
