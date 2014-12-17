@@ -9,7 +9,10 @@
 // MARK: Layers
 
 enum SceneLayer: CGFloat {
-    case Background     = 0
+    case Background             = 0
+    case PropertyTrayHandle
+    case PropertyTrayContainer
+    case PropertyTrayTiles
     case PredicateTiles
     case Foreground
 }
@@ -39,6 +42,7 @@ let TileHeight:         CGFloat = 50
 let TileSize                    = CGSizeMake(TileWidth, TileHeight)
 let TileCornerRadius:   CGFloat = 10
 let TileBorderWidth:    CGFloat = 2
+let TileMarginWidth:    CGFloat = 10
 
 // MARK: Fonts
 

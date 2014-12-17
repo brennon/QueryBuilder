@@ -83,7 +83,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         view?.showsFields = enabled
         view?.showsFPS = enabled
         view?.showsNodeCount = enabled
-        view?.showsPhysics = enabled
+        view?.showsPhysics = !enabled
         view?.showsQuadCount = enabled
     }
     

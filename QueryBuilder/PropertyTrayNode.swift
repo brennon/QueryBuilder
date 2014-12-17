@@ -33,11 +33,11 @@ class PropertyTrayNode: SKNode {
         addContainerNode()
         
         // Build PropertyTrayTileNodes from dictionary in collection
-//        buildTilesFromDictionary(
-//            collection.fields,
-//            forField: "",
-//            withParentTile: nil
-//        )
+        buildTilesFromDictionary(
+            collection.fields,
+            forField: "",
+            withParentTile: nil
+        )
     }
     
     func buildTilesFromDictionary(
@@ -56,11 +56,11 @@ class PropertyTrayNode: SKNode {
             // Get all keys from dicitonary and sort in reverse order
             var allKeys = dictionary.allKeys as [String]
             allKeys.sort {
-                $1 < $0
+                $0 < $1
             }
 
             // Iterate over keys
-            for key in allKeys {
+            for (index, key) in enumerate(allKeys) {
                 
                 var actualParentTile = parentTile
                 
@@ -94,65 +94,158 @@ class PropertyTrayNode: SKNode {
     
     func addContainerNode() {
         
+        // Build and add container
         containerNode = SKSpriteNode(
             color: PropertyTrayContainerColor,
-            size: CGSizeMake(100, 600)
+            size: CGSizeMake(TileWidth + (2 * TileMarginWidth), 0)
         )
         containerNode.anchorPoint = CGPointMake(0, 0.5)
+        containerNode.alpha = 0
+        containerNode.zPosition = SceneLayer.PropertyTrayContainer.rawValue
         addChild(containerNode)
-        addHandleNode()
+        
+        // Animate in container, then add handle node
+        let fadeInAction = SKAction.fadeInWithDuration(1)
+        let groupAction = SKAction.group([fadeInAction])
+        groupAction.timingMode = .EaseOut
+        containerNode.runAction(groupAction) {
+            self.addHandleNode()
+        }
     }
     
     func addHandleNode() {
         
+        // Build and add handle
         let handleNode = SKSpriteNode(color: UIColor.greenColor(), size: CGSizeMake(20, 60))
         handleNode.anchorPoint = CGPointMake(0, 0.5)
-        handleNode.position = CGPointMake(containerNode.size.width, 0)
-        containerNode.addChild(handleNode)
+        handleNode.position = CGPointMake(containerNode.size.width - handleNode.size.width, 0)
+        handleNode.zPosition = SceneLayer.PropertyTrayHandle.rawValue
+        addChild(handleNode)
         
-        containerNode.runAction(SKAction.resizeToHeight(100, duration: 10))
+        // Slide handle to right
+        let alphaAction = SKAction.fadeInWithDuration(0)
+        let moveAction = SKAction.moveTo(CGPointMake(containerNode.size.width, 0), duration: 0.5)
+        moveAction.timingMode = .EaseOut
+        let sequenceAction = SKAction.sequence([alphaAction, moveAction])
+        handleNode.runAction(sequenceAction)
     }
     
     func addPropertyNode(propertyNode: PropertyTrayTileNode) {
         
         propertyNodes.append(propertyNode)
         
+        // Configure position
+        let totalTiles = propertyNodes.count
+        if totalTiles == 1 {
+            propertyNode.position = CGPointMake(TileWidth / 2 + TileMarginWidth, 0)
+        } else {
+            let previousTile = propertyNodes[totalTiles - 2]
+            propertyNode.position = CGPointMake(TileWidth / 2 + TileMarginWidth, 0)
+        }
+        
+        addChild(propertyNode)
+        
         growBorder()
         
-        containerNode.addChild(propertyNode)
-        
+        removeAllTileConstraints()
         positionPropertyNodes()
+        addTileConstraints()
+    }
+    
+    func addTileConstraints() {
+        
+        let xConstraint = SKConstraint.positionX(SKRange(constantValue: containerNode.size.width / 2))
+        xConstraint.referenceNode = containerNode
+        
+        propertyNodes[0].constraints?.append(xConstraint)
+        
+        for i in 1 ..< propertyNodes.count {
+            
+            let lowerConstraint = SKConstraint.positionY(SKRange(constantValue: propertyNodes[0].position.y - TileHeight - TileMarginWidth))
+            lowerConstraint.referenceNode = propertyNodes[i - 1]
+
+            let upperConstraint = SKConstraint.positionY(SKRange(constantValue: propertyNodes[1].position.y + TileHeight + TileMarginWidth))
+            upperConstraint.referenceNode = propertyNodes[i]
+
+            propertyNodes[i - 1].constraints?.append(upperConstraint)
+            propertyNodes[i].constraints?.append(lowerConstraint)
+            propertyNodes[i].constraints?.append(xConstraint)
+        }
+    }
+    
+    func removeAllTileConstraints() {
+        for node in propertyNodes {
+            node.constraints = []
+        }
     }
     
     func growBorder() {
         
-        // Calculate height of current properties
+        // Calculate height of current tiles
         var propertiesHeight: CGFloat = 0
         
-        for node in propertyNodes {
-            
-            propertiesHeight += node.size.height
-        }
+        propertiesHeight += TileHeight * CGFloat(propertyNodes.count)
         
         // Add padding between each tile, above top tile, and below bottom tile
-        propertiesHeight += propertyNodePadding * CGFloat(propertyNodes.count + 1)
+        propertiesHeight += TileMarginWidth * CGFloat(propertyNodes.count + 1)
         
         // Create new rect for border
-        let borderRect = CGRectMake(0, 0, propertyNodes[0].size.width + (2 * propertyNodePadding), propertiesHeight)
-//        borderNode.path = CGPathCreateWithRoundedRect(borderRect, 10, 10, nil)
+        containerNode.runAction(SKAction.resizeToHeight(propertiesHeight, duration: 0.5))
     }
     
     func positionPropertyNodes() {
+        if propertyNodes.count % 2 == 0 {
+            positionEvenNumberOfPropertyNodes(propertyNodes.count)
+        } else {
+            positionOddNumberOfPropertyNodes(propertyNodes.count)
+        }
+    }
+    
+    private func positionEvenNumberOfPropertyNodes(nodeCount: Int) {
+        let halfNodes = nodeCount / 2
         
         for (index, node) in enumerate(propertyNodes) {
             
-            let x = propertyNodePadding + (node.size.width / 2)
+            let x = TileMarginWidth + (node.size.width / 2)
+            var y: CGFloat
             
-            let y = (CGFloat(index) * (node.size.height + propertyNodePadding)) + (node.size.height / 2) + propertyNodePadding
-            node.position = CGPointMake(x, y)
+            if index < halfNodes {
+                let spaces = CGFloat(halfNodes - index - 1) * TileMarginWidth
+                let halfSpace = TileMarginWidth * 0.5
+                let tiles = CGFloat(halfNodes - index) * TileHeight
+                y = spaces + halfSpace + tiles - (CGFloat(TileHeight) / 2)
+            } else {
+                let spaces = CGFloat(index - halfNodes) * TileMarginWidth
+                let halfSpace = TileMarginWidth * 0.5
+                let tiles = CGFloat(index - halfNodes + 1) * TileHeight
+                y = -(spaces + halfSpace + tiles) + (CGFloat(TileHeight) / 2)
+            }
             
-            println("x: \(x), y: \(y)")
+            node.removeAllActions()
+            node.runAction(SKAction.moveTo(CGPointMake(x, y), duration: 1))
         }
+    }
+    
+    private func positionOddNumberOfPropertyNodes(nodeCount: Int) {
+//        let halfNodes = nodeCount / 2
+//        
+//        for (index, node) in enumerate(propertyNodes) {
+//            
+//            let x = TileMarginWidth + (node.size.width / 2)
+//            let spaces = CGFloat(halfNodes - index - 1) * TileMarginWidth
+//            let halfSpace = TileMarginWidth * 0.5
+//            let tiles = CGFloat(halfNodes - index) * TileHeight
+//            var y: CGFloat
+//            
+//            if index < halfNodes {
+//                y = spaces + halfSpace + tiles
+//            } else {
+//                y = -(spaces + halfSpace + tiles)
+//            }
+//            
+//            node.removeAllActions()
+//            node.runAction(SKAction.moveTo(CGPointMake(x, y), duration: 1))
+//        }
     }
     
     required init?(coder aDecoder: NSCoder) {

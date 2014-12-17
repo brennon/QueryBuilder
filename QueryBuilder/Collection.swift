@@ -13,8 +13,8 @@ import Foundation
     a MongoDB database.
 */
 struct MongoCredentials {
-    static let hostname = "db0.musicsensorsemotion.com"
-    static let port = "27017"
+    static let hostname = "localhost"
+    static let port = "28017"
     static let authenticationDatabase = "eim"
     static let authenticationUsername = "eim"
     static let authenticationPassword = "eim"

@@ -71,7 +71,7 @@ class TileNode: SKSpriteNode {
     
     func calculateFontSize(text: String) -> CGFloat {
         
-        var scaledFontSize: CGFloat = 32
+        var scaledFontSize: CGFloat = 18
         let targetWidth = TileWidth - 10
         
         while true {

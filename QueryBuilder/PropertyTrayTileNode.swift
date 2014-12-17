@@ -35,6 +35,9 @@ class PropertyTrayTileNode: TileNode {
         
         super.init()
         
+        // Configure tile position
+        zPosition = SceneLayer.PropertyTrayTiles.rawValue
+        
         // Create, configure, and add label node as child node
         labelNode = SKLabelNode(text: label)
         labelNode!.position = CGPointZero
@@ -81,8 +84,22 @@ class PropertyTrayTileNode: TileNode {
     
     func handleSingleTap(touch: UITouch) {
         
-        // Expand direct children tiles
+        // Expand direct children tiles if they are collapsed
+        if !tileExpanded {
+            
+            for (index, child) in enumerate(childTiles) {
+//                child.position = CGPointMake(400, 400)
+                child.position = CGPointMake(0, -(TileHeight + TileMarginWidth) * CGFloat(index + 1))
+                addChild(child)
+            }
+        } else {
+            
+            for child in childTiles {
+                child.removeFromParent()
+            }
+        }
         
+        tileExpanded = !tileExpanded
     }
 
     required init?(coder aDecoder: NSCoder) {
