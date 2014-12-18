@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class PropertyTrayNode: SKNode {
+class PropertyTrayNode: SKCropNode {
     
     var containerNode: SKSpriteNode!
     var propertyNodes = [PropertyTrayTileNode]()
@@ -34,6 +34,9 @@ class PropertyTrayNode: SKNode {
         
         // Add container node
         addContainerNode()
+        
+        let newMaskNode = containerNode.copy() as SKSpriteNode
+        maskNode = newMaskNode
         
         // Build PropertyTrayTileNodes from dictionary in collection
         buildTilesFromDictionary(
@@ -95,10 +98,15 @@ class PropertyTrayNode: SKNode {
         }
     }
     
-    func updateLayout() {
+    func updateLayout(staticTile: PropertyTrayTileNode?) {
         growBorder()
+        
+        // Copy the container node
+        let newMaskNode = containerNode.copy() as SKSpriteNode
+        maskNode = newMaskNode
+        
 //        removeAllTileConstraints()
-        layoutTileNodes(nil)
+        layoutTileNodes(staticTile)
 //        addTileConstraints()
     }
     
@@ -156,7 +164,7 @@ class PropertyTrayNode: SKNode {
         
         addChild(propertyNode)
         
-        updateLayout()
+        updateLayout(nil)
     }
     
     func addTileConstraints() {

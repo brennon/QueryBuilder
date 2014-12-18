@@ -115,7 +115,7 @@ class PropertyTrayTileNode: TileNode {
         tileExpanded = !tileExpanded
         
         // Tell tray node to update its layout
-        propertyTrayNode.layoutTileNodes(self)
+        propertyTrayNode.updateLayout(self)
     }
 
     required init?(coder aDecoder: NSCoder) {
