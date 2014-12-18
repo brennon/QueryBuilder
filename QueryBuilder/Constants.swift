@@ -33,7 +33,10 @@ let SceneBackgroundColor        = UIColor(white: 0.9, alpha: 1.0)
 
 // MARK: Node Names
 
-let PredicateTileNodeName = "tile-predicate"
+let PredicateTileNodeName           = "tile-predicate"
+let PropertyTrayNodeName            = "property-tray"
+let PropertyTrayTileNodeName        = "property-tray-tile"
+let PropertyTrayContainerNodeName   = "property-tray-container"
 
 // MARK: Dimensions
 

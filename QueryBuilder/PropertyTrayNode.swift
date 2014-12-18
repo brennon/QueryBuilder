@@ -26,6 +26,9 @@ class PropertyTrayNode: SKNode {
         
         super.init()
         
+        // Name the node
+        name = PropertyTrayNodeName
+        
         // Position the main node
         position = CGPointZero
         
@@ -61,7 +64,7 @@ class PropertyTrayNode: SKNode {
 
             // Iterate over keys
             for (index, key) in enumerate(allKeys) {
-                
+
                 var actualParentTile = parentTile
                 
                 let keyString = key as String
@@ -72,12 +75,12 @@ class PropertyTrayNode: SKNode {
                 // If there is no parent tile, this is a top-level tile
                 if parentTile == nil {
                     
-                    actualParentTile = PropertyTrayTileNode(label: keyString)
+                    actualParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil)
                     addPropertyNode(actualParentTile!)
                     
                 } else {
                     
-                    let newParentTile = PropertyTrayTileNode(label: keyString)
+                    let newParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil)
                     actualParentTile!.childTiles.append(newParentTile)
                     actualParentTile = newParentTile
                     
@@ -92,6 +95,13 @@ class PropertyTrayNode: SKNode {
         }
     }
     
+    func updateLayout() {
+        growBorder()
+//        removeAllTileConstraints()
+        layoutTileNodes(nil)
+//        addTileConstraints()
+    }
+    
     func addContainerNode() {
         
         // Build and add container
@@ -102,6 +112,7 @@ class PropertyTrayNode: SKNode {
         containerNode.anchorPoint = CGPointMake(0, 0.5)
         containerNode.alpha = 0
         containerNode.zPosition = SceneLayer.PropertyTrayContainer.rawValue
+        containerNode.name = PropertyTrayContainerNodeName
         addChild(containerNode)
         
         // Animate in container, then add handle node
@@ -145,11 +156,7 @@ class PropertyTrayNode: SKNode {
         
         addChild(propertyNode)
         
-        growBorder()
-        
-        removeAllTileConstraints()
-        positionPropertyNodes()
-        addTileConstraints()
+        updateLayout()
     }
     
     func addTileConstraints() {
@@ -160,6 +167,10 @@ class PropertyTrayNode: SKNode {
         propertyNodes[0].constraints?.append(xConstraint)
         
         for i in 1 ..< propertyNodes.count {
+            
+            // Calculate rectangle of upper tile
+            let upperNodeRect = propertyNodes[i - 1].calculateAccumulatedFrame()
+            println("upperNodeRect \(upperNodeRect)")
             
             let lowerConstraint = SKConstraint.positionY(SKRange(constantValue: propertyNodes[0].position.y - TileHeight - TileMarginWidth))
             lowerConstraint.referenceNode = propertyNodes[i - 1]
@@ -193,40 +204,94 @@ class PropertyTrayNode: SKNode {
         containerNode.runAction(SKAction.resizeToHeight(propertiesHeight, duration: 0.5))
     }
     
-    func positionPropertyNodes() {
+    func layoutTileNodes(staticTile: PropertyTrayTileNode?) {
         if propertyNodes.count % 2 == 0 {
-            positionEvenNumberOfPropertyNodes(propertyNodes.count)
+            layoutEvenNumberOfTileNodes(staticTile, nodeCount: propertyNodes.count)
         } else {
-            positionOddNumberOfPropertyNodes(propertyNodes.count)
+            layoutOddNumberOfTileNodes(staticTile, nodeCount: propertyNodes.count)
         }
     }
     
-    private func positionEvenNumberOfPropertyNodes(nodeCount: Int) {
+    private func layoutEvenNumberOfTileNodes(staticTile: PropertyTrayTileNode?, nodeCount: Int) {
         let halfNodes = nodeCount / 2
         
-        for (index, node) in enumerate(propertyNodes) {
+        // If we're keeping one tile in place
+        if staticTile != nil {
             
-            let x = TileMarginWidth + (node.size.width / 2)
-            var y: CGFloat
-            
-            if index < halfNodes {
-                let spaces = CGFloat(halfNodes - index - 1) * TileMarginWidth
-                let halfSpace = TileMarginWidth * 0.5
-                let tiles = CGFloat(halfNodes - index) * TileHeight
-                y = spaces + halfSpace + tiles - (CGFloat(TileHeight) / 2)
-            } else {
-                let spaces = CGFloat(index - halfNodes) * TileMarginWidth
-                let halfSpace = TileMarginWidth * 0.5
-                let tiles = CGFloat(index - halfNodes + 1) * TileHeight
-                y = -(spaces + halfSpace + tiles) + (CGFloat(TileHeight) / 2)
+            // Get index of static tile
+            if let index = find(propertyNodes, staticTile!) {
+                
+                // Iterate over nodes *above* static tile, moving upward
+                for var i = index - 1; i >= 0; i-- {
+                    
+                    let thisNode = propertyNodes[i]
+                    let nodeBelow = propertyNodes[i + 1]
+                    
+                    // Get the size of this node
+                    let thisNodeSize = thisNode.calculateAccumulatedFrame()
+                    
+                    // Get the size and position of the node below
+                    let nodeBelowSize = nodeBelow.calculateAccumulatedFrame()
+                    let nodeBelowPosition = nodeBelow.position
+                    
+                    let thisNodeX = TileMarginWidth + (TileWidth / CGFloat(2))
+                    var thisNodeY = nodeBelowPosition.y
+                    thisNodeY += (TileHeight / CGFloat(2))
+                    thisNodeY += TileMarginWidth
+                    thisNodeY += (thisNodeSize.height / CGFloat(2))
+                    
+                    thisNode.position = CGPointMake(thisNodeX, thisNodeY)
+                }
+                
+                // Iterate over nodes *below* static tile, moving downward
+                for var i = index + 1; i < propertyNodes.count; i++ {
+                    
+                    let thisNode = propertyNodes[i]
+                    let nodeAbove = propertyNodes[i - 1]
+                    
+                    // Get the size of this node
+                    let thisNodeSize = thisNode.calculateAccumulatedFrame()
+                    
+                    // Get the size and position of the node below
+                    let nodeAboveSize = nodeAbove.calculateAccumulatedFrame()
+                    let nodeAbovePosition = nodeAbove.position
+                    
+                    let thisNodeX = TileMarginWidth + (TileWidth / CGFloat(2))
+                    var thisNodeY = nodeAbovePosition.y
+                    thisNodeY -= nodeAboveSize.height - (TileHeight / CGFloat(2))
+                    thisNodeY -= TileMarginWidth
+                    thisNodeY -= (thisNodeSize.height / CGFloat(2))
+                    
+                    thisNode.position = CGPointMake(thisNodeX, thisNodeY)
+                }
             }
-            
-            node.removeAllActions()
-            node.runAction(SKAction.moveTo(CGPointMake(x, y), duration: 1))
+        
+        // Otherwise, layout all tiles centered around the middle of the screen
+        } else {
+            for (index, node) in enumerate(propertyNodes) {
+                
+                let x = TileMarginWidth + (node.size.width / 2)
+                var y: CGFloat
+                
+                if index < halfNodes {
+                    let spaces = CGFloat(halfNodes - index - 1) * TileMarginWidth
+                    let halfSpace = TileMarginWidth * 0.5
+                    let tiles = CGFloat(halfNodes - index) * TileHeight
+                    y = spaces + halfSpace + tiles - (CGFloat(TileHeight) / 2)
+                } else {
+                    let spaces = CGFloat(index - halfNodes) * TileMarginWidth
+                    let halfSpace = TileMarginWidth * 0.5
+                    let tiles = CGFloat(index - halfNodes + 1) * TileHeight
+                    y = -(spaces + halfSpace + tiles) + (CGFloat(TileHeight) / 2)
+                }
+                
+                node.removeAllActions()
+                node.runAction(SKAction.moveTo(CGPointMake(x, y), duration: 1))
+            }
         }
     }
     
-    private func positionOddNumberOfPropertyNodes(nodeCount: Int) {
+    private func layoutOddNumberOfTileNodes(staticTile: PropertyTrayTileNode?, nodeCount: Int) {
 //        let halfNodes = nodeCount / 2
 //        
 //        for (index, node) in enumerate(propertyNodes) {

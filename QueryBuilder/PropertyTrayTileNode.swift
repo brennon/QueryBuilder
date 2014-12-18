@@ -21,6 +21,9 @@ class PropertyTrayTileNode: TileNode {
     var tapTimeWindow = 0.5
     var tapBegin = NSDate()
     var tileExpanded = false
+    var propertyTrayNode: PropertyTrayNode!
+    var rootTileNode: PropertyTrayTileNode!
+    var isRootTileNode = false
     
     /// The subproperties of the field that this node represents, as a 
     /// an array of `PropertyTrayTileNode`s.
@@ -31,9 +34,19 @@ class PropertyTrayTileNode: TileNode {
         
         :param: label The string to use for the tile's label.
     */
-    init(label: String) {
-        
+    init(label: String, propertyTrayNode: PropertyTrayNode, rootTileNode: PropertyTrayTileNode?) {
         super.init()
+        
+        self.propertyTrayNode = propertyTrayNode
+        if rootTileNode != nil {
+            self.rootTileNode = rootTileNode
+            isRootTileNode = false
+        } else {
+            self.rootTileNode = self
+            isRootTileNode = true
+        }
+        
+        name = PropertyTrayTileNodeName
         
         // Configure tile position
         zPosition = SceneLayer.PropertyTrayTiles.rawValue
@@ -88,18 +101,21 @@ class PropertyTrayTileNode: TileNode {
         if !tileExpanded {
             
             for (index, child) in enumerate(childTiles) {
-//                child.position = CGPointMake(400, 400)
                 child.position = CGPointMake(0, -(TileHeight + TileMarginWidth) * CGFloat(index + 1))
                 addChild(child)
             }
+            
         } else {
             
             for child in childTiles {
                 child.removeFromParent()
             }
+            
         }
-        
         tileExpanded = !tileExpanded
+        
+        // Tell tray node to update its layout
+        propertyTrayNode.layoutTileNodes(self)
     }
 
     required init?(coder aDecoder: NSCoder) {
