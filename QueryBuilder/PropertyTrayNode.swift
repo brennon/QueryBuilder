@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class PropertyTrayNode: SKCropNode {
+class PropertyTrayNode: SKNode {
     
     var containerNode: SKSpriteNode!
     var propertyNodes = [PropertyTrayTileNode]()
@@ -35,8 +35,8 @@ class PropertyTrayNode: SKCropNode {
         // Add container node
         addContainerNode()
         
-        let newMaskNode = containerNode.copy() as SKSpriteNode
-        maskNode = newMaskNode
+//        let newMaskNode = containerNode.copy() as SKSpriteNode
+//        maskNode = newMaskNode
         
         // Build PropertyTrayTileNodes from dictionary in collection
         buildTilesFromDictionary(
@@ -67,7 +67,7 @@ class PropertyTrayNode: SKCropNode {
 
             // Iterate over keys
             for (index, key) in enumerate(allKeys) {
-
+                
                 var actualParentTile = parentTile
                 
                 let keyString = key as String
@@ -99,15 +99,13 @@ class PropertyTrayNode: SKCropNode {
     }
     
     func updateLayout(staticTile: PropertyTrayTileNode?) {
-        growBorder()
+        layoutTray()
         
-        // Copy the container node
-        let newMaskNode = containerNode.copy() as SKSpriteNode
-        maskNode = newMaskNode
+//        // Copy the container node
+//        let newMaskNode = containerNode.copy() as SKSpriteNode
+//        maskNode = newMaskNode
         
-//        removeAllTileConstraints()
         layoutTileNodes(staticTile)
-//        addTileConstraints()
     }
     
     func addContainerNode() {
@@ -115,7 +113,7 @@ class PropertyTrayNode: SKCropNode {
         // Build and add container
         containerNode = SKSpriteNode(
             color: PropertyTrayContainerColor,
-            size: CGSizeMake(TileWidth + (2 * TileMarginWidth), 0)
+            size: CGSizeMake(TileWidth + (2 * TileMarginWidth), TileWidth)
         )
         containerNode.anchorPoint = CGPointMake(0, 0.5)
         containerNode.alpha = 0
@@ -137,16 +135,16 @@ class PropertyTrayNode: SKCropNode {
         // Build and add handle
         let handleNode = SKSpriteNode(color: UIColor.greenColor(), size: CGSizeMake(20, 60))
         handleNode.anchorPoint = CGPointMake(0, 0.5)
-        handleNode.position = CGPointMake(containerNode.size.width - handleNode.size.width, 0)
+        handleNode.position = CGPointMake(containerNode.size.width, 0)
         handleNode.zPosition = SceneLayer.PropertyTrayHandle.rawValue
         addChild(handleNode)
         
-        // Slide handle to right
-        let alphaAction = SKAction.fadeInWithDuration(0)
-        let moveAction = SKAction.moveTo(CGPointMake(containerNode.size.width, 0), duration: 0.5)
-        moveAction.timingMode = .EaseOut
-        let sequenceAction = SKAction.sequence([alphaAction, moveAction])
-        handleNode.runAction(sequenceAction)
+//        // Slide handle to right
+//        let alphaAction = SKAction.fadeInWithDuration(0)
+//        let moveAction = SKAction.moveTo(CGPointMake(containerNode.size.width, 0), duration: 0.5)
+//        moveAction.timingMode = .EaseOut
+//        let sequenceAction = SKAction.sequence([alphaAction, moveAction])
+//        handleNode.runAction(sequenceAction)
     }
     
     func addPropertyNode(propertyNode: PropertyTrayTileNode) {
@@ -167,30 +165,30 @@ class PropertyTrayNode: SKCropNode {
         updateLayout(nil)
     }
     
-    func addTileConstraints() {
-        
-        let xConstraint = SKConstraint.positionX(SKRange(constantValue: containerNode.size.width / 2))
-        xConstraint.referenceNode = containerNode
-        
-        propertyNodes[0].constraints?.append(xConstraint)
-        
-        for i in 1 ..< propertyNodes.count {
-            
-            // Calculate rectangle of upper tile
-            let upperNodeRect = propertyNodes[i - 1].calculateAccumulatedFrame()
-            println("upperNodeRect \(upperNodeRect)")
-            
-            let lowerConstraint = SKConstraint.positionY(SKRange(constantValue: propertyNodes[0].position.y - TileHeight - TileMarginWidth))
-            lowerConstraint.referenceNode = propertyNodes[i - 1]
-
-            let upperConstraint = SKConstraint.positionY(SKRange(constantValue: propertyNodes[1].position.y + TileHeight + TileMarginWidth))
-            upperConstraint.referenceNode = propertyNodes[i]
-
-            propertyNodes[i - 1].constraints?.append(upperConstraint)
-            propertyNodes[i].constraints?.append(lowerConstraint)
-            propertyNodes[i].constraints?.append(xConstraint)
-        }
-    }
+//    func addTileConstraints() {
+//        
+//        let xConstraint = SKConstraint.positionX(SKRange(constantValue: containerNode.size.width / 2))
+//        xConstraint.referenceNode = containerNode
+//        
+//        propertyNodes[0].constraints?.append(xConstraint)
+//        
+//        for i in 1 ..< propertyNodes.count {
+//            
+//            // Calculate rectangle of upper tile
+//            let upperNodeRect = propertyNodes[i - 1].calculateAccumulatedFrame()
+//            println("upperNodeRect \(upperNodeRect)")
+//            
+//            let lowerConstraint = SKConstraint.positionY(SKRange(constantValue: propertyNodes[0].position.y - TileHeight - TileMarginWidth))
+//            lowerConstraint.referenceNode = propertyNodes[i - 1]
+//
+//            let upperConstraint = SKConstraint.positionY(SKRange(constantValue: propertyNodes[1].position.y + TileHeight + TileMarginWidth))
+//            upperConstraint.referenceNode = propertyNodes[i]
+//
+//            propertyNodes[i - 1].constraints?.append(upperConstraint)
+//            propertyNodes[i].constraints?.append(lowerConstraint)
+//            propertyNodes[i].constraints?.append(xConstraint)
+//        }
+//    }
     
     func removeAllTileConstraints() {
         for node in propertyNodes {
@@ -198,7 +196,7 @@ class PropertyTrayNode: SKCropNode {
         }
     }
     
-    func growBorder() {
+    func layoutTray() {
         
         // Calculate height of current tiles
         var propertiesHeight: CGFloat = 0
@@ -209,7 +207,11 @@ class PropertyTrayNode: SKCropNode {
         propertiesHeight += TileMarginWidth * CGFloat(propertyNodes.count + 1)
         
         // Create new rect for border
-        containerNode.runAction(SKAction.resizeToHeight(propertiesHeight, duration: 0.5))
+        containerNode.runAction(SKAction.resizeToHeight(propertiesHeight, duration: 1))
+        
+//        // Reposition scrolling indicators
+//        topScrollingIndicator.runAction(SKAction.moveToY(propertiesHeight / 2 - TileHeight / 4, duration: 5))
+//        bottomScrollingIndicator.runAction(SKAction.moveToY(-(propertiesHeight / 2) - (TileHeight / 4), duration: 5))
     }
     
     func layoutTileNodes(staticTile: PropertyTrayTileNode?) {

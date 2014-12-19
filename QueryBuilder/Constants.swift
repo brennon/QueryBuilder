@@ -14,6 +14,7 @@ enum SceneLayer: CGFloat {
     case PropertyTrayContainer
     case PropertyTrayTiles
     case PredicateTiles
+    case ScrollingIndicators
     case Foreground
 }
 
