@@ -41,12 +41,13 @@ let PropertyTrayContainerNodeName   = "property-tray-container"
 
 // MARK: Dimensions
 
-let TileWidth:          CGFloat = 100
-let TileHeight:         CGFloat = 50
-let TileSize                    = CGSizeMake(TileWidth, TileHeight)
-let TileCornerRadius:   CGFloat = 10
-let TileBorderWidth:    CGFloat = 2
-let TileMarginWidth:    CGFloat = 10
+let TileWidth:                  CGFloat = 100
+let TileHeight:                 CGFloat = 25
+let TileSize                            = CGSizeMake(TileWidth, TileHeight)
+let TileCornerRadius:           CGFloat = 10
+let TileBorderWidth:            CGFloat = 2
+let TileMarginWidth:            CGFloat = 10
+let PropertyTrayMaximumHeight:  CGFloat = UIScreen.mainScreen().applicationFrame.height - 100
 
 // MARK: Fonts
 

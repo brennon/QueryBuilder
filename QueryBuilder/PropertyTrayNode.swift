@@ -8,9 +8,10 @@
 
 import SpriteKit
 
-class PropertyTrayNode: SKNode {
+class PropertyTrayNode: SKCropNode {
     
     var containerNode: SKSpriteNode!
+    var handleNode: SKSpriteNode!
     var propertyNodes = [PropertyTrayTileNode]()
     let propertyNodePadding: CGFloat = 10
     
@@ -35,10 +36,17 @@ class PropertyTrayNode: SKNode {
         // Add container node
         addContainerNode()
         
-//        let newMaskNode = containerNode.copy() as SKSpriteNode
-//        maskNode = newMaskNode
+        // Add handle node
+        addHandleNode()
+        
+        let newMaskNode = containerNode.copy() as SKSpriteNode
+        maskNode = newMaskNode
         
         // Build PropertyTrayTileNodes from dictionary in collection
+        let testDict = NSMutableDictionary()
+        testDict.setObject(collection.fields.objectForKey("media")!, forKey: "media")
+        testDict.setObject(collection.fields.objectForKey("metadata")!, forKey: "metadata")
+        
         buildTilesFromDictionary(
             collection.fields,
             forField: "",
@@ -59,7 +67,7 @@ class PropertyTrayNode: SKNode {
         // Otherwise, send the contained dictionary back to this method
         } else {
             
-            // Get all keys from dicitonary and sort in reverse order
+            // Get all keys from dictionary and sort in reverse order
             var allKeys = dictionary.allKeys as [String]
             allKeys.sort {
                 $0 < $1
@@ -100,11 +108,6 @@ class PropertyTrayNode: SKNode {
     
     func updateLayout(staticTile: PropertyTrayTileNode?) {
         layoutTray()
-        
-//        // Copy the container node
-//        let newMaskNode = containerNode.copy() as SKSpriteNode
-//        maskNode = newMaskNode
-        
         layoutTileNodes(staticTile)
     }
     
@@ -133,7 +136,7 @@ class PropertyTrayNode: SKNode {
     func addHandleNode() {
         
         // Build and add handle
-        let handleNode = SKSpriteNode(color: UIColor.greenColor(), size: CGSizeMake(20, 60))
+        handleNode = SKSpriteNode(color: UIColor.greenColor(), size: CGSizeMake(20, 60))
         handleNode.anchorPoint = CGPointMake(0, 0.5)
         handleNode.position = CGPointMake(containerNode.size.width, 0)
         handleNode.zPosition = SceneLayer.PropertyTrayHandle.rawValue
@@ -198,23 +201,26 @@ class PropertyTrayNode: SKNode {
     
     func layoutTray() {
         
-        // Calculate height of current tiles
-        var propertiesHeight: CGFloat = 0
-        
-        propertiesHeight += TileHeight * CGFloat(propertyNodes.count)
-        
-        // Add padding between each tile, above top tile, and below bottom tile
-        propertiesHeight += TileMarginWidth * CGFloat(propertyNodes.count + 1)
-        
         // Create new rect for border
-        containerNode.runAction(SKAction.resizeToHeight(propertiesHeight, duration: 1))
+        containerNode.runAction(SKAction.resizeToHeight(PropertyTrayMaximumHeight, duration: 1))
+        maskNode?.runAction(SKAction.resizeToWidth(containerNode.size.width + handleNode.size.width, height: PropertyTrayMaximumHeight, duration: 1))
         
 //        // Reposition scrolling indicators
 //        topScrollingIndicator.runAction(SKAction.moveToY(propertiesHeight / 2 - TileHeight / 4, duration: 5))
 //        bottomScrollingIndicator.runAction(SKAction.moveToY(-(propertiesHeight / 2) - (TileHeight / 4), duration: 5))
+        
+//        return CGSizeMake(containerNode.size.width, PropertyTrayMaximumHeight)
     }
     
     func layoutTileNodes(staticTile: PropertyTrayTileNode?) {
+        
+        if staticTile != nil {
+            println("static tile's position: \(staticTile!.position)")
+            println("static tile's size: \(staticTile!.size)")
+            println("static tile's frame: \(staticTile!.frame)")
+            println("static tile's accumulated frame: \(staticTile!.calculateAccumulatedFrame())")
+        }
+        
         if propertyNodes.count % 2 == 0 {
             layoutEvenNumberOfTileNodes(staticTile, nodeCount: propertyNodes.count)
         } else {
@@ -237,6 +243,10 @@ class PropertyTrayNode: SKNode {
                     let thisNode = propertyNodes[i]
                     let nodeBelow = propertyNodes[i + 1]
                     
+                    println("----------")
+                    println("this node: \(thisNode.label)")
+                    println("node below: \(nodeBelow.label)")
+                    
                     // Get the size of this node
                     let thisNodeSize = thisNode.calculateAccumulatedFrame()
                     
@@ -244,12 +254,23 @@ class PropertyTrayNode: SKNode {
                     let nodeBelowSize = nodeBelow.calculateAccumulatedFrame()
                     let nodeBelowPosition = nodeBelow.position
                     
+                    println("this node's size: \(thisNodeSize)")
+                    println("node below's size: \(nodeBelowSize)")
+                    
                     let thisNodeX = TileMarginWidth + (TileWidth / CGFloat(2))
                     var thisNodeY = nodeBelowPosition.y
-                    thisNodeY += (TileHeight / CGFloat(2))
+//                    var thisNodeY = nodeBelowSize.origin.y
+//                    thisNodeY += (TileHeight / CGFloat(2))
                     thisNodeY += TileMarginWidth
-                    thisNodeY += (thisNodeSize.height / CGFloat(2))
+                    thisNodeY += thisNodeSize.height
                     
+                    println("this node's position: \(thisNode.position)")
+                    println("node below's position: \(nodeBelow.position)")
+                    
+                    println("this node's frame's origin: \(thisNode.calculateAccumulatedFrame().origin)")
+                    println("node below's frame's origin: \(nodeBelow.calculateAccumulatedFrame().origin)")
+                    
+//                    thisNode.runAction(SKAction.moveTo(CGPointMake(thisNodeX, thisNodeY), duration: 5))
                     thisNode.position = CGPointMake(thisNodeX, thisNodeY)
                 }
                 
@@ -268,10 +289,11 @@ class PropertyTrayNode: SKNode {
                     
                     let thisNodeX = TileMarginWidth + (TileWidth / CGFloat(2))
                     var thisNodeY = nodeAbovePosition.y
-                    thisNodeY -= nodeAboveSize.height - (TileHeight / CGFloat(2))
+                    thisNodeY -= nodeAboveSize.height// - (TileHeight / CGFloat(2))
                     thisNodeY -= TileMarginWidth
-                    thisNodeY -= (thisNodeSize.height / CGFloat(2))
+//                    thisNodeY -= thisNodeSize.height
                     
+//                    thisNode.runAction(SKAction.moveTo(CGPointMake(thisNodeX, thisNodeY), duration: 5))
                     thisNode.position = CGPointMake(thisNodeX, thisNodeY)
                 }
             }

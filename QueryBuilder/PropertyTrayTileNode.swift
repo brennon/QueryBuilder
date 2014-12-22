@@ -24,6 +24,7 @@ class PropertyTrayTileNode: TileNode {
     var propertyTrayNode: PropertyTrayNode!
     var rootTileNode: PropertyTrayTileNode!
     var isRootTileNode = false
+    var label: String!
     
     /// The subproperties of the field that this node represents, as a 
     /// an array of `PropertyTrayTileNode`s.
@@ -37,6 +38,7 @@ class PropertyTrayTileNode: TileNode {
     init(label: String, propertyTrayNode: PropertyTrayNode, rootTileNode: PropertyTrayTileNode?) {
         super.init()
         
+        self.label = label
         self.propertyTrayNode = propertyTrayNode
         if rootTileNode != nil {
             self.rootTileNode = rootTileNode
@@ -104,6 +106,14 @@ class PropertyTrayTileNode: TileNode {
                 child.position = CGPointMake(0, -(TileHeight + TileMarginWidth) * CGFloat(index + 1))
                 addChild(child)
             }
+            
+            // Get number of visible property tiles
+            var count: Int = 0
+            enumerateChildNodesWithName(PropertyTrayTileNodeName, usingBlock: { (node: SKNode!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+                count = count + 1
+            })
+            
+            println("counted \(count) subtiles")
             
         } else {
             
