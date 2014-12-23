@@ -26,6 +26,12 @@ class PropertyTrayTileNode: TileNode {
     var isRootTileNode = false
     var label: String!
     
+    enum possibleGestures: Int {
+        case None   = 0
+        case Scroll = 1
+        case Tap    = 2
+    }
+    
     /// The subproperties of the field that this node represents, as a 
     /// an array of `PropertyTrayTileNode`s.
     var childTiles = [PropertyTrayTileNode]()
@@ -62,6 +68,10 @@ class PropertyTrayTileNode: TileNode {
         labelNode!.fontSize = calculateFontSize(label)
         addChild(labelNode!)
     }
+    
+    func doSomething() {
+        println("doing something")
+    }
 
     /**
         Tells the receiver when one or more fingers touch down in a view or 
@@ -79,6 +89,25 @@ class PropertyTrayTileNode: TileNode {
             
             // Start the tap timer
             tapBegin = NSDate()
+        }
+    }
+    
+    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+        
+        // Is it just one finger?
+        if touches.count == 1 {
+            
+            let touch = touches.anyObject() as UITouch
+            
+            // Get position delta
+            let deltaX = touch.locationInView(scene!.view).x - touch.previousLocationInView(scene!.view).x
+            let deltaY = touch.locationInView(scene!.view).y - touch.previousLocationInView(scene!.view).y
+            
+            // Update position with deltas
+            self.position.x += deltaX
+            self.position.y -= deltaY
+            
+            propertyTrayNode.updateLayout(self)
         }
     }
     

@@ -54,7 +54,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: SKPhysicsContactDelegate
     
     func didBeginContact(contact: SKPhysicsContact!) {
-        println("didBeginContact:")
         
 //        let settingsPopoverController = SettingsViewPopoverController()
         
@@ -62,7 +61,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didEndContact(contact: SKPhysicsContact!) {
-        println("didEndContact:")
     }
     
     func addSettingsButton() {
