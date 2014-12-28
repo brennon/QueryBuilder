@@ -68,10 +68,6 @@ class PropertyTrayTileNode: TileNode {
         labelNode!.fontSize = calculateFontSize(label)
         addChild(labelNode!)
     }
-    
-    func doSomething() {
-        println("doing something")
-    }
 
     /**
         Tells the receiver when one or more fingers touch down in a view or 
