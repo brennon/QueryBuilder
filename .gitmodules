@@ -1,3 +1,6 @@
 [submodule "ObjCMongoDB"]
 	path = ObjCMongoDB
 	url = https://github.com/paulmelnikow/ObjCMongoDB.git
+[submodule "BBGestureRecognizer"]
+	path = BBGestureRecognizer
+	url = git@github.com:brennon/BBGestureRecognizer.git
