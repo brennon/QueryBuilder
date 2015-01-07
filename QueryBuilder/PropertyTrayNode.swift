@@ -224,179 +224,91 @@ class PropertyTrayNode: SKCropNode {
         }
     }
     
-    func layoutTileNodes(staticTile: PropertyTrayTileNode?, animated: Bool, completion: (() -> ())?) {
+    func layoutTileNodes(referenceTile: PropertyTrayTileNode?, animated: Bool, completion: (() -> ())?) {
         
-        if staticTile != nil {
+        // If there isn't a static tile, find one, set its posiiton, and use it as
+        // the reference tile.
+        
+        var actualReferenceTile: PropertyTrayTileNode
+        if referenceTile == nil {
             
-            // Get index of static tile
-            if let index = find(propertyNodes, staticTile!) {
+            // If there are an even number of tiles, use the tile just above the middle.
+            if propertyNodes.count % 2 == 0 {
                 
-                // Iterate over nodes *above* static tile, moving upward
-                for var i = index - 1; i >= 0; i-- {
-                    
-                    let thisNode = propertyNodes[i]
-                    let nodeBelow = propertyNodes[i + 1]
-                    
-                    // Get the size of this node
-                    let thisNodeSize = thisNode.calculateAccumulatedFrame()
-                    
-                    // Get the size and position of the node below
-                    let nodeBelowSize = nodeBelow.calculateAccumulatedFrame()
-                    let nodeBelowPosition = nodeBelow.position
-                    
-                    let thisNodeX = TileMarginWidth + (TileWidth / CGFloat(2))
-                    var thisNodeY = nodeBelowPosition.y
-                    thisNodeY += TileMarginWidth
-                    thisNodeY += thisNodeSize.height
-                    
-                    if animated {
-                        thisNode.runAction(SKAction.moveTo(CGPointMake(thisNodeX, thisNodeY), duration: 1.0))
-                    } else {
-                        thisNode.position = CGPointMake(thisNodeX, thisNodeY)
-                    }
+                actualReferenceTile = propertyNodes[(propertyNodes.count / 2) - 1]
+                
+                // Tile should be one half a tile height plus one half a spacer above center.
+                actualReferenceTile.position = CGPointMake(TileMarginWidth + (TileWidth / CGFloat(2)), (TileMarginWidth + TileHeight) / CGFloat(2))
+            
+            // Otherwise, use the middle tile.
+            } else {
+                
+                actualReferenceTile = propertyNodes[propertyNodes.count / 2]
+                
+                // Tile should be vertically and horizontally centered in container.
+                actualReferenceTile.position = CGPointMake(TileMarginWidth + (TileWidth / CGFloat(2)), 0)
+            }
+        
+        // Otherwise, use the reference tile we were given.
+        } else {
+            actualReferenceTile = referenceTile!
+        }
+            
+        // Get index of static tile
+        if let index = find(propertyNodes, actualReferenceTile) {
+            
+            // Iterate over nodes *above* static tile, moving upward
+            for var i = index - 1; i >= 0; i-- {
+                
+                let thisNode = propertyNodes[i]
+                let nodeBelow = propertyNodes[i + 1]
+                
+                // Get the size of this node
+                let thisNodeSize = thisNode.calculateAccumulatedFrame()
+                
+                // Get the size and position of the node below
+                let nodeBelowSize = nodeBelow.calculateAccumulatedFrame()
+                let nodeBelowPosition = nodeBelow.position
+                
+                let thisNodeX = TileMarginWidth + (TileWidth / CGFloat(2))
+                var thisNodeY = nodeBelowPosition.y
+                thisNodeY += TileMarginWidth
+                thisNodeY += thisNodeSize.height
+                
+                if animated {
+                    thisNode.runAction(SKAction.moveTo(CGPointMake(thisNodeX, thisNodeY), duration: 1.0))
+                } else {
+                    thisNode.position = CGPointMake(thisNodeX, thisNodeY)
                 }
+            }
+            
+            // Iterate over nodes *below* static tile, moving downward
+            for var i = index + 1; i < propertyNodes.count; i++ {
                 
-                // Iterate over nodes *below* static tile, moving downward
-                for var i = index + 1; i < propertyNodes.count; i++ {
-                    
-                    let thisNode = propertyNodes[i]
-                    let nodeAbove = propertyNodes[i - 1]
-                    
-                    // Get the size of this node
-                    let thisNodeSize = thisNode.calculateAccumulatedFrame()
-                    
-                    // Get the size and position of the node below
-                    let nodeAboveSize = nodeAbove.calculateAccumulatedFrame()
-                    let nodeAbovePosition = nodeAbove.position
-                    
-                    let thisNodeX = TileMarginWidth + (TileWidth / CGFloat(2))
-                    var thisNodeY = nodeAbovePosition.y
-                    thisNodeY -= nodeAboveSize.height// - (TileHeight / CGFloat(2))
-                    thisNodeY -= TileMarginWidth
-                    
+                let thisNode = propertyNodes[i]
+                let nodeAbove = propertyNodes[i - 1]
+                
+                // Get the size of this node
+                let thisNodeSize = thisNode.calculateAccumulatedFrame()
+                
+                // Get the size and position of the node below
+                let nodeAboveSize = nodeAbove.calculateAccumulatedFrame()
+                let nodeAbovePosition = nodeAbove.position
+                
+                let thisNodeX = TileMarginWidth + (TileWidth / CGFloat(2))
+                var thisNodeY = nodeAbovePosition.y
+                thisNodeY -= nodeAboveSize.height// - (TileHeight / CGFloat(2))
+                thisNodeY -= TileMarginWidth
+                
 //                    if animated {
 //                        thisNode.runAction(SKAction.moveTo(CGPointMake(thisNodeX, thisNodeY), duration: 1.0))
 //                    } else {
-                        thisNode.position = CGPointMake(thisNodeX, thisNodeY)
+                    thisNode.position = CGPointMake(thisNodeX, thisNodeY)
 //                    }
-                }
-                
-                if let callableCompletionC = completion {
-                    callableCompletionC()
-                }
-            }
-        } else {
-            if propertyNodes.count % 2 == 0 {
-                layoutEvenNumberOfTileNodes(staticTile, nodeCount: propertyNodes.count, animated: animated) {
-                    if let callableCompletionD = completion {
-                        callableCompletionD()
-                    }
-                }
-            } else {
-                layoutOddNumberOfTileNodes(staticTile, nodeCount: propertyNodes.count, animated: animated)  {
-                    if let callableCompletionE = completion {
-                        callableCompletionE()
-                    }
-                }
-            }
-        }
-    }
-    
-    private func layoutEvenNumberOfTileNodes(staticTile: PropertyTrayTileNode?, nodeCount: Int, animated: Bool, completion: (() -> ())?) {
-        
-        let halfNodes = nodeCount / 2
-        
-        let animationDuration: NSTimeInterval = 1.0
-        
-        // Layout all tiles centered around the middle of the screen
-        for (index, node) in enumerate(propertyNodes) {
-            
-            let x = TileMarginWidth + (node.size.width / 2)
-            var y: CGFloat
-            
-            if index < halfNodes {
-                let spaces = CGFloat(halfNodes - index - 1) * TileMarginWidth
-                let halfSpace = TileMarginWidth * 0.5
-                let tiles = CGFloat(halfNodes - index) * TileHeight
-                y = spaces + halfSpace + tiles - (CGFloat(TileHeight) / 2)
-            } else {
-                let spaces = CGFloat(index - halfNodes) * TileMarginWidth
-                let halfSpace = TileMarginWidth * 0.5
-                let tiles = CGFloat(index - halfNodes + 1) * TileHeight
-                y = -(spaces + halfSpace + tiles) + (CGFloat(TileHeight) / 2)
             }
             
-            node.removeAllActions()
-            
-//            if animated {
-//                node.runAction(SKAction.moveTo(CGPointMake(x, y), duration: animationDuration))
-//            } else {
-                node.position = CGPointMake(x, y)
-//            }
-        }
-        
-        // Call completion closure if we received one.
-        if let callableCompletion = completion {
-            
-            // If the layout was animated, we need to wait animationDuration.
-            if animated {
-                self.runAction(SKAction.waitForDuration(animationDuration)) {
-                    callableCompletion()
-                }
-            } else {
-                callableCompletion()
-            }
-        }
-    }
-    
-    private func layoutOddNumberOfTileNodes(staticTile: PropertyTrayTileNode?, nodeCount: Int, animated: Bool, completion: (() -> ())?) {
-        
-        let halfNodes = nodeCount / 2
-        
-        let animationDuration: NSTimeInterval = 1.0
-        
-        // Layout all tiles centered around the middle of the screen
-        for (index, node) in enumerate(propertyNodes) {
-            
-            let x = TileMarginWidth + (node.size.width / 2)
-            var y: CGFloat
-            
-            // If this node is in the top section
-            if index < halfNodes {
-                let spaces = CGFloat(halfNodes - index) * TileMarginWidth
-                let tiles = CGFloat(halfNodes - index) * TileHeight
-                y = spaces + tiles
-                
-            // If this node is in the bottom section
-            } else if index > halfNodes {
-                let spaces = CGFloat(index - halfNodes) * TileMarginWidth
-                let tiles = CGFloat(index - halfNodes) * TileHeight
-                y = -(spaces + tiles)
-            
-            // If this is the middle node
-            } else {
-                y = 0
-            }
-            
-            node.removeAllActions()
-            
-            if animated {
-                node.runAction(SKAction.moveTo(CGPointMake(x, y), duration: 1))
-            } else {
-                node.position = CGPointMake(x, y)
-            }
-        }
-        
-        // Call completion closure if we received one.
-        if let callableCompletion = completion {
-            
-            // If the layout was animated, we need to wait animationDuration.
-            if animated {
-                self.runAction(SKAction.waitForDuration(animationDuration)) {
-                    callableCompletion()
-                }
-            } else {
-                callableCompletion()
+            if let callableCompletionC = completion {
+                callableCompletionC()
             }
         }
     }
