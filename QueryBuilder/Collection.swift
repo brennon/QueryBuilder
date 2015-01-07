@@ -6,86 +6,6 @@
 //  Copyright (c) 2014 Brennon Bortz. All rights reserved.
 //
 
-import Foundation
-
-/**
-    The `MongoCredentials` struct provides useful information for connecting to 
-    a MongoDB database.
-*/
-struct MongoCredentials {
-    static let hostname = "localhost"
-    static let port = "28017"
-    static let authenticationDatabase = "eim"
-    static let authenticationUsername = "eim"
-    static let authenticationPassword = "eim"
-    static var url: String {
-        get {
-            return "\(hostname):\(port)"
-        }
-    }
-}
-
-/**
-    The `DatabaseHelper` contains helper methods to work in conjunction with 
-    the `MongoCredentials` struct to connect to a MongoDB instance, to 
-    authenticate against it, etc.
-*/
-class DatabaseHelper {
-    
-    /// The `MongoConnection` opened and maintained by a `DatabaseHelper`.
-    let connection : MongoConnection? = nil
-    
-    /*!
-        Authenticates against the database with the credentials contained in 
-        `MongoCredentials.`
-    
-        :returns: It returns `true` if authentication was sucessful. Otherwise, 
-        it returns `false`.
-    */
-    func authenticateToDatabase() -> Bool {
-        
-        if connection == nil {
-            println("Not connected to database");
-            return false
-        }
-        
-        // Check for error
-        var error : NSError? = nil
-        
-        connection?.authenticate(MongoCredentials.authenticationDatabase,
-            username: MongoCredentials.authenticationUsername,
-            password: MongoCredentials.authenticationPassword,
-            error: &error)
-        
-        if let error = error {
-            print("Error authenticating to database: ")
-            println("\(error.localizedDescription)")
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    /**
-        Opens a connection to the database described by `MongoCredentials`.
-    */
-    init() {
-        var error : NSError? = nil
-        
-        // Connect to the provided connection, or create a new one using 
-        // MongoCredentials
-        connection = MongoConnection(
-            forServer: MongoCredentials.url,
-            error: &error
-        )
-        
-        if let error = error {
-            print("Error connecting to database: ")
-            println("\(error.localizedDescription)")
-        }
-    }
-}
-
 extension String {
     func isPrefixOf(longerString: String) -> Bool {
         return longerString =~ "\(self)\\.+"
@@ -165,12 +85,8 @@ class Collection {
         print("Enumerated fields from \(total) documents ")
         println("in \(timeInterval) seconds")
         
-        println("key paths: \(keyPathSet.items())")
-        
         buildBaseDictionaryForKeyPaths()
         filterLeafKeyPaths()
-        
-        println("key paths: \(keyPathSet.items())")
     }
     
     func filterLeafKeyPaths() {
@@ -292,6 +208,8 @@ class Collection {
             getDistinctValuesForField(keyPath)
         }
     }
+    
+    // FIXME: Need to set NULLs to nil
 
     /**
         Populates the corresponding dictionary in `fields` for the a specific 

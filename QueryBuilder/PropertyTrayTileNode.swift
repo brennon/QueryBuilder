@@ -67,90 +67,109 @@ class PropertyTrayTileNode: TileNode {
         labelNode!.verticalAlignmentMode = .Center
         labelNode!.fontSize = calculateFontSize(label)
         addChild(labelNode!)
+        
+        // Add single-tap recognizer to node
+        let singleTapRecognizer = BBTapGestureRecognizer(target: self, action: PropertyTrayTileNode.handleSingleTap)
+        self.addGestureRecognizer(singleTapRecognizer)
     }
 
-    /**
-        Tells the receiver when one or more fingers touch down in a view or 
-        window.
+//    /**
+//        Tells the receiver when one or more fingers touch down in a view or 
+//        window.
+//    
+//        :param: touches A set of `UITouch` instances that represent the touches 
+//            for the starting phase of the event represented by `event`.
+//        :param: event An object representing the event to which the touches 
+//            belong.
+//    */
+//    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+//        
+//        // Was it a single touch?
+//        if touches.count == 1 {
+//            
+//            // Start the tap timer
+//            tapBegin = NSDate()
+//        }
+//    }
+//    
+//    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+//        
+//        // Is it just one finger?
+//        if touches.count == 1 {
+//            
+//            let touch = touches.anyObject() as UITouch
+//            
+//            // Get position delta
+//            let deltaX = touch.locationInView(scene!.view).x - touch.previousLocationInView(scene!.view).x
+//            let deltaY = touch.locationInView(scene!.view).y - touch.previousLocationInView(scene!.view).y
+//            
+//            // Update position with deltas
+//            self.position.x += deltaX
+//            self.position.y -= deltaY
+//            
+//            propertyTrayNode.updateLayout(self)
+//        }
+//    }
+//    
+//    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
+//        
+//        // Was it a single touch?
+//        if touches.count == 1 {
+//            
+//            // Did the touch end within the tap time window?
+//            let tapDuration = NSDate().timeIntervalSinceDate(tapBegin)
+//            
+//            if tapDuration <= tapTimeWindow {
+//                
+//                handleSingleTap(touches.anyObject() as UITouch)
+//            }
+//        }
+//    }
     
-        :param: touches A set of `UITouch` instances that represent the touches 
-            for the starting phase of the event represented by `event`.
-        :param: event An object representing the event to which the touches 
-            belong.
-    */
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+    func handleSingleTap(recognizer: BBGestureRecognizer?) {
         
-        // Was it a single touch?
-        if touches.count == 1 {
-            
-            // Start the tap timer
-            tapBegin = NSDate()
-        }
-    }
-    
-    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+        if recognizer?.state == BBGestureRecognizerState.Recognized {
         
-        // Is it just one finger?
-        if touches.count == 1 {
-            
-            let touch = touches.anyObject() as UITouch
-            
-            // Get position delta
-            let deltaX = touch.locationInView(scene!.view).x - touch.previousLocationInView(scene!.view).x
-            let deltaY = touch.locationInView(scene!.view).y - touch.previousLocationInView(scene!.view).y
-            
-            // Update position with deltas
-            self.position.x += deltaX
-            self.position.y -= deltaY
-            
-            propertyTrayNode.updateLayout(self)
-        }
-    }
-    
-    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
-        
-        // Was it a single touch?
-        if touches.count == 1 {
-            
-            // Did the touch end within the tap time window?
-            let tapDuration = NSDate().timeIntervalSinceDate(tapBegin)
-            
-            if tapDuration <= tapTimeWindow {
+            // Expand direct children tiles if they are collapsed
+            if !tileExpanded {
                 
-                handleSingleTap(touches.anyObject() as UITouch)
+                for (index, child) in enumerate(childTiles) {
+                    
+                    println("frame of tapped tile: \(self.calculateAccumulatedFrame())")
+                    
+                    // Add each child and update layout as we go
+                    child.alpha = 0
+                    child.position = CGPointMake(0, -(TileHeight + TileMarginWidth) * CGFloat(index + 1))
+                    addChild(child)
+                    
+//                    propertyTrayNode.updateLayout(self) {
+//                        child.runAction(SKAction.fadeInWithDuration(0.25))
+//                    }
+                }
+                
+                propertyTrayNode.updateLayout(self, completion: nil)
+                
+                // Get number of visible property tiles
+                var count: Int = 0
+                enumerateChildNodesWithName(PropertyTrayTileNodeName, usingBlock: { (node: SKNode!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+                    count = count + 1
+                })
+                
+                println("counted \(count) subtiles")
+                
+            } else {
+                
+                for child in childTiles {
+                    child.removeFromParent()
+                }
+                
+                propertyTrayNode.updateLayout(self, nil)
             }
+            tileExpanded = !tileExpanded
         }
-    }
-    
-    func handleSingleTap(touch: UITouch) {
-        
-        // Expand direct children tiles if they are collapsed
-        if !tileExpanded {
-            
-            for (index, child) in enumerate(childTiles) {
-                child.position = CGPointMake(0, -(TileHeight + TileMarginWidth) * CGFloat(index + 1))
-                addChild(child)
-            }
-            
-            // Get number of visible property tiles
-            var count: Int = 0
-            enumerateChildNodesWithName(PropertyTrayTileNodeName, usingBlock: { (node: SKNode!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
-                count = count + 1
-            })
-            
-            println("counted \(count) subtiles")
-            
-        } else {
-            
-            for child in childTiles {
-                child.removeFromParent()
-            }
-            
-        }
-        tileExpanded = !tileExpanded
         
         // Tell tray node to update its layout
-        propertyTrayNode.updateLayout(self)
+//        propertyTrayNode.updateLayout(self)
     }
 
     required init?(coder aDecoder: NSCoder) {

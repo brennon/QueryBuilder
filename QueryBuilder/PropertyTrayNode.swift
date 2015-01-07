@@ -11,7 +11,9 @@ import SpriteKit
 class PropertyTrayNode: SKCropNode {
     
     var containerNode: SKSpriteNode!
+    /*
     var handleNode: SKSpriteNode!
+    */
     var propertyNodes = [PropertyTrayTileNode]()
     let propertyNodePadding: CGFloat = 10
     
@@ -34,31 +36,31 @@ class PropertyTrayNode: SKCropNode {
         position = CGPointZero
         
         // Add container node
-        addContainerNode()
+        addContainerNode() {
+            
+            // Build PropertyTrayTileNodes from dictionary in collection
+            self.buildTilesFromDictionary(
+                collection.fields,
+                forField: "",
+                withParentTile: nil
+            )
+            
+            // Add tiles that were just built
+            self.addPropertyNodes()
+        }
         
+        /*
         // Add handle node
         addHandleNode()
-        
-        let newMaskNode = containerNode.copy() as SKSpriteNode
-        maskNode = newMaskNode
-        
-        // Build PropertyTrayTileNodes from dictionary in collection
-        let testDict = NSMutableDictionary()
-        testDict.setObject(collection.fields.objectForKey("media")!, forKey: "media")
-        testDict.setObject(collection.fields.objectForKey("metadata")!, forKey: "metadata")
-        
-        buildTilesFromDictionary(
-            collection.fields,
-            forField: "",
-            withParentTile: nil
-        )
+        */
     }
     
+    // Adds tiles to propertyNodes based on the information available in the provided dictionary
     func buildTilesFromDictionary(
         dictionary: NSMutableDictionary,
         forField field: String,
         withParentTile parentTile: PropertyTrayTileNode?) {
-        
+            
         // If dictionary has a values key, add it to the parentTile
         if let values: AnyObject = dictionary.valueForKey("values") {
             
@@ -75,7 +77,7 @@ class PropertyTrayNode: SKCropNode {
 
             // Iterate over keys
             for (index, key) in enumerate(allKeys) {
-                if index < 7 {
+//                if index < 7 {
                     var actualParentTile = parentTile
                     
                     let keyString = key as String
@@ -87,7 +89,7 @@ class PropertyTrayNode: SKCropNode {
                     if parentTile == nil {
                         
                         actualParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil)
-                        addPropertyNode(actualParentTile!)
+                        propertyNodes.append(actualParentTile!)
                         
                     } else {
                         
@@ -102,19 +104,30 @@ class PropertyTrayNode: SKCropNode {
                         forField: keyString,
                         withParentTile: actualParentTile!
                     )
-                }
+//                }
             }
         }
     }
     
-    func updateLayout(staticTile: PropertyTrayTileNode?) {
+    // Removes all tile constraings, lays out the tray and then the tray tiles, and then replaces constraints
+    func updateLayout(staticTile: PropertyTrayTileNode?, completion: (() -> ())?) {
+        
+        println("updateLayout")
+        
         removeAllTileConstraints()
-        layoutTray()
-        layoutTileNodes(staticTile)
-        addTileConstraints()
+//        resizeContainer {
+            layoutTileNodes(staticTile, animated: true) {
+                self.addTileConstraints()
+                
+                if let callableCompletion = completion {
+                    callableCompletion()
+                }
+            }
+//        }
     }
     
-    func addContainerNode() {
+    // Adds and animates in the container node, and then calls handleNode
+    func addContainerNode(completion: (() -> ())?) {
         
         // Build and add container
         containerNode = SKSpriteNode(
@@ -131,11 +144,20 @@ class PropertyTrayNode: SKCropNode {
         let fadeInAction = SKAction.fadeInWithDuration(1)
         let groupAction = SKAction.group([fadeInAction])
         groupAction.timingMode = .EaseOut
-        containerNode.runAction(groupAction) {
-            self.addHandleNode()
+        containerNode.runAction(groupAction)
+        
+        let newMaskNode = containerNode.copy() as SKSpriteNode
+        maskNode = newMaskNode
+        
+        resizeContainer() {
+            if let callableCompletionA = completion {
+                callableCompletionA()
+            }
         }
     }
     
+    /*
+    // Adds the handlenode
     func addHandleNode() {
         
         // Build and add handle
@@ -144,33 +166,21 @@ class PropertyTrayNode: SKCropNode {
         handleNode.position = CGPointMake(containerNode.size.width, 0)
         handleNode.zPosition = SceneLayer.PropertyTrayHandle.rawValue
         addChild(handleNode)
-        
-//        // Slide handle to right
-//        let alphaAction = SKAction.fadeInWithDuration(0)
-//        let moveAction = SKAction.moveTo(CGPointMake(containerNode.size.width, 0), duration: 0.5)
-//        moveAction.timingMode = .EaseOut
-//        let sequenceAction = SKAction.sequence([alphaAction, moveAction])
-//        handleNode.runAction(sequenceAction)
     }
+    */
     
-    func addPropertyNode(propertyNode: PropertyTrayTileNode) {
+    // Lays out the tray, then the nodes, then adds all tile nodes in propertyNodes
+    func addPropertyNodes() {
         
-        propertyNodes.append(propertyNode)
+        layoutTileNodes(nil, animated: false) {
         
-        // Configure position
-        let totalTiles = propertyNodes.count
-        if totalTiles == 1 {
-            propertyNode.position = CGPointMake(TileWidth / 2 + TileMarginWidth, 0)
-        } else {
-            let previousTile = propertyNodes[totalTiles - 2]
-            propertyNode.position = CGPointMake(TileWidth / 2 + TileMarginWidth, 0)
+            for tileNode in self.propertyNodes {
+                self.addChild(tileNode)
+            }
         }
-        
-        addChild(propertyNode)
-        
-        updateLayout(nil)
     }
     
+    // Adds a horizontal position constraint to each tile
     func addTileConstraints() {
 
         let xConstraint = SKConstraint.positionX(SKRange(constantValue: containerNode.size.width / 2))
@@ -182,7 +192,6 @@ class PropertyTrayNode: SKCropNode {
 
             // Calculate rectangle of upper tile
             let upperNodeRect = propertyNodes[i - 1].calculateAccumulatedFrame()
-            println("upperNodeRect \(upperNodeRect)")
 
 //            let lowerConstraint = SKConstraint.positionY(SKRange(constantValue: propertyNodes[0].position.y - TileHeight - TileMarginWidth))
 //            lowerConstraint.referenceNode = propertyNodes[i - 1]
@@ -196,26 +205,26 @@ class PropertyTrayNode: SKCropNode {
         }
     }
 
+    // Removes all constraints from all tiles
     func removeAllTileConstraints() {
         for node in propertyNodes {
             node.constraints = []
         }
     }
     
-    func layoutTray() {
+    // Adjusts the size of the tray and mask node to contain all tiles
+    func resizeContainer(completion: (() -> ())?) {
         
         // Create new rect for border
-        containerNode.runAction(SKAction.resizeToHeight(PropertyTrayMaximumHeight, duration: 1))
-        maskNode?.runAction(SKAction.resizeToWidth(containerNode.size.width + handleNode.size.width, height: PropertyTrayMaximumHeight, duration: 1))
-        
-//        // Reposition scrolling indicators
-//        topScrollingIndicator.runAction(SKAction.moveToY(propertiesHeight / 2 - TileHeight / 4, duration: 5))
-//        bottomScrollingIndicator.runAction(SKAction.moveToY(-(propertiesHeight / 2) - (TileHeight / 4), duration: 5))
-        
-//        return CGSizeMake(containerNode.size.width, PropertyTrayMaximumHeight)
+        maskNode?.runAction(SKAction.resizeToWidth(containerNode.size.width, height: PropertyTrayMaximumHeight, duration: 1))
+        containerNode.runAction(SKAction.resizeToHeight(PropertyTrayMaximumHeight, duration: 1)) {
+            if let callableCompletionB = completion {
+                callableCompletionB()
+            }
+        }
     }
     
-    func layoutTileNodes(staticTile: PropertyTrayTileNode?) {
+    func layoutTileNodes(staticTile: PropertyTrayTileNode?, animated: Bool, completion: (() -> ())?) {
         
         if staticTile != nil {
             
@@ -240,7 +249,11 @@ class PropertyTrayNode: SKCropNode {
                     thisNodeY += TileMarginWidth
                     thisNodeY += thisNodeSize.height
                     
-                    thisNode.position = CGPointMake(thisNodeX, thisNodeY)
+                    if animated {
+                        thisNode.runAction(SKAction.moveTo(CGPointMake(thisNodeX, thisNodeY), duration: 1.0))
+                    } else {
+                        thisNode.position = CGPointMake(thisNodeX, thisNodeY)
+                    }
                 }
                 
                 // Iterate over nodes *below* static tile, moving downward
@@ -261,21 +274,39 @@ class PropertyTrayNode: SKCropNode {
                     thisNodeY -= nodeAboveSize.height// - (TileHeight / CGFloat(2))
                     thisNodeY -= TileMarginWidth
                     
-                    thisNode.position = CGPointMake(thisNodeX, thisNodeY)
+//                    if animated {
+//                        thisNode.runAction(SKAction.moveTo(CGPointMake(thisNodeX, thisNodeY), duration: 1.0))
+//                    } else {
+                        thisNode.position = CGPointMake(thisNodeX, thisNodeY)
+//                    }
+                }
+                
+                if let callableCompletionC = completion {
+                    callableCompletionC()
                 }
             }
         } else {
-            
             if propertyNodes.count % 2 == 0 {
-                layoutEvenNumberOfTileNodes(staticTile, nodeCount: propertyNodes.count)
+                layoutEvenNumberOfTileNodes(staticTile, nodeCount: propertyNodes.count, animated: animated) {
+                    if let callableCompletionD = completion {
+                        callableCompletionD()
+                    }
+                }
             } else {
-                layoutOddNumberOfTileNodes(staticTile, nodeCount: propertyNodes.count)
+                layoutOddNumberOfTileNodes(staticTile, nodeCount: propertyNodes.count, animated: animated)  {
+                    if let callableCompletionE = completion {
+                        callableCompletionE()
+                    }
+                }
             }
         }
     }
     
-    private func layoutEvenNumberOfTileNodes(staticTile: PropertyTrayTileNode?, nodeCount: Int) {
+    private func layoutEvenNumberOfTileNodes(staticTile: PropertyTrayTileNode?, nodeCount: Int, animated: Bool, completion: (() -> ())?) {
+        
         let halfNodes = nodeCount / 2
+        
+        let animationDuration: NSTimeInterval = 1.0
         
         // Layout all tiles centered around the middle of the screen
         for (index, node) in enumerate(propertyNodes) {
@@ -296,14 +327,33 @@ class PropertyTrayNode: SKCropNode {
             }
             
             node.removeAllActions()
-            node.runAction(SKAction.moveTo(CGPointMake(x, y), duration: 1))
+            
+//            if animated {
+//                node.runAction(SKAction.moveTo(CGPointMake(x, y), duration: animationDuration))
+//            } else {
+                node.position = CGPointMake(x, y)
+//            }
+        }
+        
+        // Call completion closure if we received one.
+        if let callableCompletion = completion {
+            
+            // If the layout was animated, we need to wait animationDuration.
+            if animated {
+                self.runAction(SKAction.waitForDuration(animationDuration)) {
+                    callableCompletion()
+                }
+            } else {
+                callableCompletion()
+            }
         }
     }
     
-    private func layoutOddNumberOfTileNodes(staticTile: PropertyTrayTileNode?, nodeCount: Int) {
+    private func layoutOddNumberOfTileNodes(staticTile: PropertyTrayTileNode?, nodeCount: Int, animated: Bool, completion: (() -> ())?) {
+        
         let halfNodes = nodeCount / 2
         
-        println("nodeCount: \(nodeCount), halfNodes: \(halfNodes)")
+        let animationDuration: NSTimeInterval = 1.0
         
         // Layout all tiles centered around the middle of the screen
         for (index, node) in enumerate(propertyNodes) {
@@ -329,7 +379,25 @@ class PropertyTrayNode: SKCropNode {
             }
             
             node.removeAllActions()
-            node.runAction(SKAction.moveTo(CGPointMake(x, y), duration: 1))
+            
+            if animated {
+                node.runAction(SKAction.moveTo(CGPointMake(x, y), duration: 1))
+            } else {
+                node.position = CGPointMake(x, y)
+            }
+        }
+        
+        // Call completion closure if we received one.
+        if let callableCompletion = completion {
+            
+            // If the layout was animated, we need to wait animationDuration.
+            if animated {
+                self.runAction(SKAction.waitForDuration(animationDuration)) {
+                    callableCompletion()
+                }
+            } else {
+                callableCompletion()
+            }
         }
     }
     

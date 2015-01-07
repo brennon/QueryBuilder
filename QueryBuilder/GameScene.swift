@@ -15,21 +15,25 @@ import SpriteKit
     and the `CompletedQueryNode` where query predicates are placed for use in 
     the constructed query.
 */
-class GameScene: SKScene, SKPhysicsContactDelegate {
+class GameScene: SKScene {
     
     // MARK: Instance Variables
     
-    var panRecognizer: MultiplePanGestureRecognizer!
+//    var panRecognizer: MultiplePanGestureRecognizer!
     var touchNodeMap = TouchNodeMap()
-    var propertyTiles = Array<PredicateTileNode>()
-    var trayNode: PropertyTrayNode?
+//    var propertyTiles = Array<PredicateTileNode>()
+    var propertyTrayNode: PropertyTrayNode?
     var collection: Collection?
+//    var statusNode: SKLabelNode!
     
     // MARK: Initializers
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-        addTestPredicateNodes()
+//        addTestPredicateNodes()
+        
+        // Add a node for displaying status messages
+//        addStatusNode()
         
         // Add pan gesture recognizer to the view
 //        panRecognizer = MultiplePanGestureRecognizer(
@@ -38,89 +42,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        )
 //        view.addGestureRecognizer(panRecognizer)
         
+        // Add the property tray
+        addPropertyTray(collection!)
+        
         // Setup physics
         physicsWorld.gravity = CGVectorMake(0, 0)
-        physicsWorld.contactDelegate = self
-        
-        // Enabled debugging display
-        debuggingDisplay(true)
-    }
-    
-    
-    func useCollection(collection: Collection) {
-        replacePropertyTray(collection)
-    }
-    
-    // MARK: SKPhysicsContactDelegate
-    
-    func didBeginContact(contact: SKPhysicsContact!) {
-        
-//        let settingsPopoverController = SettingsViewPopoverController()
-        
-//        settingsPopoverController.presentPopoverFromRect(CGRectMake(frame.origin.x, 100, 100, 100), inView: self.view!, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
-    }
-    
-    func didEndContact(contact: SKPhysicsContact!) {
-    }
-    
-    func addSettingsButton() {
-        
     }
     
     // MARK: Testing/Debugging
     
-    /*!
-        Enables/disables the display of all stock debugging information.
-
-        :param: enabled If `true`, diplay of debugging information is enabled. 
-            If `false`, it is hidden.
-    */
-    func debuggingDisplay(enabled: Bool) {
-        
-        view?.showsDrawCount = enabled
-        view?.showsFields = enabled
-        view?.showsFPS = enabled
-        view?.showsNodeCount = enabled
-        view?.showsPhysics = !enabled
-        view?.showsQuadCount = enabled
-    }
-    
-    /*!
-        Adds several test `PredicateTileNode`s to the scene.
-    */
-    func addTestPredicateNodes() {
-        var rectangleA = PredicateTileNode(label: "rectangleA")
-        rectangleA.position = CGPoint(
-            x: CGRectGetMidX(frame) / 2,
-            y: CGRectGetMidY(frame)
-        )
-        addChild(rectangleA)
-        
-        var rectangleB = PredicateTileNode(label: "rectangleB")
-        rectangleB.position = CGPoint(
-            x: (CGRectGetMidX(frame) / 2) * 3,
-            y:CGRectGetMidY(frame)
-        )
-        addChild(rectangleB)
-        
-        var rectangleC = PredicateTileNode(label: "rectangleC")
-        rectangleC.position = CGPoint(
-            x: CGRectGetMidX(frame),
-            y: CGRectGetMidY(frame) + (CGRectGetHeight(frame) / 4)
-        )
-        addChild(rectangleC)
-    }
-    
-    func replacePropertyTray(collection: Collection) {
+    func addPropertyTray(collection: Collection) {
             
         // Remove the current PropetyTrayNode, if it exists
-        trayNode?.removeFromParent()
+        propertyTrayNode?.removeFromParent()
         
         // Create a new PropertyTrayNode
-        trayNode = PropertyTrayNode(collection: collection)
-        trayNode!.position = CGPointMake(0, size.height / 2)
+        propertyTrayNode = PropertyTrayNode(collection: collection)
+        propertyTrayNode!.position = CGPointMake(0, size.height / 2)
         
-        addChild(trayNode!)
+        addChild(propertyTrayNode!)
     }
     
     // MARK: Pan Gesture Handling
