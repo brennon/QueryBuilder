@@ -64,7 +64,7 @@ class LoadingScene: SKScene {
     
     func connectToDatabase() {
         dispatch_async(QueueManager.sharedInstance.getDatabaseQueue()) {
-            self.trials = Collection(name: "experiments", inDatabase: "eim")
+            self.trials = Collection(name: "trials", inDatabase: "eim")
             self.trials.enumerateFieldNames(5)
             self.trials.getDistinctValuesForAllFields()
             dispatch_async(dispatch_get_main_queue()) {
@@ -88,7 +88,7 @@ class LoadingScene: SKScene {
         view?.showsFields = enabled
         view?.showsFPS = enabled
         view?.showsNodeCount = enabled
-        view?.showsPhysics = !enabled
+        view?.showsPhysics = enabled
         view?.showsQuadCount = enabled
     }
 }

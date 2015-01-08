@@ -51,16 +51,16 @@ class TileNode: SKSpriteNode {
         position = CGPointZero
         zPosition = SceneLayer.PredicateTiles.rawValue
         
-        physicsBody = SKPhysicsBody(
-            rectangleOfSize: size,
-            center: CGPointZero
-        )
-        
-        physicsBody?.categoryBitMask =
-            SceneNodeCategories.PredicateTile.rawValue
-        physicsBody?.collisionBitMask = SceneNodeCategories.None.rawValue
-        physicsBody?.contactTestBitMask =
-            SceneNodeCategories.PredicateTile.rawValue
+//        physicsBody = SKPhysicsBody(
+//            rectangleOfSize: size,
+//            center: CGPointZero
+//        )
+//        
+//        physicsBody?.categoryBitMask =
+//            SceneNodeCategories.PredicateTile.rawValue
+//        physicsBody?.collisionBitMask = SceneNodeCategories.None.rawValue
+//        physicsBody?.contactTestBitMask =
+//            SceneNodeCategories.PredicateTile.rawValue
         
         userInteractionEnabled = true
     }

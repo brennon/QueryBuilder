@@ -68,9 +68,18 @@ class PropertyTrayTileNode: TileNode {
         labelNode!.fontSize = calculateFontSize(label)
         addChild(labelNode!)
         
+        // Configure physics body
+//        physicsBody = SKPhysicsBody(rectangleOfSize: self.size)
+//        physicsBody!.allowsRotation = false
+//        physicsBody!.affectedByGravity = false
+        
         // Add single-tap recognizer to node
         let singleTapRecognizer = BBTapGestureRecognizer(target: self, action: PropertyTrayTileNode.handleSingleTap)
-        self.addGestureRecognizer(singleTapRecognizer)
+        addGestureRecognizer(singleTapRecognizer)
+        
+        // Add pan recognizer to node
+        let panRecognizer = BBPanGestureRecognizer(target: self, action: PropertyTrayTileNode.handlePan)
+        addGestureRecognizer(panRecognizer)
     }
 
 //    /**
@@ -126,6 +135,23 @@ class PropertyTrayTileNode: TileNode {
 //        }
 //    }
     
+    func handlePan(recognizer: BBGestureRecognizer?) {
+        
+        if let panRecognizer = recognizer as? BBPanGestureRecognizer {
+            
+            if panRecognizer.state == BBGestureRecognizerState.Changed {
+                
+                let translation = panRecognizer.translationInNode(self.scene!)
+                let newPosition = CGPointMake(position.x, position.y + translation.y)
+                position = newPosition
+                propertyTrayNode.updateLayout(rootTileNode, animated: false, completion: nil)
+//                runAction(SKAction.moveTo(newPosition, duration: 0))
+//                propertyTrayNode.scrollTiles(translation.y)
+                panRecognizer.setTranslation(CGPointZero, inNode: self.scene!)
+            }
+        }
+    }
+    
     func handleSingleTap(recognizer: BBGestureRecognizer?) {
         
         if recognizer?.state == BBGestureRecognizerState.Recognized {
@@ -139,15 +165,28 @@ class PropertyTrayTileNode: TileNode {
                     
                     // Add each child and update layout as we go
                     child.alpha = 0
+                    
+//                    if index < 1 {
                     child.position = CGPointMake(0, -(TileHeight + TileMarginWidth) * CGFloat(index + 1))
                     addChild(child)
+//                    }
                     
 //                    propertyTrayNode.updateLayout(self) {
 //                        child.runAction(SKAction.fadeInWithDuration(0.25))
 //                    }
                 }
                 
-                propertyTrayNode.updateLayout(self, completion: nil)
+                // Tell tray node to update its layout
+                propertyTrayNode.updateLayout(self.rootTileNode, animated: true) {
+                
+                    // Fade in the new tiles
+                    for tile in self.childTiles {
+                        let wait = SKAction.waitForDuration(PropertyTrayTileExpandDuration)
+                        let fadeIn = SKAction.fadeInWithDuration(0.1)
+                        let sequence = SKAction.sequence([wait, fadeIn])
+                        tile.runAction(sequence)
+                    }
+                }
                 
                 // Get number of visible property tiles
                 var count: Int = 0
@@ -155,21 +194,24 @@ class PropertyTrayTileNode: TileNode {
                     count = count + 1
                 })
                 
-                println("counted \(count) subtiles")
-                
             } else {
                 
-                for child in childTiles {
-                    child.removeFromParent()
-                }
+                for var i = childTiles.count - 1; i >= 0; i-- {
+                    let child = childTiles[i]
+                    let oldParent = child.parent!
+                    let fadeOut = SKAction.fadeOutWithDuration(0.1)
+                    child.runAction(fadeOut)
                 
-                propertyTrayNode.updateLayout(self, nil)
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
+                    dispatch_after(delayTime, dispatch_get_main_queue()) {
+                        child.removeFromParent()
+                        
+                        self.propertyTrayNode.updateLayout(self.rootTileNode, animated: true, completion: nil)
+                    }
+                }
             }
             tileExpanded = !tileExpanded
         }
-        
-        // Tell tray node to update its layout
-//        propertyTrayNode.updateLayout(self)
     }
 
     required init?(coder aDecoder: NSCoder) {

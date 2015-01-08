@@ -77,7 +77,7 @@ class PropertyTrayNode: SKCropNode {
 
             // Iterate over keys
             for (index, key) in enumerate(allKeys) {
-//                if index < 7 {
+//                if index < 9 {
                     var actualParentTile = parentTile
                     
                     let keyString = key as String
@@ -110,20 +110,14 @@ class PropertyTrayNode: SKCropNode {
     }
     
     // Removes all tile constraings, lays out the tray and then the tray tiles, and then replaces constraints
-    func updateLayout(staticTile: PropertyTrayTileNode?, completion: (() -> ())?) {
-        
-        println("updateLayout")
-        
+    func updateLayout(staticTile: PropertyTrayTileNode?, animated: Bool, completion: (() -> ())?) {
+
         removeAllTileConstraints()
-//        resizeContainer {
-            layoutTileNodes(staticTile, animated: true) {
-                self.addTileConstraints()
-                
-                if let callableCompletion = completion {
-                    callableCompletion()
-                }
+        layoutTileNodes(staticTile, animated: animated) {
+            if let callableCompletion = completion {
+                callableCompletion()
             }
-//        }
+        }
     }
     
     // Adds and animates in the container node, and then calls handleNode
@@ -172,11 +166,15 @@ class PropertyTrayNode: SKCropNode {
     // Lays out the tray, then the nodes, then adds all tile nodes in propertyNodes
     func addPropertyNodes() {
         
+        removeAllTileConstraints()
+        
         layoutTileNodes(nil, animated: false) {
         
             for tileNode in self.propertyNodes {
                 self.addChild(tileNode)
             }
+            
+            self.addTileConstraints()
         }
     }
     
@@ -186,27 +184,34 @@ class PropertyTrayNode: SKCropNode {
         let xConstraint = SKConstraint.positionX(SKRange(constantValue: containerNode.size.width / 2))
         xConstraint.referenceNode = containerNode
 
-        propertyNodes[0].constraints?.append(xConstraint)
+        for tile in propertyNodes {
 
-        for i in 1 ..< propertyNodes.count {
-
-            // Calculate rectangle of upper tile
-            let upperNodeRect = propertyNodes[i - 1].calculateAccumulatedFrame()
-
-//            let lowerConstraint = SKConstraint.positionY(SKRange(constantValue: propertyNodes[0].position.y - TileHeight - TileMarginWidth))
-//            lowerConstraint.referenceNode = propertyNodes[i - 1]
-//
-//            let upperConstraint = SKConstraint.positionY(SKRange(constantValue: propertyNodes[1].position.y + TileHeight + TileMarginWidth))
-//            upperConstraint.referenceNode = propertyNodes[i]
-//
-//            propertyNodes[i - 1].constraints?.append(upperConstraint)
-//            propertyNodes[i].constraints?.append(lowerConstraint)
-            propertyNodes[i].constraints?.append(xConstraint)
+            tile.constraints = [xConstraint]
+        }
+    }
+    
+    func addTileJoints() {
+        
+        // Iterate over tiles from top to bottom.
+        for var i = 0; i < propertyNodes.count - 1; i++ {
+            
+            let aboveTile = propertyNodes[i]
+            let belowTile = propertyNodes[i + 1]
+            
+            let centralY = aboveTile.position.y - abs((belowTile.position.y - aboveTile.position.y) / 2)
+            
+            let anchorPoint = aboveTile.position
+            let anchorPointInScene = scene!.convertPoint(anchorPoint, fromNode: self)
+            
+            let joint = SKPhysicsJointSpring.jointWithBodyA(aboveTile.physicsBody, bodyB: belowTile.physicsBody, anchorA: aboveTile.position, anchorB: belowTile.position)
+            
+            scene!.physicsWorld.addJoint(joint)
         }
     }
 
     // Removes all constraints from all tiles
     func removeAllTileConstraints() {
+        
         for node in propertyNodes {
             node.constraints = []
         }
@@ -224,92 +229,114 @@ class PropertyTrayNode: SKCropNode {
         }
     }
     
+    func determineAndPositionReferenceTile() -> PropertyTrayTileNode {
+        
+        var referenceTile: PropertyTrayTileNode
+        
+        // If there are an even number of tiles, use the tile just above the middle.
+        if propertyNodes.count % 2 == 0 {
+            
+            referenceTile = propertyNodes[(propertyNodes.count / 2) - 1]
+            
+            // Tile should be one half a tile height plus one half a spacer above center.
+            referenceTile.position = CGPointMake(TileMarginWidth + (TileWidth / CGFloat(2)), (TileMarginWidth + TileHeight) / CGFloat(2))
+            
+            // Otherwise, use the middle tile.
+        } else {
+            
+            referenceTile = propertyNodes[propertyNodes.count / 2]
+            
+            // Tile should be vertically and horizontally centered in container.
+            referenceTile.position = CGPointMake(TileMarginWidth + (TileWidth / CGFloat(2)), 0)
+        }
+        
+        return referenceTile
+    }
+    
     func layoutTileNodes(referenceTile: PropertyTrayTileNode?, animated: Bool, completion: (() -> ())?) {
         
         // If there isn't a static tile, find one, set its posiiton, and use it as
         // the reference tile.
         
         var actualReferenceTile: PropertyTrayTileNode
-        if referenceTile == nil {
-            
-            // If there are an even number of tiles, use the tile just above the middle.
-            if propertyNodes.count % 2 == 0 {
-                
-                actualReferenceTile = propertyNodes[(propertyNodes.count / 2) - 1]
-                
-                // Tile should be one half a tile height plus one half a spacer above center.
-                actualReferenceTile.position = CGPointMake(TileMarginWidth + (TileWidth / CGFloat(2)), (TileMarginWidth + TileHeight) / CGFloat(2))
-            
-            // Otherwise, use the middle tile.
-            } else {
-                
-                actualReferenceTile = propertyNodes[propertyNodes.count / 2]
-                
-                // Tile should be vertically and horizontally centered in container.
-                actualReferenceTile.position = CGPointMake(TileMarginWidth + (TileWidth / CGFloat(2)), 0)
-            }
         
-        // Otherwise, use the reference tile we were given.
-        } else {
+        if referenceTile != nil {
             actualReferenceTile = referenceTile!
+        } else {
+            actualReferenceTile = determineAndPositionReferenceTile()
         }
-            
+        
         // Get index of static tile
         if let index = find(propertyNodes, actualReferenceTile) {
             
             // Iterate over nodes *above* static tile, moving upward
             for var i = index - 1; i >= 0; i-- {
-                
-                let thisNode = propertyNodes[i]
-                let nodeBelow = propertyNodes[i + 1]
-                
-                // Get the size of this node
-                let thisNodeSize = thisNode.calculateAccumulatedFrame()
-                
-                // Get the size and position of the node below
-                let nodeBelowSize = nodeBelow.calculateAccumulatedFrame()
-                let nodeBelowPosition = nodeBelow.position
-                
-                let thisNodeX = TileMarginWidth + (TileWidth / CGFloat(2))
-                var thisNodeY = nodeBelowPosition.y
-                thisNodeY += TileMarginWidth
-                thisNodeY += thisNodeSize.height
-                
-                if animated {
-                    thisNode.runAction(SKAction.moveTo(CGPointMake(thisNodeX, thisNodeY), duration: 1.0))
-                } else {
-                    thisNode.position = CGPointMake(thisNodeX, thisNodeY)
-                }
+                layoutTileNode(atIndex: i, aboveReferenceTileAtIndex: index, animated: animated, completion: nil)
             }
             
             // Iterate over nodes *below* static tile, moving downward
             for var i = index + 1; i < propertyNodes.count; i++ {
-                
-                let thisNode = propertyNodes[i]
-                let nodeAbove = propertyNodes[i - 1]
-                
-                // Get the size of this node
-                let thisNodeSize = thisNode.calculateAccumulatedFrame()
-                
-                // Get the size and position of the node below
-                let nodeAboveSize = nodeAbove.calculateAccumulatedFrame()
-                let nodeAbovePosition = nodeAbove.position
-                
-                let thisNodeX = TileMarginWidth + (TileWidth / CGFloat(2))
-                var thisNodeY = nodeAbovePosition.y
-                thisNodeY -= nodeAboveSize.height// - (TileHeight / CGFloat(2))
-                thisNodeY -= TileMarginWidth
-                
-//                    if animated {
-//                        thisNode.runAction(SKAction.moveTo(CGPointMake(thisNodeX, thisNodeY), duration: 1.0))
-//                    } else {
-                    thisNode.position = CGPointMake(thisNodeX, thisNodeY)
-//                    }
+                layoutTileNode(atIndex: i, belowReferenceTileAtIndex: index, animated: animated, completion: nil)
             }
+        }
+        
+        if let callableCompletionC = completion {
+            callableCompletionC()
+        }
+    }
+    
+    private func layoutTileNode(
+        atIndex index: Int,
+        aboveReferenceTileAtIndex referenceTileIndex: Int,
+        animated: Bool,
+        completion: (() -> ())?) {
             
-            if let callableCompletionC = completion {
-                callableCompletionC()
+            // Calculate vertical position of this tile based on heights of tiles below it.
+            var currentTile = propertyNodes[referenceTileIndex]
+            var y = currentTile.position.y + (TileHeight / CGFloat(2)) + TileMarginHeight
+            for var i = referenceTileIndex - 1; i > index; i-- {
+                currentTile = propertyNodes[i]
+                y += currentTile.calculateAccumulatedFrame().height + TileMarginHeight
             }
+            y += TileHeight / CGFloat(2)
+            var tilePosition = CGPointMake(TileMarginWidth + (TileWidth / CGFloat(2)), y)
+            
+            // Move the tile into position.
+            if animated {
+                propertyNodes[index].runAction(SKAction.moveTo(tilePosition, duration: PropertyTrayTileExpandDuration))
+            } else {
+                propertyNodes[index].position = tilePosition
+            }
+    }
+    
+    private func layoutTileNode(
+        atIndex index: Int,
+        belowReferenceTileAtIndex referenceTileIndex: Int,
+        animated: Bool,
+        completion: (() -> ())?) {
+        
+        // Calculate vertical position of this tile based on heights of tiles above it.
+        var currentTile = propertyNodes[referenceTileIndex]
+        var y = currentTile.position.y - currentTile.calculateAccumulatedFrame().height + (TileHeight / CGFloat(2)) - TileMarginHeight
+        for var i = referenceTileIndex + 1; i < index; i++ {
+            currentTile = propertyNodes[i]
+            y -= currentTile.calculateAccumulatedFrame().height + TileMarginHeight
+        }
+        y -= TileHeight / CGFloat(2)
+        var tilePosition = CGPointMake(TileMarginWidth + (TileWidth / CGFloat(2)), y)
+        
+        // Move the tile into position.
+        if animated {
+            propertyNodes[index].runAction(SKAction.moveTo(tilePosition, duration: PropertyTrayTileExpandDuration))
+        } else {
+            propertyNodes[index].position = tilePosition
+        }
+    }
+    
+    func scrollTiles(dy: CGFloat) {
+        
+        for tile in propertyNodes {
+            tile.position = CGPointMake(tile.position.x, tile.position.y + dy)
         }
     }
     

@@ -39,13 +39,19 @@ let PropertyTrayNodeName            = "property-tray"
 let PropertyTrayTileNodeName        = "property-tray-tile"
 let PropertyTrayContainerNodeName   = "property-tray-container"
 
+// MARK: Animation Durations
+
+let PropertyTrayTileExpandDuration      = 0.2
+let PropertyTrayTileContractDuration    = 0.2
+
 // MARK: Dimensions
 
-let TileWidth:                  CGFloat = 100
 let TileHeight:                 CGFloat = 25
+let TileWidth:                  CGFloat = 100
 let TileSize                            = CGSizeMake(TileWidth, TileHeight)
 let TileCornerRadius:           CGFloat = 10
 let TileBorderWidth:            CGFloat = 2
+let TileMarginHeight:           CGFloat = 10
 let TileMarginWidth:            CGFloat = 10
 let PropertyTrayMaximumHeight:  CGFloat = UIScreen.mainScreen().applicationFrame.height - 100
 

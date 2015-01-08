@@ -25,6 +25,7 @@ class GameScene: SKScene {
     var propertyTrayNode: PropertyTrayNode?
     var collection: Collection?
 //    var statusNode: SKLabelNode!
+    var propertyTrayNeedsUpdate = false
     
     // MARK: Initializers
     
@@ -169,5 +170,9 @@ class GameScene: SKScene {
         /* Called before each frame is rendered */
         
         super.update(currentTime)
+        
+        if propertyTrayNeedsUpdate {
+            propertyTrayNode?.updateLayout(nil, animated: true, completion: nil)
+        }
     }
 }

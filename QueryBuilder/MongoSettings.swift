@@ -17,8 +17,8 @@ class MongoSettings {
         return _mongoSettingsSharedInstance
     }
     
-    var hostname = "db0.musicsensorsemotion.com"
-    var port = "27017"
+    var hostname = "127.0.0.1"
+    var port = "28017"
     var authenticationDatabase = "eim"
     var authenticationUsername = "eim"
     var authenticationPassword = "eim"
