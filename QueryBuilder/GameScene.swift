@@ -171,8 +171,11 @@ class GameScene: SKScene {
         
         super.update(currentTime)
         
-        if propertyTrayNeedsUpdate {
-            propertyTrayNode?.updateLayout(nil, animated: true, completion: nil)
+        if let tray = propertyTrayNode {
+            if tray.needsLayout {
+                tray.updateLayout(tray.propertyNodes[0], animated: false, completion: {})
+                tray.needsLayout = false
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ class PropertyTrayNode: SKCropNode {
     */
     var propertyNodes = [PropertyTrayTileNode]()
     let propertyNodePadding: CGFloat = 10
+    var needsLayout = false
     
     /**
         Designated initializer. Builds the `PropertyTrayNode` with 
@@ -49,11 +50,6 @@ class PropertyTrayNode: SKCropNode {
             // Add tiles that were just built
             self.addPropertyNodes()
         }
-        
-        /*
-        // Add handle node
-        addHandleNode()
-        */
     }
     
     // Adds tiles to propertyNodes based on the information available in the provided dictionary
@@ -79,39 +75,37 @@ class PropertyTrayNode: SKCropNode {
 
             // Iterate over keys
             for (index, key) in enumerate(allKeys) {
-//                if index < 9 {
-                    var actualParentTile = parentTile
-                    
-                    let keyString = key as String
+                var actualParentTile = parentTile
+                
+                let keyString = key as String
 
-                    let subdictionary =
-                        dictionary.objectForKey(key)! as NSMutableDictionary
+                let subdictionary =
+                    dictionary.objectForKey(key)! as NSMutableDictionary
+                
+                // If there is no parent tile, this is a top-level tile
+                if parentTile == nil {
                     
-                    // If there is no parent tile, this is a top-level tile
-                    if parentTile == nil {
-                        
-                        actualParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil, depth: depthCounter)
-                        propertyNodes.append(actualParentTile!)
-                        
-                    } else {
-                        
-                        let newParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil, depth: depthCounter)
-                        actualParentTile!.childTiles.append(newParentTile)
-                        actualParentTile = newParentTile
-                    }
+                    actualParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil, depth: depthCounter)
+                    propertyNodes.append(actualParentTile!)
+                    
+                } else {
+                    
+                    let newParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil, depth: depthCounter)
+                    actualParentTile!.childTiles.append(newParentTile)
+                    actualParentTile = newParentTile
+                }
 
-                    buildTilesFromDictionary(
-                        subdictionary,
-                        forField: keyString,
-                        withParentTile: actualParentTile!,
-                        andDepthCounter: depthCounter + 1
-                    )
-//                }
+                buildTilesFromDictionary(
+                    subdictionary,
+                    forField: keyString,
+                    withParentTile: actualParentTile!,
+                    andDepthCounter: depthCounter + 1
+                )
             }
         }
     }
     
-    // Removes all tile constraings, lays out the tray and then the tray tiles, and then replaces constraints
+    // Removes all tile constraints, lays out the tray and then the tray tiles, and then replaces constraints
     func updateLayout(staticTile: PropertyTrayTileNode?, animated: Bool, completion: (() -> ())?) {
 
         removeAllTileConstraints()
@@ -152,19 +146,6 @@ class PropertyTrayNode: SKCropNode {
         }
     }
     
-    /*
-    // Adds the handlenode
-    func addHandleNode() {
-        
-        // Build and add handle
-        handleNode = SKSpriteNode(color: UIColor.greenColor(), size: CGSizeMake(20, 60))
-        handleNode.anchorPoint = CGPointMake(0, 0.5)
-        handleNode.position = CGPointMake(containerNode.size.width, 0)
-        handleNode.zPosition = SceneLayer.PropertyTrayHandle.rawValue
-        addChild(handleNode)
-    }
-    */
-    
     // Lays out the tray, then the nodes, then adds all tile nodes in propertyNodes
     func addPropertyNodes() {
         
@@ -189,25 +170,6 @@ class PropertyTrayNode: SKCropNode {
         for tile in propertyNodes {
 
             tile.constraints = [xConstraint]
-        }
-    }
-    
-    func addTileJoints() {
-        
-        // Iterate over tiles from top to bottom.
-        for var i = 0; i < propertyNodes.count - 1; i++ {
-            
-            let aboveTile = propertyNodes[i]
-            let belowTile = propertyNodes[i + 1]
-            
-            let centralY = aboveTile.position.y - abs((belowTile.position.y - aboveTile.position.y) / 2)
-            
-            let anchorPoint = aboveTile.position
-            let anchorPointInScene = scene!.convertPoint(anchorPoint, fromNode: self)
-            
-            let joint = SKPhysicsJointSpring.jointWithBodyA(aboveTile.physicsBody, bodyB: belowTile.physicsBody, anchorA: aboveTile.position, anchorB: belowTile.position)
-            
-            scene!.physicsWorld.addJoint(joint)
         }
     }
 

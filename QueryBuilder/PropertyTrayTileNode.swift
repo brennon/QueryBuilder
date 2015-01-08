@@ -111,13 +111,10 @@ class PropertyTrayTileNode: TileNode {
         
         tileExpanded = true
         
-        println("expandTile called on \(label)")
-        
         // Add child tiles to parent node
         for (index, child) in enumerate(childTiles) {
             
             // Add each child and update layout as we go
-//            child.alpha = 0
             child.position = CGPointMake(0, -(TileHeight + TileMarginWidth) * CGFloat(index + 1))
             addChild(child)
         }
@@ -126,9 +123,7 @@ class PropertyTrayTileNode: TileNode {
             tileParent.updateLayout()
         }
         
-//        println("root tile frame: \(rootTileNode.calculateAccumulatedFrame())")
-        
-        propertyTrayNode.updateLayout(rootTileNode, animated: true, completion: {})
+        propertyTrayNode.needsLayout = true
     }
     
     func collapseTile() {
@@ -146,61 +141,8 @@ class PropertyTrayTileNode: TileNode {
             tileParent.updateLayout()
         }
         
-        propertyTrayNode.updateLayout(rootTileNode, animated: true, completion: {})
+        propertyTrayNode.needsLayout = true
     }
-
-//    /**
-//        Tells the receiver when one or more fingers touch down in a view or
-//        window.
-//    
-//        :param: touches A set of `UITouch` instances that represent the touches 
-//            for the starting phase of the event represented by `event`.
-//        :param: event An object representing the event to which the touches 
-//            belong.
-//    */
-//    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
-//        
-//        // Was it a single touch?
-//        if touches.count == 1 {
-//            
-//            // Start the tap timer
-//            tapBegin = NSDate()
-//        }
-//    }
-//    
-//    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
-//        
-//        // Is it just one finger?
-//        if touches.count == 1 {
-//            
-//            let touch = touches.anyObject() as UITouch
-//            
-//            // Get position delta
-//            let deltaX = touch.locationInView(scene!.view).x - touch.previousLocationInView(scene!.view).x
-//            let deltaY = touch.locationInView(scene!.view).y - touch.previousLocationInView(scene!.view).y
-//            
-//            // Update position with deltas
-//            self.position.x += deltaX
-//            self.position.y -= deltaY
-//            
-//            propertyTrayNode.updateLayout(self)
-//        }
-//    }
-//    
-//    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
-//        
-//        // Was it a single touch?
-//        if touches.count == 1 {
-//            
-//            // Did the touch end within the tap time window?
-//            let tapDuration = NSDate().timeIntervalSinceDate(tapBegin)
-//            
-//            if tapDuration <= tapTimeWindow {
-//                
-//                handleSingleTap(touches.anyObject() as UITouch)
-//            }
-//        }
-//    }
     
     func handlePan(recognizer: BBGestureRecognizer?) {
         
@@ -209,10 +151,6 @@ class PropertyTrayTileNode: TileNode {
             if panRecognizer.state == BBGestureRecognizerState.Changed {
                 
                 let translation = panRecognizer.translationInNode(self.scene!)
-//                let newPosition = CGPointMake(position.x, position.y + translation.y)
-//                position = newPosition
-//                propertyTrayNode.updateLayout(rootTileNode, animated: false, completion: nil)
-//                runAction(SKAction.moveTo(newPosition, duration: 0))
                 propertyTrayNode.scrollTiles(translation.y)
                 panRecognizer.setTranslation(CGPointZero, inNode: self.scene!)
             }
@@ -225,42 +163,9 @@ class PropertyTrayTileNode: TileNode {
         
             // Expand direct children tiles if they are collapsed
             if !tileExpanded {
-                
                 expandTile()
-                
-//                // Tell tray node to update its layout
-//                propertyTrayNode.updateLayout(self.rootTileNode, animated: true) {
-//                
-//                    // Fade in the new tiles
-//                    for tile in self.childTiles {
-//                        let wait = SKAction.waitForDuration(PropertyTrayTileExpandDuration)
-//                        let fadeIn = SKAction.fadeInWithDuration(0.1)
-//                        let sequence = SKAction.sequence([wait, fadeIn])
-//                        tile.runAction(sequence)
-//                    }
-//                }
-//                
-//                // Get number of visible property tiles
-//                var count: Int = 0
-//                enumerateChildNodesWithName(PropertyTrayTileNodeName, usingBlock: { (node: SKNode!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
-//                    count = count + 1
-//                })
-                
             } else {
                 collapseTile()
-//                for var i = childTiles.count - 1; i >= 0; i-- {
-//                    let child = childTiles[i]
-//                    let oldParent = child.parent!
-//                    let fadeOut = SKAction.fadeOutWithDuration(0.1)
-//                    child.runAction(fadeOut)
-//                
-//                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
-//                    dispatch_after(delayTime, dispatch_get_main_queue()) {
-//                        child.removeFromParent()
-//                        
-//                        self.propertyTrayNode.updateLayout(self.rootTileNode, animated: true, completion: nil)
-//                    }
-//                }
             }
         }
     }
