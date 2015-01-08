@@ -25,6 +25,7 @@ class PropertyTrayTileNode: TileNode {
     var rootTileNode: PropertyTrayTileNode!
     var isRootTileNode = false
     var label: String!
+    var depth: Int = 0
     
     enum possibleGestures: Int {
         case None   = 0
@@ -41,11 +42,15 @@ class PropertyTrayTileNode: TileNode {
         
         :param: label The string to use for the tile's label.
     */
-    init(label: String, propertyTrayNode: PropertyTrayNode, rootTileNode: PropertyTrayTileNode?) {
+    init(label: String, propertyTrayNode: PropertyTrayNode, rootTileNode: PropertyTrayTileNode?, depth: Int) {
         super.init()
         
         self.label = label
         self.propertyTrayNode = propertyTrayNode
+        self.depth = depth
+        self.color = UIColor.blackColor()
+        self.colorBlendFactor = 0.15 * CGFloat(depth)
+        
         if rootTileNode != nil {
             self.rootTileNode = rootTileNode
             isRootTileNode = false
@@ -81,9 +86,71 @@ class PropertyTrayTileNode: TileNode {
         let panRecognizer = BBPanGestureRecognizer(target: self, action: PropertyTrayTileNode.handlePan)
         addGestureRecognizer(panRecognizer)
     }
+    
+    func updateLayout() {
+        
+        // If this tile isn't expanded, return immediately.
+        if !tileExpanded {
+            return
+        }
+        
+        // First, tell each child tile to layout itself.
+        for child in childTiles {
+            child.updateLayout()
+        }
+        
+        // Then, position the child tiles now that they've been updated.
+        var nextTileY = -TileHeight - TileMarginHeight
+        for child in childTiles {
+            child.position = CGPointMake(0, nextTileY)
+            nextTileY -= (child.calculateAccumulatedFrame().height - (TileHeight / 2)) + TileMarginHeight + (TileHeight / 2)
+        }
+    }
+    
+    func expandTile() {
+        
+        tileExpanded = true
+        
+        println("expandTile called on \(label)")
+        
+        // Add child tiles to parent node
+        for (index, child) in enumerate(childTiles) {
+            
+            // Add each child and update layout as we go
+//            child.alpha = 0
+            child.position = CGPointMake(0, -(TileHeight + TileMarginWidth) * CGFloat(index + 1))
+            addChild(child)
+        }
+        
+        if let tileParent = parent as? PropertyTrayTileNode {
+            tileParent.updateLayout()
+        }
+        
+//        println("root tile frame: \(rootTileNode.calculateAccumulatedFrame())")
+        
+        propertyTrayNode.updateLayout(rootTileNode, animated: true, completion: {})
+    }
+    
+    func collapseTile() {
+        
+        tileExpanded = false
+        
+        // Collapse all child tiles
+        for child in childTiles {
+            
+            child.collapseTile()
+            child.removeFromParent()
+        }
+        
+        if let tileParent = parent as? PropertyTrayTileNode {
+            tileParent.updateLayout()
+        }
+        
+        propertyTrayNode.updateLayout(rootTileNode, animated: true, completion: {})
+    }
 
 //    /**
-//        Tells the receiver when one or more fingers touch down in a view or 
+//        Tells the receiver when one or more fingers touch down in a view or
 //        window.
 //    
 //        :param: touches A set of `UITouch` instances that represent the touches 
@@ -142,11 +209,11 @@ class PropertyTrayTileNode: TileNode {
             if panRecognizer.state == BBGestureRecognizerState.Changed {
                 
                 let translation = panRecognizer.translationInNode(self.scene!)
-                let newPosition = CGPointMake(position.x, position.y + translation.y)
-                position = newPosition
-                propertyTrayNode.updateLayout(rootTileNode, animated: false, completion: nil)
+//                let newPosition = CGPointMake(position.x, position.y + translation.y)
+//                position = newPosition
+//                propertyTrayNode.updateLayout(rootTileNode, animated: false, completion: nil)
 //                runAction(SKAction.moveTo(newPosition, duration: 0))
-//                propertyTrayNode.scrollTiles(translation.y)
+                propertyTrayNode.scrollTiles(translation.y)
                 panRecognizer.setTranslation(CGPointZero, inNode: self.scene!)
             }
         }
@@ -159,58 +226,42 @@ class PropertyTrayTileNode: TileNode {
             // Expand direct children tiles if they are collapsed
             if !tileExpanded {
                 
-                for (index, child) in enumerate(childTiles) {
-                    
-                    println("frame of tapped tile: \(self.calculateAccumulatedFrame())")
-                    
-                    // Add each child and update layout as we go
-                    child.alpha = 0
-                    
-//                    if index < 1 {
-                    child.position = CGPointMake(0, -(TileHeight + TileMarginWidth) * CGFloat(index + 1))
-                    addChild(child)
+                expandTile()
+                
+//                // Tell tray node to update its layout
+//                propertyTrayNode.updateLayout(self.rootTileNode, animated: true) {
+//                
+//                    // Fade in the new tiles
+//                    for tile in self.childTiles {
+//                        let wait = SKAction.waitForDuration(PropertyTrayTileExpandDuration)
+//                        let fadeIn = SKAction.fadeInWithDuration(0.1)
+//                        let sequence = SKAction.sequence([wait, fadeIn])
+//                        tile.runAction(sequence)
 //                    }
-                    
-//                    propertyTrayNode.updateLayout(self) {
-//                        child.runAction(SKAction.fadeInWithDuration(0.25))
-//                    }
-                }
-                
-                // Tell tray node to update its layout
-                propertyTrayNode.updateLayout(self.rootTileNode, animated: true) {
-                
-                    // Fade in the new tiles
-                    for tile in self.childTiles {
-                        let wait = SKAction.waitForDuration(PropertyTrayTileExpandDuration)
-                        let fadeIn = SKAction.fadeInWithDuration(0.1)
-                        let sequence = SKAction.sequence([wait, fadeIn])
-                        tile.runAction(sequence)
-                    }
-                }
-                
-                // Get number of visible property tiles
-                var count: Int = 0
-                enumerateChildNodesWithName(PropertyTrayTileNodeName, usingBlock: { (node: SKNode!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
-                    count = count + 1
-                })
+//                }
+//                
+//                // Get number of visible property tiles
+//                var count: Int = 0
+//                enumerateChildNodesWithName(PropertyTrayTileNodeName, usingBlock: { (node: SKNode!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+//                    count = count + 1
+//                })
                 
             } else {
-                
-                for var i = childTiles.count - 1; i >= 0; i-- {
-                    let child = childTiles[i]
-                    let oldParent = child.parent!
-                    let fadeOut = SKAction.fadeOutWithDuration(0.1)
-                    child.runAction(fadeOut)
-                
-                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
-                    dispatch_after(delayTime, dispatch_get_main_queue()) {
-                        child.removeFromParent()
-                        
-                        self.propertyTrayNode.updateLayout(self.rootTileNode, animated: true, completion: nil)
-                    }
-                }
+                collapseTile()
+//                for var i = childTiles.count - 1; i >= 0; i-- {
+//                    let child = childTiles[i]
+//                    let oldParent = child.parent!
+//                    let fadeOut = SKAction.fadeOutWithDuration(0.1)
+//                    child.runAction(fadeOut)
+//                
+//                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
+//                    dispatch_after(delayTime, dispatch_get_main_queue()) {
+//                        child.removeFromParent()
+//                        
+//                        self.propertyTrayNode.updateLayout(self.rootTileNode, animated: true, completion: nil)
+//                    }
+//                }
             }
-            tileExpanded = !tileExpanded
         }
     }
 

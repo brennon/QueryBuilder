@@ -42,7 +42,8 @@ class PropertyTrayNode: SKCropNode {
             self.buildTilesFromDictionary(
                 collection.fields,
                 forField: "",
-                withParentTile: nil
+                withParentTile: nil,
+                andDepthCounter: 0
             )
             
             // Add tiles that were just built
@@ -59,7 +60,8 @@ class PropertyTrayNode: SKCropNode {
     func buildTilesFromDictionary(
         dictionary: NSMutableDictionary,
         forField field: String,
-        withParentTile parentTile: PropertyTrayTileNode?) {
+        withParentTile parentTile: PropertyTrayTileNode?,
+        andDepthCounter depthCounter: Int) {
             
         // If dictionary has a values key, add it to the parentTile
         if let values: AnyObject = dictionary.valueForKey("values") {
@@ -88,21 +90,21 @@ class PropertyTrayNode: SKCropNode {
                     // If there is no parent tile, this is a top-level tile
                     if parentTile == nil {
                         
-                        actualParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil)
+                        actualParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil, depth: depthCounter)
                         propertyNodes.append(actualParentTile!)
                         
                     } else {
                         
-                        let newParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil)
+                        let newParentTile = PropertyTrayTileNode(label: keyString, propertyTrayNode: self, rootTileNode: nil, depth: depthCounter)
                         actualParentTile!.childTiles.append(newParentTile)
                         actualParentTile = newParentTile
-                        
                     }
 
                     buildTilesFromDictionary(
                         subdictionary,
                         forField: keyString,
-                        withParentTile: actualParentTile!
+                        withParentTile: actualParentTile!,
+                        andDepthCounter: depthCounter + 1
                     )
 //                }
             }
@@ -273,6 +275,7 @@ class PropertyTrayNode: SKCropNode {
             for var i = index - 1; i >= 0; i-- {
                 layoutTileNode(atIndex: i, aboveReferenceTileAtIndex: index, animated: animated, completion: nil)
             }
+            
             
             // Iterate over nodes *below* static tile, moving downward
             for var i = index + 1; i < propertyNodes.count; i++ {
