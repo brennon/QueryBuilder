@@ -73,11 +73,6 @@ class PropertyTrayTileNode: TileNode {
         labelNode!.fontSize = calculateFontSize(label)
         addChild(labelNode!)
         
-        // Configure physics body
-//        physicsBody = SKPhysicsBody(rectangleOfSize: self.size)
-//        physicsBody!.allowsRotation = false
-//        physicsBody!.affectedByGravity = false
-        
         // Add single-tap recognizer to node
         let singleTapRecognizer = BBTapGestureRecognizer(target: self, action: PropertyTrayTileNode.handleSingleTap)
         addGestureRecognizer(singleTapRecognizer)
