@@ -58,6 +58,8 @@ class PredicateTileNode: TileNode {
         
         super.touchesMoved(touches, withEvent: event)
         
+        println("touchesMoved")
+        
         // Get the touch
         if let touch = touches.anyObject() as? UITouch {
             

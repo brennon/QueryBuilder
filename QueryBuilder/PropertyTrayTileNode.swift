@@ -80,6 +80,11 @@ class PropertyTrayTileNode: TileNode {
         // Add pan recognizer to node
         let panRecognizer = BBPanGestureRecognizer(target: self, action: PropertyTrayTileNode.handlePan)
         addGestureRecognizer(panRecognizer)
+        
+        let tapTapDragGestureRecognizer = BBTapTapDragGestureRecognizer(target: self, action: PropertyTrayTileNode.handleTapAndAHalf)
+        addGestureRecognizer(tapTapDragGestureRecognizer)
+        
+        panRecognizer.requireGestureRecognizerToFail(tapTapDragGestureRecognizer)
     }
     
     func updateLayout() {
@@ -145,6 +150,7 @@ class PropertyTrayTileNode: TileNode {
             
             if panRecognizer.state == BBGestureRecognizerState.Changed {
                 
+                println("scrolling")
                 let translation = panRecognizer.translationInNode(self.scene!)
                 propertyTrayNode.scrollTiles(translation.y)
                 panRecognizer.setTranslation(CGPointZero, inNode: self.scene!)
@@ -161,6 +167,124 @@ class PropertyTrayTileNode: TileNode {
                 expandTile()
             } else {
                 collapseTile()
+            }
+        }
+    }
+    
+    var lastRemovedTilePosition: CGPoint?
+    var lastRemovedTileParentNode: SKNode?
+    var lastRemovedTileKeyPath: String?
+    var lastRemovedTile: PropertyTrayTileNode?
+    
+    func handleTapAndAHalf(recognizer: BBGestureRecognizer?) {
+        
+//        println("\(recognizer)")
+        
+        if let tapRecognizer = recognizer as? BBTapTapDragGestureRecognizer {
+            
+            // Move the tile to the scene so that we can reposition it.
+            if tapRecognizer.state == .Began {
+                println("Began")
+                
+                if let oldScene = scene {
+                    if let oldNode = tapRecognizer.node as? PropertyTrayTileNode {
+                        if let oldParent = oldNode.parent {
+                            if let oldKeyPath = oldNode.propertyDict?.valueForKey("keyPath") as? String {
+                                
+                                // Get all the information we need to replace the tile.
+                                lastRemovedTileParentNode = oldParent
+                                lastRemovedTilePosition = oldScene.convertPoint(oldNode.position, fromNode: oldParent)
+                                lastRemovedTileKeyPath = oldKeyPath
+                                lastRemovedTile = oldNode
+                                
+                                // Move the tile to the scene.
+                                oldNode.removeFromParent()
+                                oldNode.position = lastRemovedTilePosition!
+                                oldScene.addChild(oldNode)
+                                
+                                // Remove tile constraints.
+                                propertyTrayNode.removeAllTileConstraints()
+                            } else {
+                                println("no key path")
+                            }
+                        } else {
+                            println("no parent")
+                        }
+                    } else {
+                        println("no node")
+                    }
+                } else {
+                    println("no scene")
+                }
+                
+//                let oldScene = scene!
+//                let propertyNode = tapRecognizer.node! as PropertyTrayTileNode
+//
+//                // Store a reference to the tile's parent and old position.
+//                lastRemovedTileParentNode = tapRecognizer.node!.parent!
+//                lastRemovedTilePosition = scene!.convertPoint(propertyNode.position, fromNode: tapRecognizer.node!.parent!)
+//                lastRemovedTileKeyPath = propertyNode.propertyDict?.valueForKey("keyPath") as? String
+//
+//                // Move the tile to the scene.
+//                tapRecognizer.node!.removeFromParent()
+//                tapRecognizer.node!.position = lastRemovedTilePosition!
+//                oldScene.addChild(tapRecognizer.node!)
+            
+            // Reposition the tile.
+            } else if tapRecognizer.state == .Changed {
+                
+                if let parent = lastRemovedTileParentNode {
+                    if let tilePosition = lastRemovedTilePosition {
+                        if let keyPath = lastRemovedTileKeyPath {
+                            if let tile = lastRemovedTile {
+                                
+                                // Reset velocity--we don't need it.
+                                tile.physicsBody?.velocity = CGVectorMake(0, 0)
+                                
+                                // Apply translation to tile and reset translation on recognizer.
+                                let translation = tapRecognizer.translationInNode(scene!)
+                                let newPosition = CGPointMake(position.x + translation.x, position.y + translation.y)
+                                position = newPosition
+                                tapRecognizer.setTranslation(CGPointZero, inNode: scene!)
+                            }
+                        }
+                    }
+                }
+                
+            // Snap the tile back to its original position and reattach it to original parent.
+            } else if tapRecognizer.state == .Ended {
+                
+                if let parent = lastRemovedTileParentNode {
+                    if let tilePosition = lastRemovedTilePosition {
+                        if let keyPath = lastRemovedTileKeyPath {
+                            if let tile = lastRemovedTile {
+                                let oldScene = scene!
+                                
+                                let fadeOut = SKAction.fadeOutWithDuration(0)
+                                let scaleUp = SKAction.scaleTo(1.25, duration: 0)
+                                let snapBack = SKAction.moveTo(tilePosition, duration: 0)
+                                let disappear = SKAction.group([fadeOut, scaleUp, snapBack])
+                                
+                                let fadeIn = SKAction.fadeInWithDuration(0.25)
+                                let scaleDown = SKAction.scaleTo(1, duration: 0.25)
+                                let reappear = SKAction.group([fadeIn, scaleDown])
+                                
+                                let sequence = SKAction.sequence([disappear, reappear])
+                                tapRecognizer.node!.runAction(sequence) {
+                                    tapRecognizer.node!.removeFromParent()
+                                    tapRecognizer.node!.position = parent.convertPoint(tilePosition, fromNode: oldScene)
+                                    parent.addChild(tapRecognizer.node!)
+                                    self.propertyTrayNode.addTileConstraints()
+                                }
+
+                                // Add a new PredicateTileNode at the new position.
+                                let predicateNode = PredicateTileNode(label: keyPath)
+                                predicateNode.position = tapRecognizer.node!.position
+                                oldScene.addChild(predicateNode)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
