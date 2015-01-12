@@ -15,6 +15,8 @@ enum SceneLayer: CGFloat {
     case PropertyTrayTiles
     case PredicateTiles
     case ScrollingIndicators
+    case MenuRing
+    case MenuKnob
     case Foreground
 }
 
@@ -27,10 +29,15 @@ enum SceneNodeCategories: UInt32 {
 
 // MARK: Colors
 
-let PropertyTrayContainerColor  = UIColor.lightGrayColor()
-let PropertyTrayBorderColor     = UIColor.darkGrayColor()
-let TileLabelFontColor          = UIColor.whiteColor()
-let SceneBackgroundColor        = UIColor(white: 0.9, alpha: 1.0)
+let PropertyTrayContainerColor                  = UIColor(red: 0.314, green: 0.494, blue: 0.698, alpha: 1)
+let PropertyTilePrimaryColor                    = UIColor(red: 0.2, green: 0.4, blue: 0.624, alpha: 1)
+let PredicateTileHeaderColor                    = UIColor(red: 0.953, green: 0.682, blue: 0.251, alpha: 1)
+let PredicateTileDescriptionColor               = UIColor(red: 1, green: 0.765, blue: 0.4, alpha: 1)
+let PredicateTileChooserHeaderColor             = UIColor(red: 0.2, green: 0.392, blue: 0.624, alpha: 1)
+let PredicateTileChooserChoicePrimaryColor      = UIColor(red: 0.314, green: 0.49, blue: 0.698, alpha: 1)
+let PredicateTileChooserChoiceSecondaryColor    = UIColor(red: 0.094, green: 0.314, blue: 0.573, alpha: 1)
+let TileLabelFontColor                          = UIColor.whiteColor()
+let SceneBackgroundColor                        = UIColor(white: 0.9, alpha: 1.0)
 
 // MARK: Node Names
 
@@ -46,8 +53,8 @@ let PropertyTrayTileContractDuration    = 0.2
 
 // MARK: Dimensions
 
-let TileHeight:                 CGFloat = 25
-let TileWidth:                  CGFloat = 100
+let TileHeight:                 CGFloat = 50
+let TileWidth:                  CGFloat = 150
 let TileSize                            = CGSizeMake(TileWidth, TileHeight)
 let TileCornerRadius:           CGFloat = 10
 let TileBorderWidth:            CGFloat = 2

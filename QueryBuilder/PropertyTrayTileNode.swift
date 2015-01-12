@@ -178,8 +178,6 @@ class PropertyTrayTileNode: TileNode {
     
     func handleTapAndAHalf(recognizer: BBGestureRecognizer?) {
         
-//        println("\(recognizer)")
-        
         if let tapRecognizer = recognizer as? BBTapTapDragGestureRecognizer {
             
             // Move the tile to the scene so that we can reposition it.
@@ -204,31 +202,10 @@ class PropertyTrayTileNode: TileNode {
                                 
                                 // Remove tile constraints.
                                 propertyTrayNode.removeAllTileConstraints()
-                            } else {
-                                println("no key path")
                             }
-                        } else {
-                            println("no parent")
                         }
-                    } else {
-                        println("no node")
                     }
-                } else {
-                    println("no scene")
                 }
-                
-//                let oldScene = scene!
-//                let propertyNode = tapRecognizer.node! as PropertyTrayTileNode
-//
-//                // Store a reference to the tile's parent and old position.
-//                lastRemovedTileParentNode = tapRecognizer.node!.parent!
-//                lastRemovedTilePosition = scene!.convertPoint(propertyNode.position, fromNode: tapRecognizer.node!.parent!)
-//                lastRemovedTileKeyPath = propertyNode.propertyDict?.valueForKey("keyPath") as? String
-//
-//                // Move the tile to the scene.
-//                tapRecognizer.node!.removeFromParent()
-//                tapRecognizer.node!.position = lastRemovedTilePosition!
-//                oldScene.addChild(tapRecognizer.node!)
             
             // Reposition the tile.
             } else if tapRecognizer.state == .Changed {
@@ -260,17 +237,9 @@ class PropertyTrayTileNode: TileNode {
                             if let tile = lastRemovedTile {
                                 let oldScene = scene!
                                 
-                                let fadeOut = SKAction.fadeOutWithDuration(0)
-                                let scaleUp = SKAction.scaleTo(1.25, duration: 0)
-                                let snapBack = SKAction.moveTo(tilePosition, duration: 0)
-                                let disappear = SKAction.group([fadeOut, scaleUp, snapBack])
+                                let snapBack = snapBackAction(toPosition: tilePosition)
                                 
-                                let fadeIn = SKAction.fadeInWithDuration(0.25)
-                                let scaleDown = SKAction.scaleTo(1, duration: 0.25)
-                                let reappear = SKAction.group([fadeIn, scaleDown])
-                                
-                                let sequence = SKAction.sequence([disappear, reappear])
-                                tapRecognizer.node!.runAction(sequence) {
+                                tapRecognizer.node!.runAction(snapBack) {
                                     tapRecognizer.node!.removeFromParent()
                                     tapRecognizer.node!.position = parent.convertPoint(tilePosition, fromNode: oldScene)
                                     parent.addChild(tapRecognizer.node!)
@@ -278,15 +247,32 @@ class PropertyTrayTileNode: TileNode {
                                 }
 
                                 // Add a new PredicateTileNode at the new position.
-                                let predicateNode = PredicateTileNode(label: keyPath)
-                                predicateNode.position = tapRecognizer.node!.position
-                                oldScene.addChild(predicateNode)
+                                let newPredicateTile = PredicateTileNode(propertyTile: tile, andLabel: keyPath)
+                                newPredicateTile?.position = tapRecognizer.node!.position
+                                if newPredicateTile != nil {
+                                    oldScene.addChild(newPredicateTile!)
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+    
+    func snapBackAction(toPosition position: CGPoint) -> SKAction {
+        let fadeOut = SKAction.fadeOutWithDuration(0)
+        let scaleUp = SKAction.scaleTo(1.25, duration: 0)
+        let snapBack = SKAction.moveTo(position, duration: 0)
+        let disappear = SKAction.group([fadeOut, scaleUp, snapBack])
+        
+        let fadeIn = SKAction.fadeInWithDuration(0.25)
+        let scaleDown = SKAction.scaleTo(1, duration: 0.25)
+        let reappear = SKAction.group([fadeIn, scaleDown])
+        
+        let sequence = SKAction.sequence([disappear, reappear])
+        
+        return sequence
     }
 
     required init?(coder aDecoder: NSCoder) {

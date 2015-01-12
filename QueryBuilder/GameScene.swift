@@ -46,11 +46,56 @@ class GameScene: SKScene {
         // Add the property tray
         addPropertyTray(collection!)
         
+        addRunQueryButton()
+        
         // Setup physics
         physicsWorld.gravity = CGVectorMake(0, 0)
+        
+        let panRecognizer = BBPanGestureRecognizer(target: self, action: GameScene.handleTrace)
+        addGestureRecognizer(panRecognizer)
     }
     
-    // MARK: Testing/Debugging
+    var tracePath: CGMutablePath!
+    var traceNode: SKShapeNode!
+    
+    func handleTrace(panRecognizer: BBGestureRecognizer?) {
+        if let recognizer = panRecognizer as? BBPanGestureRecognizer {
+            
+            let position = recognizer.locationInNode(self)
+            
+            if recognizer.state == .Began {
+                tracePath = CGPathCreateMutable()
+                CGPathMoveToPoint(tracePath, nil, position!.x, position!.y)
+                traceNode = SKShapeNode(path: tracePath)
+                traceNode.strokeColor = UIColor.blackColor()
+                traceNode.lineWidth = 5
+                addChild(traceNode)
+            } else if recognizer.state == .Changed {
+                CGPathAddLineToPoint(tracePath, nil, position!.x, position!.y)
+                traceNode.path = tracePath
+//                addChild(traceNode)
+            } else if recognizer.state == .Ended || recognizer.state == .Cancelled {
+                fadeOutAndRemoveTraceNode()
+            }
+        }
+    }
+    
+    func fadeOutAndRemoveTraceNode() {
+//        traceNode.removeFromParent()
+//        traceNode.path = CGPathCreateMutable()
+//        traceNode = nil
+        traceNode.runAction(SKAction.fadeOutWithDuration(0.5)) {
+            self.traceNode.removeFromParent()
+        }
+    }
+    
+    func addRunQueryButton() {
+//        let buttonNode = SKShapeNode(circleOfRadius: 25)
+//        buttonNode.fillColor = UIColor(red: 28.2, green: 23.9, blue: 66.3, alpha: 1)
+//        buttonNode.position = CGPointMake(size.width / 2, 45)
+//        
+//        let buttonIcon = SKSpriteNode(imageNamed: <#String#>)
+    }
     
     func addPropertyTray(collection: Collection) {
             

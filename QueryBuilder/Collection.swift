@@ -298,7 +298,7 @@ class Collection {
                                 fields.setValue(intArray, forKeyPath: "\(keyPath).values")
                                 fields.setValue(intArray.first, forKeyPath: "\(keyPath).min")
                                 fields.setValue(intArray.last, forKeyPath: "\(keyPath).max")
-                                fields.setValue("numeric", forKeyPath: "\(keyPath).type")
+                                fields.setValue("int", forKeyPath: "\(keyPath).type")
                                 fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
                                 
                             } else {
@@ -314,7 +314,7 @@ class Collection {
                                 fields.setValue(doubleArray, forKeyPath: "\(keyPath).values")
                                 fields.setValue(doubleArray.first, forKeyPath: "\(keyPath).min")
                                 fields.setValue(doubleArray.last, forKeyPath: "\(keyPath).max")
-                                fields.setValue("numeric", forKeyPath: "\(keyPath).type")
+                                fields.setValue("double", forKeyPath: "\(keyPath).type")
                                 fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
                             }
                             
