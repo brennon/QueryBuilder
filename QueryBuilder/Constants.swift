@@ -29,13 +29,36 @@ enum SceneNodeCategories: UInt32 {
 
 // MARK: Colors
 
-let PropertyTrayContainerColor                  = UIColor(red: 0.314, green: 0.494, blue: 0.698, alpha: 1)
-let PropertyTilePrimaryColor                    = UIColor(red: 0.2, green: 0.4, blue: 0.624, alpha: 1)
-let PredicateTileHeaderColor                    = UIColor(red: 0.953, green: 0.682, blue: 0.251, alpha: 1)
-let PredicateTileDescriptionColor               = UIColor(red: 1, green: 0.765, blue: 0.4, alpha: 1)
-let PredicateTileChooserHeaderColor             = UIColor(red: 0.2, green: 0.392, blue: 0.624, alpha: 1)
-let PredicateTileChooserChoicePrimaryColor      = UIColor(red: 0.314, green: 0.49, blue: 0.698, alpha: 1)
-let PredicateTileChooserChoiceSecondaryColor    = UIColor(red: 0.094, green: 0.314, blue: 0.573, alpha: 1)
+// http://paletton.com/#uid=70O0u0kn-uvdZJdjg-0t9s1uwlC
+
+let QBColorPrimaryLightest                      = UIColor(red: 0.953, green: 0.682, blue: 0.251, alpha: 1)
+let QBColorPrimaryLighter                       = UIColor(red: 1, green: 0.831, blue: 0.565, alpha: 1)
+let QBColorPrimary                              = UIColor(red: 1, green: 0.765, blue: 0.4, alpha: 1)
+let QBColorPrimaryDarker                        = UIColor(red: 0.875, green: 0.565, blue: 0.078, alpha: 1)
+let QBColorPrimaryDarkest                       = UIColor(red: 0.675, green: 0.424, blue: 0.031, alpha: 1)
+let QBColorSecondaryALightest                   = UIColor(red: 0.953, green: 0.8, blue: 0.251, alpha: 1)
+let QBColorSecondaryALighter                    = UIColor(red: 1, green: 0.906, blue: 0.565, alpha: 1)
+let QBColorSecondaryA                           = UIColor(red: 1, green: 0.867, blue: 0.4, alpha: 1)
+let QBColorSecondaryADarker                     = UIColor(red: 0.875, green: 0.702, blue: 0.078, alpha: 1)
+let QBColorSecondaryADarkest                    = UIColor(red: 0.675, green: 0.533, blue: 0.031, alpha: 1)
+let QBColorSecondaryBLightest                   = UIColor(red: 0.286, green: 0.239, blue: 0.663, alpha: 1)
+let QBColorSecondaryBLighter                    = UIColor(red: 0.549, green: 0.518, blue: 0.831, alpha: 1)
+let QBColorSecondaryB                           = UIColor(red: 0.392, green: 0.349, blue: 0.733, alpha: 1)
+let QBColorSecondaryBDarker                     = UIColor(red: 0.18, green: 0.129, blue: 0.608, alpha: 1)
+let QBColorSecondaryBDarkest                    = UIColor(red: 0.122, green: 0.082, blue: 0.471, alpha: 1)
+let QBColorComplementLightest                   = UIColor(red: 0.2, green: 0.392, blue: 0.624, alpha: 1)
+let QBColorComplementLighter                    = UIColor(red: 0.482, green: 0.631, blue: 0.808, alpha: 1)
+let QBColorComplement                           = UIColor(red: 0.314, green: 0.486, blue: 0.698, alpha: 1)
+let QBColorComplementDarker                     = UIColor(red: 0.094, green: 0.314, blue: 0.573, alpha: 1)
+let QBColorComplementDarkest                    = UIColor(red: 0.055, green: 0.231, blue: 0.443, alpha: 1)
+let RunQueryButtonColor                         = QBColorComplement
+let PropertyTrayContainerColor                  = QBColorComplementLightest
+let PropertyTilePrimaryColor                    = QBColorPrimaryLightest
+let PredicateTileHeaderColor                    = QBColorPrimary
+let PredicateTileDescriptionColor               = QBColorPrimaryLighter
+let PredicateTileChooserHeaderColor             = QBColorSecondaryB
+let PredicateTileChooserChoicePrimaryColor      = QBColorSecondaryBLighter
+let PredicateTileChooserChoiceSecondaryColor    = QBColorSecondaryBDarker
 let TileLabelFontColor                          = UIColor.whiteColor()
 let SceneBackgroundColor                        = UIColor(white: 0.9, alpha: 1.0)
 

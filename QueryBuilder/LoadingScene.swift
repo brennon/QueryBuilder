@@ -28,7 +28,7 @@ class LoadingScene: SKScene {
         addActivityIndicator()
         
         // Enabled debugging display
-        debuggingDisplay(true)
+//        debuggingDisplay(true)
         
         connectToDatabase()
     }

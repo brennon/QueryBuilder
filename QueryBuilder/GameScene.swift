@@ -50,55 +50,92 @@ class GameScene: SKScene {
         
         // Setup physics
         physicsWorld.gravity = CGVectorMake(0, 0)
-        
-        let panRecognizer = BBPanGestureRecognizer(target: self, action: GameScene.handleTrace)
-        addGestureRecognizer(panRecognizer)
-    }
-    
-    var tracePath: CGMutablePath!
-    var traceNode: SKShapeNode!
-    
-    func handleTrace(panRecognizer: BBGestureRecognizer?) {
-        if let recognizer = panRecognizer as? BBPanGestureRecognizer {
-            
-            let position = recognizer.locationInNode(self)
-            
-            if recognizer.state == .Began {
-                tracePath = CGPathCreateMutable()
-                CGPathMoveToPoint(tracePath, nil, position!.x, position!.y)
-                traceNode = SKShapeNode(path: tracePath)
-                traceNode.strokeColor = UIColor.blackColor()
-                traceNode.lineWidth = 5
-                addChild(traceNode)
-            } else if recognizer.state == .Changed {
-                CGPathAddLineToPoint(tracePath, nil, position!.x, position!.y)
-                traceNode.path = tracePath
-//                addChild(traceNode)
-            } else if recognizer.state == .Ended || recognizer.state == .Cancelled {
-                fadeOutAndRemoveTraceNode()
-            }
-        }
-    }
-    
-    func fadeOutAndRemoveTraceNode() {
-//        traceNode.removeFromParent()
-//        traceNode.path = CGPathCreateMutable()
-//        traceNode = nil
-        traceNode.runAction(SKAction.fadeOutWithDuration(0.5)) {
-            self.traceNode.removeFromParent()
-        }
     }
     
     func addRunQueryButton() {
-//        let buttonNode = SKShapeNode(circleOfRadius: 25)
-//        buttonNode.fillColor = UIColor(red: 28.2, green: 23.9, blue: 66.3, alpha: 1)
-//        buttonNode.position = CGPointMake(size.width / 2, 45)
-//        
-//        let buttonIcon = SKSpriteNode(imageNamed: <#String#>)
+        let buttonNode = SKShapeNode(circleOfRadius: 25)
+        buttonNode.fillColor = RunQueryButtonColor
+        buttonNode.position = CGPointMake(size.width / 2, 45)
+        buttonNode.userInteractionEnabled = true
+        buttonNode.alpha = 0
+        
+        let tapRecognizer = BBTapGestureRecognizer(target: self, action: GameScene.runQuery)
+        buttonNode.addGestureRecognizer(tapRecognizer)
+        
+        addChild(buttonNode)
+        
+        let buttonIcon = SKSpriteNode(imageNamed: "RunIcon")
+        buttonIcon.size = CGSizeMake(30, 30)
+        buttonNode.addChild(buttonIcon)
+        
+        buttonNode.runAction(SKAction.sequence([
+            SKAction.waitForDuration(1),
+            SKAction.fadeInWithDuration(0.5)
+        ]))
+    }
+    
+    func runQuery(tapRecognizer: BBGestureRecognizer?) {
+        var subPredicates = [MongoKeyedPredicate]()
+        
+        enumerateChildNodesWithName(PredicateTileNodeName, usingBlock: { (node: SKNode!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+            
+            if let predicateNode = node as? PredicateTileNode {
+                if let predicate = predicateNode.generatePredicateForTile() {
+                    subPredicates.append(predicate)
+                }
+            }
+        })
+        
+        if subPredicates.count > 0 {
+        
+            dispatch_async(QueueManager.sharedInstance.getDatabaseQueue()) {
+                let mainPredicate = MongoPredicate.andPredicateWithArray(subPredicates)
+                let collectionName = self.collection!.collectionName
+                let databaseName = self.collection!.databaseName
+                let qualifiedName = "\(databaseName).\(collectionName)"
+                let dbHelper = DatabaseHelper()
+                dbHelper.authenticateToDatabase()
+                
+                let connection = dbHelper.connection
+                let liveCollection: MongoDBCollection = connection!.collectionWithName(qualifiedName)
+                
+                var error : NSError? = nil
+                error = nil
+                let result = liveCollection.findWithPredicate(mainPredicate, error: &error)
+                
+                var displayString: String
+                if error == nil && result.count > 0 {
+                    displayString = "\(result.count) matching documents"
+                } else {
+                    displayString = "No matching documents"
+                }
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.showStatusString(displayString)
+                }
+            }
+        } else {
+            showStatusString("No matching documents")
+        }
+    }
+    
+    func showStatusString(text: String) {
+        let statusNode = SKLabelNode(text: text)
+        statusNode.fontSize = 48
+        statusNode.fontColor = QBColorComplementDarkest
+        statusNode.alpha = 0
+        statusNode.position = CGPointMake(size.width / 2, 100)
+        self.addChild(statusNode)
+        
+        let fadeIn = SKAction.fadeInWithDuration(0.5)
+        let wait = SKAction.waitForDuration(2.0)
+        let fadeOut = SKAction.fadeOutWithDuration(0.5)
+        let remove = SKAction.removeFromParent()
+        statusNode.runAction(SKAction.sequence([fadeIn, wait, fadeOut, remove]))
     }
     
     func addPropertyTray(collection: Collection) {
-            
+        
         // Remove the current PropetyTrayNode, if it exists
         propertyTrayNode?.removeFromParent()
         

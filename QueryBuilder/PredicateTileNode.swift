@@ -8,13 +8,19 @@
 
 import SpriteKit
 
-enum PropertyType: UInt16 {
-    case Int        = 0
+enum PredicatePropertyType: Int {
+    case Integer    = 0
     case Double
     case DateTime
     case String
     case Unknown
 }
+
+enum PredicateType: Int {
+    case Yup
+}
+
+// FIXME: Notting a value predicate with menu does not actual predicate
 
 /**
     A `PredicateTileNode` is a visual representation of a predicate in a
@@ -33,7 +39,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
             if let validType = newValue?.valueForKey("type") as? String {
                 switch validType {
                 case "int":
-                    propertyType = .Int
+                    propertyType = .Integer
                 case "double":
                     propertyType = .Double
                 case "datetime":
@@ -54,7 +60,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
     
     var selectedChoices: [String]?
     
-    var propertyType = PropertyType.Unknown
+    var propertyType = PredicatePropertyType.Unknown
     
     var radialMenu: RadialMenu!
     
@@ -65,7 +71,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
     var notNode: SKShapeNode!
     
     var descriptionTile: SKSpriteNode!
-    var descriptionLabel: SKLabelNode!
+    var descriptionLabel: ASAttributedLabelNode!
     
     /**
         Assigns the node's sprite and name, and configures its physics.
@@ -83,6 +89,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
         userData?.setValue(label, forKey: "label")
         
         self.title = label
+        self.name = PredicateTileNodeName
         
         // Create, configure, and add label node as child node
         labelNode = SKLabelNode(text: label)
@@ -109,11 +116,8 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
         descriptionTile.position = CGPointMake(0, -TileSize.height - 2)
         addChild(descriptionTile)
         
-        descriptionLabel = SKLabelNode(text: "")
-        descriptionLabel.fontSize = calculateFontSize(descriptionLabel.text)
-        descriptionLabel.fontName = TileLabelFontName
-        descriptionLabel.fontColor = SKColor.whiteColor()
-        descriptionLabel.position = CGPointMake(0, -descriptionLabel.fontSize / 2)
+        descriptionLabel = ASAttributedLabelNode(size: CGSizeMake(descriptionTile.size.width - 10, descriptionTile.size.height - 10))
+        descriptionLabel.position = CGPointMake(0, 0)
         updateDescription()
         descriptionTile.addChild(descriptionLabel)
         
@@ -151,7 +155,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
     
     func showValueChooser() {
         switch propertyType {
-        case .Int, .Double:
+        case .Integer, .Double:
             break
         case .String, .DateTime:
             showListChooser()
@@ -228,10 +232,25 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
             }
         }
         
-        descriptionLabel.text = newText
+        descriptionLabel.attributedString = attributedString(newText)
     }
     
-    func generatePredicateForTile() -> MongoPredicate? {
+    func attributedString(text: String) -> NSAttributedString {
+        var font = UIFont(name: "HelveticaNeue-CondensedBold", size: 12)
+        var attributes = NSMutableDictionary()
+        
+        var paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .Right
+        paragraphStyle.lineBreakMode = .ByWordWrapping
+        attributes.setValue(UIColor.whiteColor(), forKey: NSForegroundColorAttributeName)
+        attributes.setValue(font, forKey: NSFontAttributeName)
+        
+        let attrString: NSMutableAttributedString = NSMutableAttributedString(string: text, attributes: attributes)
+        
+        return attrString
+    }
+    
+    func generatePredicateForTile() -> MongoKeyedPredicate? {
         
         let predicate = MongoKeyedPredicate()
         
@@ -246,11 +265,21 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
         }
         
         if selectedChoices?.count > 1 {
-            predicate.keyPath(title, matchesAnyFromArray: selectedChoices!)
-            return predicate
+            if predicateIsNotted {
+                predicate.keyPath(title, doesNotMatchAnyFromArray: selectedChoices!)
+                return predicate
+            } else {
+                predicate.keyPath(title, matchesAnyFromArray: selectedChoices!)
+                return predicate
+            }
         } else if selectedChoices?.count == 1 {
-            predicate.keyPath(title, matches: selectedChoices![0])
-            return predicate
+            if predicateIsNotted {
+                predicate.keyPath(title, isNotEqualTo: selectedChoices![0])
+                return predicate
+            } else {
+                predicate.keyPath(title, matches: selectedChoices![0])
+                return predicate
+            }
         }
         
         return nil

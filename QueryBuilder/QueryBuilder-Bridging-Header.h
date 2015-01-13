@@ -10,6 +10,7 @@
 #define QueryBuilder_QueryBuilder_Bridging_Header_h
 
 #import "ObjCMongoDB.h"
+#import "NSString+DrawFixer.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
 #endif

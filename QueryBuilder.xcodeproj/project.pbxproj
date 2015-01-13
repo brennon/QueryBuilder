@@ -20,6 +20,8 @@
 		3A4CE7A51A3E482B00E68A92 /* Set.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4CE7A41A3E482B00E68A92 /* Set.swift */; };
 		3A5531341A6317DE00D6C202 /* CGFloat+QueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5531331A6317DE00D6C202 /* CGFloat+QueryBuilder.swift */; };
 		3A5531461A6362FB00D6C202 /* ListChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5531451A6362FB00D6C202 /* ListChooser.swift */; };
+		3A57D6C81A64693400A9DA88 /* ASAttributedLabelNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A57D6C71A64693400A9DA88 /* ASAttributedLabelNode.swift */; };
+		3A57D6CB1A64693E00A9DA88 /* NSString+DrawFixer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A57D6CA1A64693E00A9DA88 /* NSString+DrawFixer.m */; };
 		3A8281FC1A3FF06400398107 /* Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8281FB1A3FF06400398107 /* Regex.swift */; };
 		3A98D0BD1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */; };
 		3AAB9E131A602A09003C35C4 /* BBTapTapDragGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAB9E121A602A09003C35C4 /* BBTapTapDragGestureRecognizer.swift */; };
@@ -97,6 +99,9 @@
 		3A4CE7A41A3E482B00E68A92 /* Set.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Set.swift; sourceTree = "<group>"; };
 		3A5531331A6317DE00D6C202 /* CGFloat+QueryBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+QueryBuilder.swift"; sourceTree = "<group>"; };
 		3A5531451A6362FB00D6C202 /* ListChooser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListChooser.swift; sourceTree = "<group>"; };
+		3A57D6C71A64693400A9DA88 /* ASAttributedLabelNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASAttributedLabelNode.swift; sourceTree = "<group>"; };
+		3A57D6C91A64693E00A9DA88 /* NSString+DrawFixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DrawFixer.h"; sourceTree = "<group>"; };
+		3A57D6CA1A64693E00A9DA88 /* NSString+DrawFixer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DrawFixer.m"; sourceTree = "<group>"; };
 		3A8281FB1A3FF06400398107 /* Regex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Regex.swift; sourceTree = "<group>"; };
 		3A98D0BC1A2D622000EF1F08 /* MultiplePanGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplePanGestureRecognizer.swift; sourceTree = "<group>"; };
 		3AAB9E121A602A09003C35C4 /* BBTapTapDragGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BBTapTapDragGestureRecognizer.swift; path = BBGestureRecognizer/Source/BBTapTapDragGestureRecognizer.swift; sourceTree = "<group>"; };
@@ -259,6 +264,9 @@
 		3AB3E8F31A1A3601004A9691 /* QueryBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				3A57D6C91A64693E00A9DA88 /* NSString+DrawFixer.h */,
+				3A57D6CA1A64693E00A9DA88 /* NSString+DrawFixer.m */,
+				3A57D6C71A64693400A9DA88 /* ASAttributedLabelNode.swift */,
 				3AB3E8F61A1A3601004A9691 /* AppDelegate.swift */,
 				3A5531331A6317DE00D6C202 /* CGFloat+QueryBuilder.swift */,
 				3AB3E9DE1A1A45E4004A9691 /* Collection.swift */,
@@ -548,6 +556,7 @@
 				3A4CE7A11A3C1F4800E68A92 /* PropertyTrayTileNode.swift in Sources */,
 				3AB3E9D21A1A3CDF004A9691 /* MongoPredicate.m in Sources */,
 				3AB3E9D11A1A3CDF004A9691 /* MongoKeyedPredicate.m in Sources */,
+				3A57D6CB1A64693E00A9DA88 /* NSString+DrawFixer.m in Sources */,
 				3AFCBA061A5B7CFB00232891 /* DatabaseHelper.swift in Sources */,
 				3A025FA81A5F838B00DAE71E /* BBGestureRecognizer.swift in Sources */,
 				3A025FAD1A5F838B00DAE71E /* BBTapGestureRecognizer.swift in Sources */,
@@ -579,6 +588,7 @@
 				3AB3E9AF1A1A3CCC004A9691 /* OrderedDictionary.m in Sources */,
 				3AFCBA081A5B7D4F00232891 /* MongoSettings.swift in Sources */,
 				3AB3E9DF1A1A45E4004A9691 /* Collection.swift in Sources */,
+				3A57D6C81A64693400A9DA88 /* ASAttributedLabelNode.swift in Sources */,
 				3AB3E8F71A1A3601004A9691 /* AppDelegate.swift in Sources */,
 				3A025FAA1A5F838B00DAE71E /* BBPanGestureRecognizer.swift in Sources */,
 				3A084C281A2E70C300DB83E0 /* TouchNodeMap.swift in Sources */,
