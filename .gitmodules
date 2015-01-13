@@ -4,3 +4,9 @@
 [submodule "BBGestureRecognizer"]
 	path = BBGestureRecognizer
 	url = git@github.com:brennon/BBGestureRecognizer.git
+[submodule "Quick"]
+	path = Quick
+	url = git@github.com:Quick/Quick.git
+[submodule "Nimble"]
+	path = Nimble
+	url = git@github.com:Quick/Nimble.git
