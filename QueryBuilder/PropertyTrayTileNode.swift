@@ -150,7 +150,6 @@ class PropertyTrayTileNode: TileNode {
             
             if panRecognizer.state == BBGestureRecognizerState.Changed {
                 
-                println("scrolling")
                 let translation = panRecognizer.translationInNode(self.scene!)
                 propertyTrayNode.scrollTiles(translation.y)
                 panRecognizer.setTranslation(CGPointZero, inNode: self.scene!)
@@ -182,7 +181,6 @@ class PropertyTrayTileNode: TileNode {
             
             // Move the tile to the scene so that we can reposition it.
             if tapRecognizer.state == .Began {
-                println("Began")
                 
                 if let oldScene = scene {
                     if let oldNode = tapRecognizer.node as? PropertyTrayTileNode {

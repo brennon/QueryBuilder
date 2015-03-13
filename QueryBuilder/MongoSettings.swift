@@ -17,7 +17,7 @@ class MongoSettings {
         return _mongoSettingsSharedInstance
     }
     
-    var hostname = "172.31.207.124"
+    var hostname = "127.0.0.1"
     var port = "28017"
     var authenticationDatabase = "eim"
     var authenticationUsername = "eim"

@@ -8,16 +8,19 @@
 
 import SpriteKit
 
-enum PredicatePropertyType: Int {
-    case Integer    = 0
+enum PredicatePropertyType {
+    case Integer
+    case BSONObjectID
     case Double
     case DateTime
     case String
     case Unknown
 }
 
-enum PredicateType: Int {
-    case Yup
+enum PredicateType {
+    case Existence
+    case Value
+    case Choice
 }
 
 // FIXME: Notting a value predicate with menu does not actual predicate
@@ -26,7 +29,7 @@ enum PredicateType: Int {
     A `PredicateTileNode` is a visual representation of a predicate in a
     MongoDB query.
  */
-class PredicateTileNode: TileNode, ListChooserDelegate {
+class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
     
     /// The dictionary for the field that this node represents, as configured
     /// by a `Collection`
@@ -46,6 +49,8 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
                     propertyType = .DateTime
                 case "string":
                     propertyType = .String
+                case "BSONObjectID":
+                    propertyType = .BSONObjectID
                 default:
                     propertyType = .Unknown
                     println("Unknown type: validType")
@@ -60,13 +65,15 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
     
     var selectedChoices: [String]?
     
+    var selectedValue: Double?
+    
     var propertyType = PredicatePropertyType.Unknown
     
     var radialMenu: RadialMenu!
     
-    var predicateIsNotted = false
+    var predicateType = PredicateType.Existence
     
-    var existencePredicate = true
+    var predicateIsNotted = false
     
     var notNode: SKShapeNode!
     
@@ -153,14 +160,39 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
         updateDescription()
     }
     
+    func valueChanged(value: Double, valueChooser: DialChooser) {
+        selectedValue = value
+        updateDescription()
+    }
+    
     func showValueChooser() {
         switch propertyType {
         case .Integer, .Double:
-            break
-        case .String, .DateTime:
+            println(".Integer or .Double")
+            showDialChooser()
+        case .String, .DateTime, .BSONObjectID:
             showListChooser()
         case .Unknown:
             break
+        }
+    }
+    
+    func showDialChooser() {
+        if let min = propertyDict?.valueForKey("min") as? Double {
+            if let max = propertyDict?.valueForKey("max") as? Double {
+                if let numericType = propertyDict?.valueForKey("type") as? String {
+                    var dialType = RelativeDialNodeType.Integral
+                    
+                    if numericType == "double" {
+                        dialType = .FloatingPoint
+                    }
+                    
+                    let dialChooser = DialChooser(max: max, min: min, dialType: dialType, andTitle: "Value for \(title)")
+                    dialChooser.position = CGPointMake(0, -calculateAccumulatedFrame().height / 2)
+                    dialChooser.delegate = self
+                    addChild(dialChooser)
+                }
+            }
         }
     }
     
@@ -199,40 +231,69 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
     }
     
     func equalSelected(menu: RadialMenu) {
-        existencePredicate = false
+        switch propertyType {
+        case .Integer, .Double:
+            predicateType = .Value
+        case .String, .DateTime, .BSONObjectID:
+            predicateType = .Choice
+        default:
+            break
+        }
+        
         showValueChooser()
         updateDescription()
     }
     
     func existsSelected(menu: RadialMenu) {
-        if existencePredicate {
-            existencePredicate = false
-        } else {
-            existencePredicate = true
-        }
+        predicateType = .Existence
         updateDescription()
     }
     
     func updateDescription() {
         var newText = ""
         
-        if existencePredicate {
-            if predicateIsNotted {
-                newText = "\(title) does not exist"
-            } else {
-                newText = "\(title) exists"
-            }
-        } else {
-            if selectedChoices?.count > 1 {
-                newText = "\(title) is in \(selectedChoices!)"
-            } else if selectedChoices?.count == 1 {
-                newText = "\(title) is \(selectedChoices![0])"
-            } else {
-                newText = "\(title) is ..."
-            }
+        switch predicateType {
+        case .Existence:
+            newText = descriptionForExistencePredicate()
+        case .Value:
+            newText = descriptionForValuePredicate()
+        case .Choice:
+            newText = descriptionForChoicePredicate()
         }
         
         descriptionLabel.attributedString = attributedString(newText)
+    }
+    
+    func descriptionForChoicePredicate() -> String {
+        if selectedChoices?.count > 1 {
+            return "\(title) is in \(selectedChoices!)"
+        } else if selectedChoices?.count == 1 {
+            return "\(title) is \(selectedChoices![0])"
+        } else {
+            return "\(title) is ..."
+        }
+    }
+    
+    
+    func descriptionForValuePredicate() -> String {
+        if let actualValue = selectedValue {
+            if propertyType == PredicatePropertyType.Integer {
+                let truncatedValue = String(format: "%.0f", actualValue)
+                return "\(title) = \(truncatedValue)"
+            } else {
+                return "\(title) = \(actualValue)"
+            }
+        } else {
+            return "\(title) = ..."
+        }
+    }
+    
+    func descriptionForExistencePredicate() -> String {
+        if predicateIsNotted {
+            return "\(title) does not exist"
+        } else {
+            return "\(title) exists"
+        }
     }
     
     func attributedString(text: String) -> NSAttributedString {
@@ -254,7 +315,18 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
         
         let predicate = MongoKeyedPredicate()
         
-        if existencePredicate {
+        switch predicateType {
+        case .Value:
+            if predicateIsNotted {
+                predicate.keyPath(title, isNotEqualTo: selectedValue)
+                return predicate
+            } else {
+                predicate.keyPath(title, isLessThanOrEqualTo: selectedValue)
+                predicate.keyPath(title, isGreaterThanOrEqualTo: selectedValue)
+                return predicate
+            }
+            
+        case .Existence:
             if predicateIsNotted {
                 predicate.valueDoesNotExistForKeyPath(title)
                 return predicate
@@ -262,23 +334,53 @@ class PredicateTileNode: TileNode, ListChooserDelegate {
                 predicate.valueExistsForKeyPath(title)
                 return predicate
             }
-        }
-        
-        if selectedChoices?.count > 1 {
-            if predicateIsNotted {
-                predicate.keyPath(title, doesNotMatchAnyFromArray: selectedChoices!)
-                return predicate
-            } else {
-                predicate.keyPath(title, matchesAnyFromArray: selectedChoices!)
-                return predicate
-            }
-        } else if selectedChoices?.count == 1 {
-            if predicateIsNotted {
-                predicate.keyPath(title, isNotEqualTo: selectedChoices![0])
-                return predicate
-            } else {
-                predicate.keyPath(title, matches: selectedChoices![0])
-                return predicate
+            
+        case .Choice:
+            switch propertyType {
+            case .BSONObjectID:
+                
+                var selectedBSONObjectIDs = [BSONObjectID]()
+                for (var i = 0; i < selectedChoices!.count; i++) {
+                    selectedBSONObjectIDs.append(BSONObjectID(string: selectedChoices![i]))
+                }
+                
+                if selectedChoices?.count > 1 {
+                    if predicateIsNotted {
+                        predicate.keyPath(title, doesNotMatchAnyFromArray: selectedBSONObjectIDs)
+                        return predicate
+                    } else {
+                        predicate.keyPath(title, matchesAnyFromArray: selectedBSONObjectIDs)
+                        return predicate
+                    }
+                } else if selectedChoices?.count == 1 {
+                    if predicateIsNotted {
+                        predicate.keyPath(title, isNotEqualTo: selectedBSONObjectIDs[0])
+                        return predicate
+                    } else {
+                        predicate.keyPath(title, matches: selectedBSONObjectIDs[0])
+                        return predicate
+                    }
+                }
+            case .String:
+                if selectedChoices?.count > 1 {
+                    if predicateIsNotted {
+                        predicate.keyPath(title, doesNotMatchAnyFromArray: selectedChoices!)
+                        return predicate
+                    } else {
+                        predicate.keyPath(title, matchesAnyFromArray: selectedChoices!)
+                        return predicate
+                    }
+                } else if selectedChoices?.count == 1 {
+                    if predicateIsNotted {
+                        predicate.keyPath(title, isNotEqualTo: selectedChoices![0])
+                        return predicate
+                    } else {
+                        predicate.keyPath(title, matches: selectedChoices![0])
+                        return predicate
+                    }
+                }
+            default:
+                break
             }
         }
         

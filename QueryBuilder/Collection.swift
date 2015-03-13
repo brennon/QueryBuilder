@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Brennon Bortz. All rights reserved.
 //
 
+import Foundation
+
 extension String {
     func isPrefixOf(longerString: String) -> Bool {
         return longerString =~ "\(self)\\.+"
@@ -220,6 +222,8 @@ class Collection {
     */
     func getDistinctValuesForField(keyPath: String) {
         
+        println("\(keyPath)")
+        
         // Build command for getting distinct values for a field
         let commandDictionary = [
             MongoDBCommandDictKey:["distinct": collectionName], "key": keyPath
@@ -243,9 +247,7 @@ class Collection {
             if result.indexForKey("values") != nil {
 
                 // If values is an array
-                if result["values"] is [AnyObject] {
-
-                    let resultArray = result["values"] as [AnyObject]
+                if let resultArray = result["values"] as? [AnyObject] {
                     
                     // If array has at least one entry
                     if resultArray.count > 0 {
@@ -255,11 +257,15 @@ class Collection {
                             !($0 is NSNull)
                         }
                         
+                        println("type: \(_stdlib_getTypeName(filteredResult[0]))")
+                        
                         // Switch on the first entry in the array
-                        switch filteredResult[0] {
+                        let typeString = _stdlib_getTypeName(filteredResult[0])
+                        
+                        switch typeString {
                         
                         // If type is String
-                        case let resultString as String:
+                        case "__NSCFString":
                             
                             // Cast array to [String] and sort it
                             var stringArray = filteredResult as [String]
@@ -273,7 +279,7 @@ class Collection {
                             fields.setValue("string", forKeyPath: "\(keyPath).type")
                             fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
                             
-                        case let resultInteger as Int:
+                        case "__NSCFNumber":
                             
                             // Test for Int vs Double
                             let asString = filteredResult[0].stringValue
@@ -318,7 +324,7 @@ class Collection {
                                 fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
                             }
                             
-                        case let resultBool as Bool:
+                        case "__NSCFBoolean":
                             
                             // Cast array to [Bool]
                             var boolArray = filteredResult as [Bool]
@@ -328,7 +334,7 @@ class Collection {
                             fields.setValue("boolean", forKeyPath: "\(keyPath).type")
                             fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
 
-                        case let resultBSONObjectId as BSONObjectID:
+                        case "BSONObjectID":
                             
                             // Create a sorted array of string representations
                             var oidArray = filteredResult as [BSONObjectID]
@@ -344,10 +350,10 @@ class Collection {
                             
                             // Assign casted array to main dict
                             fields.setValue(stringArray, forKeyPath: "\(keyPath).values")
-                            fields.setValue("string", forKeyPath: "\(keyPath).type")
+                            fields.setValue("BSONObjectID", forKeyPath: "\(keyPath).type")
                             fields.setValue("\(keyPath)", forKeyPath: "\(keyPath).keyPath")
 
-                        case let resultDate as NSDate:
+                        case "__NSTaggedDate":
                             
                             // Cast array to [NSDate]
                             var dateArray = filteredResult as [NSDate]
@@ -365,6 +371,7 @@ class Collection {
                             
                         default:
                             println("Didn't handle values for \(keyPath)")
+                            println("Type was \(typeString)")
                             println("First entry in array: \(filteredResult[0])")
                         }
                     }

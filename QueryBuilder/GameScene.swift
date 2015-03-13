@@ -96,6 +96,8 @@ class GameScene: SKScene {
                 let dbHelper = DatabaseHelper()
                 dbHelper.authenticateToDatabase()
                 
+                println("Query: \(mainPredicate)")
+                
                 let connection = dbHelper.connection
                 let liveCollection: MongoDBCollection = connection!.collectionWithName(qualifiedName)
                 
@@ -144,71 +146,6 @@ class GameScene: SKScene {
         propertyTrayNode!.position = CGPointMake(0, size.height / 2)
         
         addChild(propertyTrayNode!)
-    }
-    
-    // MARK: Pan Gesture Handling
-    
-    /*!
-        Track multiple pan gestures in the scene.
-    
-        There is no way to add a `UIGestureRecognizer` to individual `SKNode`s, 
-        so the only way to use a `UIGestureRecognizer` in an `SKScene` is to add 
-        one to the `view` of the `SKScene`. Because of this, tracking multiple
-        pan gestures at once, thereby allowing the user to move multiple nodes
-        simultaneously, is difficult. `handleMultiplePan:`, in conjunction with 
-        a `TouchNodeMap` and `MultiplePanGestureRecognizer` allows this 
-        functionality.
-    
-        :param: recognizer The `MultiplePanGestureRecognizer` for this 
-            `SKScene`'s `view`.
-    */
-    func handleMultiplePan(recognizer: MultiplePanGestureRecognizer) {
-        
-        switch recognizer.state {
-        case .Began, .Changed:
-            
-            // Remove those touches from tracking that are no longer being
-            // recognized
-            touchNodeMap.prune(recognizer.currentTouches)
-            
-            // Iterate over the recognizer's currentTouches
-            for touch in recognizer.currentTouches {
-                
-                // Is it over a child node of the scene?
-                if let node = getChildNodeForTouch(touch) {
-                    
-                    // If so, add it to the touchNodeMap
-                    touchNodeMap.add(touch, withNode: node)
-                }
-            }
-            
-            // Move all predicate tile nodes to Tile layer
-            moveNodesWithName(PredicateTileNodeName, toLayer: .PredicateTiles)
-            
-            // Get node for most recent touch
-            let (_, mostRecentNode) = touchNodeMap.mostRecentTouchAndNode()
-            
-            // Move it to the Foreground layer
-            if mostRecentNode != nil {
-                mostRecentNode!.zPosition = SceneLayer.Foreground.rawValue
-            }
-            
-            // Iterate over currentlyPanningTouches and move nodes accordingly
-            for (touch, node) in touchNodeMap {
-                
-                let location = touch.locationInNode(self)
-                let previousLocation = touch.previousLocationInNode(self)
-                let deltaX = location.x - previousLocation.x
-                let deltaY = location.y - previousLocation.y
-                node.position = CGPointMake(
-                    node.position.x + deltaX,
-                    node.position.y + deltaY
-                )
-            }
-            
-        default:
-            break
-        }
     }
     
     // MARK: Node Manipulation
