@@ -150,52 +150,98 @@ class ListChooser: SKNode {
         }
     }
     
+    /**
+        Handler for moving the entire choices list. Currently disabled.
+        
+        :param: panRecognizer The `BBGestureRecognizer` that recognized a pan gesture.
+    */
     func moveChooser(panRecognizer: BBGestureRecognizer?) {
         
-        if let recognizer = panRecognizer as? BBPanGestureRecognizer {
-            
-            if recognizer.state == .Changed {
-                
-                let translation = recognizer.translationInNode(self.scene!)
-                recognizer.setTranslation(CGPointZero, inNode: self.scene!)
-                position = CGPointMake(position.x + translation.x, position.y + translation.y)
-            }
-        }
+//        if let recognizer = panRecognizer as? BBPanGestureRecognizer {
+//            
+//            if recognizer.state == .Changed {
+//                
+//                let translation = recognizer.translationInNode(self.scene!)
+//                recognizer.setTranslation(CGPointZero, inNode: self.scene!)
+//                position = CGPointMake(position.x + translation.x, position.y + translation.y)
+//            }
+//        }
     }
     
+    /**
+        Handler for panning (scrolling) the choices list.
+        
+        :param: panRecognizer The `BBGestureRecognizer that recognized a pan gesture.
+    */
     func scrollChoices(panRecognizer: BBGestureRecognizer?) {
         
         if let recognizer = panRecognizer as? BBPanGestureRecognizer {
             
+            // If we're currently panning and the node being panned is within
+            // the container mask...
             if recognizer.state == .Changed {
+                if let node = recognizer.node as? SKSpriteNode {
+                    if nodeIntersectsContainerMask(node) {
                 
-                let translation = recognizer.translationInNode(self.scene!)
-                recognizer.setTranslation(CGPointZero, inNode: self.scene!)
-                
-                for choiceNode in choiceNodes {
-                    choiceNode.position = CGPointMake(0, choiceNode.position.y + translation.y)
+                        let translation = recognizer.translationInNode(self.scene!)
+                        recognizer.setTranslation(CGPointZero, inNode: self.scene!)
+                        
+                        for choiceNode in choiceNodes {
+                            choiceNode.position = CGPointMake(0, choiceNode.position.y + translation.y)
+                        }
+                    }
                 }
             }
         }
     }
     
+    /**
+        Handler for tapping choice tiles. Highlights the tile and marks it as selected in its
+        `userData` dictionary.
+        
+        :param: tapRecognizer The `BBGestureRecognizer` that recognized a tap gesture.
+    */
     func choiceTapped(tapRecognizer: BBGestureRecognizer?) {
         
         if let recognizer = tapRecognizer as? BBTapGestureRecognizer {
+            
+            // If the gesture recognizer completed recognition, and the tapped
+            // node is within container mask...
             if recognizer.state == .Recognized {
-                let node = recognizer.node! as SKSpriteNode
-                
-                let selected = node.userData?.valueForKey(dictKeySelected) as? Bool
-                
-                if selected != nil {
-                    if selected == true {
-                        deselectChoice(node)
-                    } else {
-                        selectChoice(node)
+                if let node = recognizer.node as? SKSpriteNode {
+                    if nodeIntersectsContainerMask(node) {
+                        
+                        if let selected = node.userData?.valueForKey(dictKeySelected) as? Bool {
+                            
+                            // Flip the state of the node's 'selected' property using
+                            // deselectChoice() or selectChoice()
+                            if selected == true {
+                                deselectChoice(node)
+                            } else {
+                                selectChoice(node)
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    /**
+        Checks if `node` is within the masked area of `choiceContainerNode` (an `SKCropNode`).
+    
+        :param: node The `SKSpriteNode that may or not be within the rect of the container node's
+            `maskNode`.
+    
+        :returns: Returns `true` if `node` is within the mask of `choiceContainerNode` (i.e., is
+            visible). Otherwise, it returns `false`.
+    */
+    func nodeIntersectsContainerMask(node: SKSpriteNode) -> Bool {
+        if let maskNode = self.choiceContainerNode.maskNode {
+            return node.intersectsNode(maskNode)
+        }
+        
+        return false
     }
     
     func calculateFontSize(text: String) -> CGFloat {
