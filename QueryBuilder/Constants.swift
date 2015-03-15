@@ -81,8 +81,8 @@ let TileWidth:                  CGFloat = 150
 let TileSize                            = CGSizeMake(TileWidth, TileHeight)
 let TileCornerRadius:           CGFloat = 10
 let TileBorderWidth:            CGFloat = 2
-let TileMarginHeight:           CGFloat = 10
-let TileMarginWidth:            CGFloat = 10
+let TileMarginHeight:           CGFloat = 5
+let TileMarginWidth:            CGFloat = 5
 let PropertyTrayMaximumHeight:  CGFloat = UIScreen.mainScreen().applicationFrame.height - 100
 
 // MARK: Fonts

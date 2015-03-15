@@ -198,7 +198,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
     
     func showListChooser() {
         if let values = propertyDict?.valueForKey("values") as? [String] {
-            let listChooser = ListChooser(values: values, andTitle: "Choices for \(title)")
+            let listChooser = ListChooser(values: values, andTitle: title)
             listChooser.position = CGPointMake(0, -calculateAccumulatedFrame().height / 2)
             listChooser.delegate = self
             addChild(listChooser)

@@ -196,5 +196,11 @@ class GameScene: SKScene {
                 tray.needsLayout = false
             }
         }
+        
+        enumerateChildNodesWithName("//list-chooser", usingBlock: { (node: SKNode!, pointer: UnsafeMutablePointer<ObjCBool>) -> Void in
+            if let listChooserNode = node as? ListChooser {
+                listChooserNode.update()
+            }
+        })
     }
 }

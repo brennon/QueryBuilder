@@ -27,6 +27,7 @@
 		3A57D6CB1A64693E00A9DA88 /* NSString+DrawFixer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A57D6CA1A64693E00A9DA88 /* NSString+DrawFixer.m */; };
 		3A8040871A6D905D00A3C474 /* DialChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8040861A6D905D00A3C474 /* DialChooser.swift */; };
 		3A8281FC1A3FF06400398107 /* Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8281FB1A3FF06400398107 /* Regex.swift */; };
+		3A87F8631AB4F94700283CE6 /* TODO.md in Sources */ = {isa = PBXBuildFile; fileRef = 3A87F8621AB4F94700283CE6 /* TODO.md */; };
 		3AAB9E131A602A09003C35C4 /* BBTapTapDragGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAB9E121A602A09003C35C4 /* BBTapTapDragGestureRecognizer.swift */; };
 		3AADCBA71A2F8AA90047CA95 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AADCBA61A2F8AA90047CA95 /* Constants.swift */; };
 		3AADCBA91A2F98020047CA95 /* PredicateTileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */; };
@@ -110,6 +111,7 @@
 		3A57D6CA1A64693E00A9DA88 /* NSString+DrawFixer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DrawFixer.m"; sourceTree = "<group>"; };
 		3A8040861A6D905D00A3C474 /* DialChooser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialChooser.swift; sourceTree = "<group>"; };
 		3A8281FB1A3FF06400398107 /* Regex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Regex.swift; sourceTree = "<group>"; };
+		3A87F8621AB4F94700283CE6 /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		3AAB9E121A602A09003C35C4 /* BBTapTapDragGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BBTapTapDragGestureRecognizer.swift; path = BBGestureRecognizer/Source/BBTapTapDragGestureRecognizer.swift; sourceTree = "<group>"; };
 		3AADCBA61A2F8AA90047CA95 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PredicateTileNode.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 				3AB3E8F61A1A3601004A9691 /* AppDelegate.swift */,
 				3AB3E8F51A1A3601004A9691 /* Info.plist */,
 				3AB3E9DB1A1A3F5C004A9691 /* QueryBuilder-Bridging-Header.h */,
+				3A87F8621AB4F94700283CE6 /* TODO.md */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -663,6 +666,7 @@
 				3A084C281A2E70C300DB83E0 /* TouchNodeMap.swift in Sources */,
 				3AE5E9271A358F29002E6813 /* PropertyTrayNode.swift in Sources */,
 				3AB3E9CF1A1A3CDF004A9691 /* MongoDBCollection.m in Sources */,
+				3A87F8631AB4F94700283CE6 /* TODO.md in Sources */,
 				3A4A8FAF1A61821200E1F067 /* RadialMenu.swift in Sources */,
 				3AADCBA71A2F8AA90047CA95 /* Constants.swift in Sources */,
 				3AB3E9A91A1A3CA4004A9691 /* NSManagedObject+BSONCoding.m in Sources */,

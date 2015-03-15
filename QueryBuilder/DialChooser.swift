@@ -69,8 +69,7 @@ class DialChooser: SKNode, RelativeDialNodeDelegate {
     }
     
     func addDialNode(max: Double, min: Double, dialType: RelativeDialNodeType) {
-        let dialNode = RelativeDialNode(min: min, max: max)
-        dialNode.dialType = dialType
+        let dialNode = RelativeDialNode(min: min, max: max, type: dialType)
         dialNode.position = CGPointMake(0, -(headerChoiceGap + 75 + (headerTileSize.height / 2)))
         dialNode.delegate = self
         addChild(dialNode)

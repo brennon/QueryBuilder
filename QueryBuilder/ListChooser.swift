@@ -49,6 +49,7 @@ class ListChooser: SKNode {
         
         self.values = values
         self.title = title
+        name = "list-chooser"
         
         userInteractionEnabled = true
         
@@ -68,6 +69,8 @@ class ListChooser: SKNode {
         labelNode.fontSize = headerFontSize
         labelNode.fontName = tileLabelFontName
         labelNode.position = CGPointMake(0, -labelNode.fontSize / 2)
+        labelNode.userInteractionEnabled = false
+        
         headerNode.addChild(labelNode)
         
         // Create, configure, and add RadialMenu as child node
@@ -79,6 +82,11 @@ class ListChooser: SKNode {
         
         addChild(headerNode)
     }
+    
+//    ListChooser
+//        Header
+//        ChoiceContainer
+//            Choices
     
     func menuTrashSelected(radialMenu: RadialMenu) {
         self.removeFromParent()
@@ -112,6 +120,7 @@ class ListChooser: SKNode {
             
             choiceTile.position = CGPointMake(0, tileY)
             
+            choiceLabel.userInteractionEnabled = false
             choiceTile.userInteractionEnabled = true
             
             choiceTile.userData = NSMutableDictionary(objects: [choice, false], forKeys: [dictKeyValue, dictKeySelected])
@@ -122,8 +131,63 @@ class ListChooser: SKNode {
             let tapRecognizer = BBTapGestureRecognizer(target: self, action: ListChooser.choiceTapped)
             choiceTile.addGestureRecognizer(tapRecognizer)
             
+            // Add a physics body so that we can flick the choice list to scroll.
+            choiceTile.physicsBody = SKPhysicsBody(rectangleOfSize: choiceTile.size)
+            
             choiceContainerNode.addChild(choiceTile)
             choiceNodes.append(choiceTile)
+        }
+    }
+    
+    func layoutChoiceNodes() {
+
+        // Check if the top tile is running the 'layout-action' action.
+        if let topTile = choiceNodes.first {
+        
+            let layoutAction = topTile.actionForKey("layout-action")
+            
+            if layoutAction == nil {
+                println("layoutChoiceNodes()")
+                
+                // If the top of the list has been moved down too far...
+                if topTileIsTooLow() {
+                    
+                    // Stop all animation on tiles
+                    for (index, node) in enumerate(choiceNodes) {
+                        node.removeAllActions()
+                        
+                        node.physicsBody?.velocity = CGVectorMake(0, 0)
+                        
+                        var tileY = -headerTileSize.height / 2
+                        tileY -= headerChoiceGap
+                        tileY -= CGFloat(index) * interChoiceGap
+                        tileY -= CGFloat(index) * (choiceTileSize.height)
+                        tileY -= choiceTileSize.height / 2
+                        
+                        node.runAction(SKAction.moveTo(CGPointMake(0, tileY), duration: 0.2), withKey: "layout-action")
+                    }
+                
+                // Or, if the bottom of the list has been moved up too high...
+                } else if bottomTileIsTooHigh() {
+                    
+                    // Stop all animation on tiles
+                    for (index, node) in enumerate(reverse(choiceNodes)) {
+                        node.removeAllActions()
+                        
+                        node.physicsBody?.velocity = CGVectorMake(0, 0)
+                        
+                        var tileY = -headerTileSize.height / 2
+                        tileY -= headerChoiceGap
+                        tileY -= choiceContainerNode.maskNode!.frame.size.height
+                        tileY += choiceTileSize.height / 2
+                        
+                        tileY += CGFloat(index) * interChoiceGap
+                        tileY += CGFloat(index) * (choiceTileSize.height)
+                        
+                        node.runAction(SKAction.moveTo(CGPointMake(0, tileY), duration: 0.2), withKey: "layout-action")
+                    }
+                }
+            }
         }
     }
     
@@ -175,6 +239,11 @@ class ListChooser: SKNode {
     */
     func scrollChoices(panRecognizer: BBGestureRecognizer?) {
         
+        // Don't do anything if all choices can be displayed at once.
+        if CGFloat(choiceNodes.count) <= self.visibleNumberOfChoices {
+            return
+        }
+        
         if let recognizer = panRecognizer as? BBPanGestureRecognizer {
             
             // If we're currently panning and the node being panned is within
@@ -184,15 +253,69 @@ class ListChooser: SKNode {
                     if nodeIntersectsContainerMask(node) {
                 
                         let translation = recognizer.translationInNode(self.scene!)
-                        recognizer.setTranslation(CGPointZero, inNode: self.scene!)
+                        let forceMultiplier: CGFloat = 100.0
+                        let forceVector = CGVectorMake(0, translation.y * forceMultiplier)
                         
-                        for choiceNode in choiceNodes {
-                            choiceNode.position = CGPointMake(0, choiceNode.position.y + translation.y)
+                        if choiceTilesAreInBounds(translation) {
+                            recognizer.setTranslation(CGPointZero, inNode: self.scene!)
+                            
+                            for choiceNode in choiceNodes {
+                                choiceNode.physicsBody?.applyForce(forceVector)
+//                                choiceNode.position = CGPointMake(0, choiceNode.position.y + translation.y)
+                            }
                         }
                     }
                 }
             }
         }
+    }
+    
+//    func layoutChoiceTiles
+    
+    func choiceTilesAreInBounds(translation: CGPoint) -> Bool {
+        // We want to restrict the top of the top tile from moving below the top of the mask node,
+        // and we want to restrict the bottom of the bottom tile from moving above the bottom of
+        // the mask node.
+        topTileIsTooLow()
+        bottomTileIsTooHigh()
+        return true
+//        return (topTileIsTooLow() && bottomTileIsTooHigh())
+    }
+    
+    func topTileIsTooLow() -> Bool {
+        
+        // We want to restrict the top of the top tile from moving below the top of the mask node.
+        if let topTile = choiceNodes.first {
+            if let maskNode = self.choiceContainerNode.maskNode {
+                
+                if let scene = self.scene {
+                    
+                    let maskNodeTop = maskNode.position.y + maskNode.frame.height / 2
+                    let topTileTop = topTile.position.y + topTile.frame.height / 2
+                    return (topTileTop - maskNodeTop < 0)
+                }
+            }
+        }
+        
+        return false
+    }
+    
+    func bottomTileIsTooHigh() -> Bool {
+        
+        // We want to restrict the top of the top tile from moving below the top of the mask node.
+        if let bottomTile = choiceNodes.last {
+            if let maskNode = self.choiceContainerNode.maskNode {
+                
+                if let scene = self.scene {
+                    
+                    let maskNodeBottom = maskNode.position.y - maskNode.frame.height / 2
+                    let bottomTileBottom = bottomTile.position.y - bottomTile.frame.height / 2
+                    return (maskNodeBottom - bottomTileBottom < 0)
+                }
+            }
+        }
+        
+        return false
     }
     
     /**
@@ -279,5 +402,11 @@ class ListChooser: SKNode {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func update() {
+        if topTileIsTooLow() || bottomTileIsTooHigh() {
+            layoutChoiceNodes()
+        }
     }
 }
