@@ -17,10 +17,23 @@
 		3A11A7DE1A6D801D00FC0865 /* CGVector+QueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A11A7DD1A6D801D00FC0865 /* CGVector+QueryBuilder.swift */; };
 		3A11A7E01A6D803700FC0865 /* CGPoint+QueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A11A7DF1A6D803700FC0865 /* CGPoint+QueryBuilder.swift */; };
 		3A2B47131A66F1220041870C /* RelativeDialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2B47121A66F1220041870C /* RelativeDialNode.swift */; };
+		3A31FDC71ABA079E00D9C237 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDBB1ABA079E00D9C237 /* CGFloat+Extensions.swift */; };
+		3A31FDC81ABA079E00D9C237 /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDBC1ABA079E00D9C237 /* CGPoint+Extensions.swift */; };
+		3A31FDC91ABA079E00D9C237 /* CGVector+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDBD1ABA079E00D9C237 /* CGVector+Extensions.swift */; };
+		3A31FDCA1ABA079E00D9C237 /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDBE1ABA079E00D9C237 /* Int+Extensions.swift */; };
+		3A31FDCB1ABA079E00D9C237 /* SKAction+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDBF1ABA079E00D9C237 /* SKAction+Extensions.swift */; };
+		3A31FDCC1ABA079E00D9C237 /* SKAction+SpecialEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDC01ABA079E00D9C237 /* SKAction+SpecialEffects.swift */; };
+		3A31FDCD1ABA079E00D9C237 /* SKColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDC11ABA079E00D9C237 /* SKColor+Extensions.swift */; };
+		3A31FDCE1ABA079E00D9C237 /* SKNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDC21ABA079E00D9C237 /* SKNode+Extensions.swift */; };
+		3A31FDCF1ABA079E00D9C237 /* SKTAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDC31ABA079E00D9C237 /* SKTAudio.swift */; };
+		3A31FDD01ABA079E00D9C237 /* SKTEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDC41ABA079E00D9C237 /* SKTEffects.swift */; };
+		3A31FDD11ABA079E00D9C237 /* SKTTimingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDC51ABA079E00D9C237 /* SKTTimingFunctions.swift */; };
+		3A31FDD21ABA079E00D9C237 /* Vector3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31FDC61ABA079E00D9C237 /* Vector3.swift */; };
 		3A4A8FAF1A61821200E1F067 /* RadialMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4A8FAE1A61821200E1F067 /* RadialMenu.swift */; };
 		3A4CE7A11A3C1F4800E68A92 /* PropertyTrayTileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4CE7A01A3C1F4800E68A92 /* PropertyTrayTileNode.swift */; };
 		3A4CE7A31A3CAF0F00E68A92 /* TileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4CE7A21A3CAF0F00E68A92 /* TileNode.swift */; };
 		3A4CE7A51A3E482B00E68A92 /* Set.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4CE7A41A3E482B00E68A92 /* Set.swift */; };
+		3A4CE81A1AB9E78000078E42 /* PredicateGroupNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4CE8191AB9E78000078E42 /* PredicateGroupNode.swift */; };
 		3A5531341A6317DE00D6C202 /* CGFloat+QueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5531331A6317DE00D6C202 /* CGFloat+QueryBuilder.swift */; };
 		3A5531461A6362FB00D6C202 /* ListChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5531451A6362FB00D6C202 /* ListChooser.swift */; };
 		3A57D6C81A64693400A9DA88 /* ASAttributedLabelNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A57D6C71A64693400A9DA88 /* ASAttributedLabelNode.swift */; };
@@ -100,10 +113,23 @@
 		3A11A7DD1A6D801D00FC0865 /* CGVector+QueryBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGVector+QueryBuilder.swift"; sourceTree = "<group>"; };
 		3A11A7DF1A6D803700FC0865 /* CGPoint+QueryBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+QueryBuilder.swift"; sourceTree = "<group>"; };
 		3A2B47121A66F1220041870C /* RelativeDialNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelativeDialNode.swift; sourceTree = "<group>"; };
+		3A31FDBB1ABA079E00D9C237 /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
+		3A31FDBC1ABA079E00D9C237 /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
+		3A31FDBD1ABA079E00D9C237 /* CGVector+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGVector+Extensions.swift"; sourceTree = "<group>"; };
+		3A31FDBE1ABA079E00D9C237 /* Int+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
+		3A31FDBF1ABA079E00D9C237 /* SKAction+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SKAction+Extensions.swift"; sourceTree = "<group>"; };
+		3A31FDC01ABA079E00D9C237 /* SKAction+SpecialEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SKAction+SpecialEffects.swift"; sourceTree = "<group>"; };
+		3A31FDC11ABA079E00D9C237 /* SKColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SKColor+Extensions.swift"; sourceTree = "<group>"; };
+		3A31FDC21ABA079E00D9C237 /* SKNode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SKNode+Extensions.swift"; sourceTree = "<group>"; };
+		3A31FDC31ABA079E00D9C237 /* SKTAudio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTAudio.swift; sourceTree = "<group>"; };
+		3A31FDC41ABA079E00D9C237 /* SKTEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTEffects.swift; sourceTree = "<group>"; };
+		3A31FDC51ABA079E00D9C237 /* SKTTimingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTTimingFunctions.swift; sourceTree = "<group>"; };
+		3A31FDC61ABA079E00D9C237 /* Vector3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vector3.swift; sourceTree = "<group>"; };
 		3A4A8FAE1A61821200E1F067 /* RadialMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadialMenu.swift; sourceTree = "<group>"; };
 		3A4CE7A01A3C1F4800E68A92 /* PropertyTrayTileNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyTrayTileNode.swift; sourceTree = "<group>"; };
 		3A4CE7A21A3CAF0F00E68A92 /* TileNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TileNode.swift; sourceTree = "<group>"; };
 		3A4CE7A41A3E482B00E68A92 /* Set.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Set.swift; sourceTree = "<group>"; };
+		3A4CE8191AB9E78000078E42 /* PredicateGroupNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PredicateGroupNode.swift; sourceTree = "<group>"; };
 		3A5531331A6317DE00D6C202 /* CGFloat+QueryBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+QueryBuilder.swift"; sourceTree = "<group>"; };
 		3A5531451A6362FB00D6C202 /* ListChooser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListChooser.swift; sourceTree = "<group>"; };
 		3A57D6C71A64693400A9DA88 /* ASAttributedLabelNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASAttributedLabelNode.swift; sourceTree = "<group>"; };
@@ -257,6 +283,7 @@
 				3A8040861A6D905D00A3C474 /* DialChooser.swift */,
 				3A5531451A6362FB00D6C202 /* ListChooser.swift */,
 				3AADCBA81A2F98020047CA95 /* PredicateTileNode.swift */,
+				3A4CE8191AB9E78000078E42 /* PredicateGroupNode.swift */,
 				3AE5E9261A358F29002E6813 /* PropertyTrayNode.swift */,
 				3A4CE7A01A3C1F4800E68A92 /* PropertyTrayTileNode.swift */,
 				3A4A8FAE1A61821200E1F067 /* RadialMenu.swift */,
@@ -312,6 +339,25 @@
 			name = Database;
 			sourceTree = "<group>";
 		};
+		3A31FDBA1ABA079E00D9C237 /* SKTUtils */ = {
+			isa = PBXGroup;
+			children = (
+				3A31FDBB1ABA079E00D9C237 /* CGFloat+Extensions.swift */,
+				3A31FDBC1ABA079E00D9C237 /* CGPoint+Extensions.swift */,
+				3A31FDBD1ABA079E00D9C237 /* CGVector+Extensions.swift */,
+				3A31FDBE1ABA079E00D9C237 /* Int+Extensions.swift */,
+				3A31FDBF1ABA079E00D9C237 /* SKAction+Extensions.swift */,
+				3A31FDC01ABA079E00D9C237 /* SKAction+SpecialEffects.swift */,
+				3A31FDC11ABA079E00D9C237 /* SKColor+Extensions.swift */,
+				3A31FDC21ABA079E00D9C237 /* SKNode+Extensions.swift */,
+				3A31FDC31ABA079E00D9C237 /* SKTAudio.swift */,
+				3A31FDC41ABA079E00D9C237 /* SKTEffects.swift */,
+				3A31FDC51ABA079E00D9C237 /* SKTTimingFunctions.swift */,
+				3A31FDC61ABA079E00D9C237 /* Vector3.swift */,
+			);
+			path = SKTUtils;
+			sourceTree = "<group>";
+		};
 		3A8DB8A71A384E8400DA353E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -326,6 +372,7 @@
 		3AB3E8E81A1A3601004A9691 = {
 			isa = PBXGroup;
 			children = (
+				3A31FDBA1ABA079E00D9C237 /* SKTUtils */,
 				3A025F9E1A5F81C600DAE71E /* BBGestureRecognizer */,
 				3AB3E9DD1A1A4548004A9691 /* ObjCMongoDB */,
 				3AB3E8F31A1A3601004A9691 /* QueryBuilder */,
@@ -608,6 +655,7 @@
 			files = (
 				3AB3E9871A1A3C80004A9691 /* numbers.c in Sources */,
 				3AB3E9D51A1A3CDF004A9691 /* MongoWriteConcern.m in Sources */,
+				3A31FDD11ABA079E00D9C237 /* SKTTimingFunctions.swift in Sources */,
 				3A025FA91A5F838B00DAE71E /* BBGestureRecognizerDelegate.swift in Sources */,
 				3A11A7DE1A6D801D00FC0865 /* CGVector+QueryBuilder.swift in Sources */,
 				3A025FAC1A5F838B00DAE71E /* BBTapAndAHalfGestureRecognizer.swift in Sources */,
@@ -619,8 +667,10 @@
 				3AB3E9D31A1A3CDF004A9691 /* MongoTypes.m in Sources */,
 				3AB3E9A21A1A3CA4004A9691 /* BSONDecoder.m in Sources */,
 				3AADCBA91A2F98020047CA95 /* PredicateTileNode.swift in Sources */,
+				3A31FDCF1ABA079E00D9C237 /* SKTAudio.swift in Sources */,
 				3AB3E9861A1A3C80004A9691 /* mongo.c in Sources */,
 				3AB3E9851A1A3C80004A9691 /* md5.c in Sources */,
+				3A31FDCA1ABA079E00D9C237 /* Int+Extensions.swift in Sources */,
 				3A5531341A6317DE00D6C202 /* CGFloat+QueryBuilder.swift in Sources */,
 				3A4CE7A11A3C1F4800E68A92 /* PropertyTrayTileNode.swift in Sources */,
 				3AB3E9D21A1A3CDF004A9691 /* MongoPredicate.m in Sources */,
@@ -628,6 +678,7 @@
 				3A57D6CB1A64693E00A9DA88 /* NSString+DrawFixer.m in Sources */,
 				3A11A7E01A6D803700FC0865 /* CGPoint+QueryBuilder.swift in Sources */,
 				3AFCBA061A5B7CFB00232891 /* DatabaseHelper.swift in Sources */,
+				3A31FDC71ABA079E00D9C237 /* CGFloat+Extensions.swift in Sources */,
 				3A025FA81A5F838B00DAE71E /* BBGestureRecognizer.swift in Sources */,
 				3A025FAD1A5F838B00DAE71E /* BBTapGestureRecognizer.swift in Sources */,
 				3AAB9E131A602A09003C35C4 /* BBTapTapDragGestureRecognizer.swift in Sources */,
@@ -653,19 +704,28 @@
 				3AFCBA041A5B764A00232891 /* LoadingScene.swift in Sources */,
 				3AB3E9CC1A1A3CDF004A9691 /* MongoConnection+Diagnostics.m in Sources */,
 				3AB3E8FD1A1A3601004A9691 /* GameViewController.swift in Sources */,
+				3A4CE81A1AB9E78000078E42 /* PredicateGroupNode.swift in Sources */,
 				3AB3E9A31A1A3CA4004A9691 /* BSONDocument.m in Sources */,
+				3A31FDCB1ABA079E00D9C237 /* SKAction+Extensions.swift in Sources */,
 				3AB3E9D41A1A3CDF004A9691 /* MongoUpdateRequest.m in Sources */,
+				3A31FDD21ABA079E00D9C237 /* Vector3.swift in Sources */,
 				3AB3E9CD1A1A3CDF004A9691 /* MongoConnection.m in Sources */,
 				3AB3E9AF1A1A3CCC004A9691 /* OrderedDictionary.m in Sources */,
 				3AFCBA081A5B7D4F00232891 /* MongoSettings.swift in Sources */,
 				3AB3E9DF1A1A45E4004A9691 /* Collection.swift in Sources */,
+				3A31FDCE1ABA079E00D9C237 /* SKNode+Extensions.swift in Sources */,
 				3A57D6C81A64693400A9DA88 /* ASAttributedLabelNode.swift in Sources */,
+				3A31FDC91ABA079E00D9C237 /* CGVector+Extensions.swift in Sources */,
+				3A31FDD01ABA079E00D9C237 /* SKTEffects.swift in Sources */,
 				3A8040871A6D905D00A3C474 /* DialChooser.swift in Sources */,
 				3AB3E8F71A1A3601004A9691 /* AppDelegate.swift in Sources */,
+				3A31FDCC1ABA079E00D9C237 /* SKAction+SpecialEffects.swift in Sources */,
 				3A025FAA1A5F838B00DAE71E /* BBPanGestureRecognizer.swift in Sources */,
 				3A084C281A2E70C300DB83E0 /* TouchNodeMap.swift in Sources */,
 				3AE5E9271A358F29002E6813 /* PropertyTrayNode.swift in Sources */,
 				3AB3E9CF1A1A3CDF004A9691 /* MongoDBCollection.m in Sources */,
+				3A31FDC81ABA079E00D9C237 /* CGPoint+Extensions.swift in Sources */,
+				3A31FDCD1ABA079E00D9C237 /* SKColor+Extensions.swift in Sources */,
 				3A87F8631AB4F94700283CE6 /* TODO.md in Sources */,
 				3A4A8FAF1A61821200E1F067 /* RadialMenu.swift in Sources */,
 				3AADCBA71A2F8AA90047CA95 /* Constants.swift in Sources */,

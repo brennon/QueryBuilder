@@ -1,11 +1,8 @@
 # To-Do List
 
-- Disable user interaction on dial label
-- Don't show floating point initially on integral dial
-- Way to cycle between >, >=, <, <=, and =
 - Allow merging / breaking of predicates
 
-- Flick property tray tiles
-- Property tray scroll limits
 - Fix header text in choosers
 - Don't add aditional choosers
+- Dial and description don't always show the same value
+- Search for deeper nodes in gesture recognition when user interaction is disabled on first node

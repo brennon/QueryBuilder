@@ -59,12 +59,14 @@ let PredicateTileDescriptionColor               = QBColorPrimaryLighter
 let PredicateTileChooserHeaderColor             = QBColorSecondaryB
 let PredicateTileChooserChoicePrimaryColor      = QBColorSecondaryBLighter
 let PredicateTileChooserChoiceSecondaryColor    = QBColorSecondaryBDarker
+let PredicateTileHighlightColor                 = QBColorComplement
 let TileLabelFontColor                          = UIColor.whiteColor()
 let SceneBackgroundColor                        = UIColor(white: 0.9, alpha: 1.0)
 
 // MARK: Node Names
 
 let PredicateTileNodeName           = "tile-predicate"
+let PredicateGroupNodeName          = "predicate-group"
 let PropertyTrayNodeName            = "property-tray"
 let PropertyTrayTileNodeName        = "property-tray-tile"
 let PropertyTrayContainerNodeName   = "property-tray-container"
@@ -83,6 +85,7 @@ let TileCornerRadius:           CGFloat = 10
 let TileBorderWidth:            CGFloat = 2
 let TileMarginHeight:           CGFloat = 5
 let TileMarginWidth:            CGFloat = 5
+let PredicateGroupTileMarginWidth: CGFloat = 30
 let PropertyTrayMaximumHeight:  CGFloat = UIScreen.mainScreen().applicationFrame.height - 100
 
 // MARK: Fonts

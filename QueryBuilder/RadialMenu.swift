@@ -54,6 +54,7 @@ class RadialMenu: SKNode {
     var ring: SKShapeNode!
     var sectorNodes = [SKShapeNode]()
     var iconNodes = [SKSpriteNode]()
+    var selectionIconNode: SKLabelNode?
     
     // Colors
     var normalIconColor = UIColor.whiteColor()
@@ -99,6 +100,8 @@ class RadialMenu: SKNode {
         numberOfSectors = menuItems.count
         self.menuItems = menuItems
         
+        self.zPosition = SceneLayer.Foreground.rawValue
+        
         for (index, menuItem) in enumerate(menuItems) {
             let sector = circleSector(atIndex: index)
             circleSectors.append(sector)
@@ -118,6 +121,19 @@ class RadialMenu: SKNode {
         knob.fillColor = handleColor
         knob.zPosition = SceneLayer.MenuKnob.rawValue
         addChild(knob)
+    }
+    
+    func setThumbText(text: String) {
+        
+        if let node = selectionIconNode {
+            node.removeFromParent()
+        }
+        
+        selectionIconNode = SKLabelNode(text: text)
+        selectionIconNode!.fontSize = 20
+        selectionIconNode!.fontName = TileLabelFontName
+        selectionIconNode!.position = CGPointMake(0, -6)
+        knob.addChild(selectionIconNode!)
     }
     
     func circleSectorNode(atIndex index: Int) -> SKShapeNode {

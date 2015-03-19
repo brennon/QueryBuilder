@@ -75,14 +75,23 @@ class GameScene: SKScene {
     }
     
     func runQuery(tapRecognizer: BBGestureRecognizer?) {
-        var subPredicates = [MongoKeyedPredicate]()
+        var subPredicates = [MongoPredicate]()
         
         enumerateChildNodesWithName(PredicateTileNodeName, usingBlock: { (node: SKNode!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
             
             if let predicateNode = node as? PredicateTileNode {
-                if let predicate = predicateNode.generatePredicateForTile() {
-                    subPredicates.append(predicate)
+                if predicateNode.predicateGroup == nil {
+                    if let predicate = predicateNode.generatePredicateForTile() {
+                        subPredicates.append(predicate)
+                    }
                 }
+            }
+        })
+        
+        enumerateChildNodesWithName(PredicateGroupNodeName, usingBlock: { (node: SKNode!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+            
+            if let predicateGroupNode = node as? PredicateGroupNode {
+                subPredicates.append(predicateGroupNode.generatePredicateForGroup())
             }
         })
         
@@ -200,6 +209,18 @@ class GameScene: SKScene {
         enumerateChildNodesWithName("//list-chooser", usingBlock: { (node: SKNode!, pointer: UnsafeMutablePointer<ObjCBool>) -> Void in
             if let listChooserNode = node as? ListChooser {
                 listChooserNode.update()
+            }
+        })
+        
+        enumerateChildNodesWithName("//\(PredicateTileNodeName)", usingBlock: { (node: SKNode!, pointer: UnsafeMutablePointer<ObjCBool>) -> Void in
+            if let predicateTileNode = node as? PredicateTileNode {
+                predicateTileNode.update()
+            }
+        })
+        
+        enumerateChildNodesWithName("//\(PredicateGroupNodeName)", usingBlock: { (node: SKNode!, pointer: UnsafeMutablePointer<ObjCBool>) -> Void in
+            if let predicateGroupNode = node as? PredicateGroupNode {
+                predicateGroupNode.update()
             }
         })
     }

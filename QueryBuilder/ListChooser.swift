@@ -253,15 +253,33 @@ class ListChooser: SKNode {
                     if nodeIntersectsContainerMask(node) {
                 
                         let translation = recognizer.translationInNode(self.scene!)
-                        let forceMultiplier: CGFloat = 100.0
+                        let forceMultiplier: CGFloat = 2.0
                         let forceVector = CGVectorMake(0, translation.y * forceMultiplier)
                         
                         if choiceTilesAreInBounds(translation) {
                             recognizer.setTranslation(CGPointZero, inNode: self.scene!)
                             
                             for choiceNode in choiceNodes {
+                                choiceNode.physicsBody?.velocity = CGVectorMake(0, 0)
+                                choiceNode.position = CGPointMake(0, choiceNode.position.y + translation.y)
+                            }
+                        }
+                    }
+                }
+            } else if recognizer.state == .Ended {
+                if let node = recognizer.node as? SKSpriteNode {
+                    if nodeIntersectsContainerMask(node) {
+                        
+                        let translation = recognizer.translationInNode(self.scene!)
+                        let forceMultiplier: CGFloat = 2.0
+                        let forceVector = CGVectorMake(0, translation.y * forceMultiplier)
+                        
+                        if choiceTilesAreInBounds(translation) {
+                            recognizer.setTranslation(CGPointZero, inNode: self.scene!)
+                            
+                            for choiceNode in choiceNodes {
+                                choiceNode.physicsBody?.velocity = CGVectorMake(0, 0)
                                 choiceNode.physicsBody?.applyForce(forceVector)
-//                                choiceNode.position = CGPointMake(0, choiceNode.position.y + translation.y)
                             }
                         }
                     }
@@ -269,8 +287,6 @@ class ListChooser: SKNode {
             }
         }
     }
-    
-//    func layoutChoiceTiles
     
     func choiceTilesAreInBounds(translation: CGPoint) -> Bool {
         // We want to restrict the top of the top tile from moving below the top of the mask node,

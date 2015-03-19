@@ -31,6 +31,8 @@ enum PredicateType {
  */
 class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
     
+    // MARK: Properties
+    
     /// The dictionary for the field that this node represents, as configured
     /// by a `Collection`
     var _propertyDict: NSMutableDictionary?
@@ -63,6 +65,9 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
     }
     var title: String!
     
+    var isHighlighted = false
+    var highlightNode: SKShapeNode!
+    
     var selectedChoices: [String]?
     
     var selectedValue: Double?
@@ -75,10 +80,20 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
     
     var predicateIsNotted = false
     
-    var notNode: SKShapeNode!
+    var notMenu: RadialMenu!
+    
+    var selectedComparison: String?
+    var comparisonMenu: RadialMenu!
     
     var descriptionTile: SKSpriteNode!
     var descriptionLabel: ASAttributedLabelNode!
+    
+    var predicateGroup: PredicateGroupNode? = nil
+    
+    var listChooser: ListChooser? = nil
+    var dialChooser: DialChooser? = nil
+    
+    // MARK: Initialization
     
     /**
         Assigns the node's sprite and name, and configures its physics.
@@ -110,33 +125,39 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
         let panRecognizer = BBPanGestureRecognizer(target: self, action: PredicateTileNode.handlePan)
         addGestureRecognizer(panRecognizer)
         
-        notNode = SKShapeNode(circleOfRadius: 10)
-        notNode.fillColor = SKColor.lightGrayColor()
-        notNode.position = CGPointMake(-size.width / 2, size.height / 2)
-        let notNodeLabel = SKLabelNode(text: "¬")
-        notNodeLabel.fontSize = 20
-        notNodeLabel.fontName = TileLabelFontName
-        notNodeLabel.position = CGPointMake(0, -6)
-        notNode.addChild(notNodeLabel)
-        
         descriptionTile = SKSpriteNode(color: PredicateTileDescriptionColor, size: TileSize)
         descriptionTile.position = CGPointMake(0, -TileSize.height - 2)
         addChild(descriptionTile)
         
-        descriptionLabel = ASAttributedLabelNode(size: CGSizeMake(descriptionTile.size.width - 10, descriptionTile.size.height - 10))
-        descriptionLabel.position = CGPointMake(0, 0)
-        updateDescription()
-        descriptionTile.addChild(descriptionLabel)
+        updateDescriptionLabel()
         
         // Create, configure, and add RadialMenu as child node
         let trashMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.trashSelected, withIconImageName: "TrashIcon")
         let notMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.notSelected, withIconImageName: "NotIcon")
-        let equalMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.equalSelected, withIconImageName: "EqualIcon")
+        let equalMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.comparisonSelected, withIconImageName: "EqualIcon")
         let existsMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.existsSelected, withIconImageName: "ExistsIcon")
         
         let menu = RadialMenu(menuItems: [trashMenuItem, notMenuItem, equalMenuItem, existsMenuItem])
         menu.position = CGPointMake(size.width / 2, size.height / 2)
         addChild(menu)
+        
+        // Create, configure, and add a RadialMenu for removing `notMenu`.
+        let notTrashMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.notTrashSelected, withIconImageName: "TrashIcon")
+        notMenu = RadialMenu(menuItems: [notTrashMenuItem])
+        notMenu.position = CGPointMake(-size.width / 2, size.height / 2)
+        notMenu.hidden = true
+        addChild(notMenu)
+        
+        // Create, configure, and add a RadialMenu for updating `comparisonMenu`.
+        let comparisonEqualsMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.comparisonMenuEqualsSelected, withIconImageName: "EqualComparisonIcon")
+        let comparisonLessThanMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.comparisonMenuLessThanSelected, withIconImageName: "LessThanComparisonIcon")
+        let comparisonLessThanOrEqualMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.comparisonMenuLessThanOrEqualSelected, withIconImageName: "LessThanOrEqualComparisonIcon")
+        let comparisonGreaterThanMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.comparisonMenuGreaterThanSelected, withIconImageName: "GreaterThanComparisonIcon")
+        let comparisonGreaterThanOrEqualMenuItem = RadialMenuItem(target: self, andAction: PredicateTileNode.comparisonMenuGreaterThanOrEqualSelected, withIconImageName: "GreaterThanOrEqualComparisonIcon")
+        comparisonMenu = RadialMenu(menuItems: [comparisonEqualsMenuItem, comparisonLessThanMenuItem, comparisonLessThanOrEqualMenuItem, comparisonGreaterThanOrEqualMenuItem, comparisonGreaterThanMenuItem])
+        comparisonMenu.position = CGPointMake(-descriptionTile.size.width / 2, 0)
+        comparisonMenu.hidden = true
+        descriptionTile.addChild(comparisonMenu)
     }
     
     convenience init?(propertyTile: PropertyTrayTileNode, andLabel label: String) {
@@ -155,6 +176,8 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: State Management
+    
     func choicesChanged(choices: [String], listChooser: ListChooser) {
         selectedChoices = choices
         updateDescription()
@@ -164,6 +187,8 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
         selectedValue = value
         updateDescription()
     }
+    
+    // MARK: Choosers
     
     func showValueChooser() {
         switch propertyType {
@@ -187,53 +212,174 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
                         dialType = .FloatingPoint
                     }
                     
-                    let dialChooser = DialChooser(max: max, min: min, dialType: dialType, andTitle: "Value for \(title)")
-                    dialChooser.position = CGPointMake(0, -calculateAccumulatedFrame().height / 2)
-                    dialChooser.delegate = self
-                    addChild(dialChooser)
+                    dialChooser = DialChooser(max: max, min: min, dialType: dialType, andTitle: "Value for \(title)")
+                    dialChooser!.position = CGPointMake(0, -calculateAccumulatedFrame().height / 2)
+                    dialChooser!.delegate = self
+                    addChild(dialChooser!)
                 }
             }
         }
     }
     
-    func showListChooser() {
-        if let values = propertyDict?.valueForKey("values") as? [String] {
-            let listChooser = ListChooser(values: values, andTitle: title)
-            listChooser.position = CGPointMake(0, -calculateAccumulatedFrame().height / 2)
-            listChooser.delegate = self
-            addChild(listChooser)
+    func hideDialChooser() {
+        if let chooser = dialChooser {
+            chooser.removeFromParent()
+            dialChooser = nil
         }
     }
+    
+    func showListChooser() {
+        if let values = propertyDict?.valueForKey("values") as? [String] {
+            listChooser = ListChooser(values: values, andTitle: title)
+            listChooser!.position = CGPointMake(0, -calculateAccumulatedFrame().height / 2)
+            listChooser!.delegate = self
+            addChild(listChooser!)
+        }
+    }
+    
+    func hideListChooser() {
+        if let chooser = listChooser {
+            chooser.removeFromParent()
+            dialChooser = nil
+        }
+    }
+    
+    func hideAllChoosers() {
+        hideDialChooser()
+        hideListChooser()
+    }
+    
+    // MARK: Gestures
     
     func handlePan(panRecognizer: BBGestureRecognizer?) {
         if let recognizer = panRecognizer as? BBPanGestureRecognizer {
             if recognizer.state == .Changed {
+                
                 let translation = recognizer.translationInNode(scene!)
+                
+                if let group = predicateGroup {
+                    group.translateAllTiles(translation.x, dy: translation.y)
+                } else {
+                    position = CGPointMake(position.x + translation.x, position.y + translation.y)
+                }
+                
                 recognizer.setTranslation(CGPointZero, inNode: scene!)
-                position = CGPointMake(position.x + translation.x, position.y + translation.y)
+                
+                unhighlightAllTiles()
+                
+                if let nearest = findNearestPredicateTile() {
+                    let actualDistance = sqrt(pow((self.position.x - nearest.position.x), 2) + pow((self.position.y - nearest.position.y), 2))
+                    
+                    if actualDistance < 180 {
+                        isHighlighted = true
+                        nearest.isHighlighted = true
+                    }
+                }
+            }
+            
+            if recognizer.state == .Ended {
+                if let nearest = findNearestPredicateTile() {
+                    unhighlightAllTiles()
+                    
+                    let actualDistance = sqrt(pow((self.position.x - nearest.position.x), 2) + pow((self.position.y - nearest.position.y), 2))
+                    
+                    if actualDistance < 180 {
+                        combineWithPredicateTile(nearest)
+                    }
+                }
             }
         }
     }
     
+    func findNearestPredicateTile() -> PredicateTileNode? {
+        var predicateTileCount: Int = 0
+        var closestDistance: CGFloat = CGFloat.max
+        var closestTile: PredicateTileNode? = nil
+        
+        if let scene = self.scene {
+            scene.enumerateChildNodesWithName(PredicateTileNodeName, usingBlock: { (node: SKNode!, pointer: UnsafeMutablePointer<ObjCBool>) -> Void in
+                if node != self {
+                    predicateTileCount = predicateTileCount + 1
+                    var distance = pow((node.position.x - self.position.x), 2) + pow((node.position.y - self.position.y), 2)
+                    if distance < closestDistance {
+                        closestDistance = distance
+                        closestTile = node as? PredicateTileNode
+                    }
+                }
+            })
+        }
+        
+        return closestTile
+    }
+    
+    // MARK: Compound Predicates
+    
+    func combineWithPredicateTile(otherPredicate: PredicateTileNode) {
+        if let scene = self.scene {
+            hideAllChoosers()
+            let group = PredicateGroupNode(predicates: [self, otherPredicate], scene: scene)
+        }
+    }
+    
+    // MARK: Highlighting
+    
+    func addHighlightBorder() {
+        removeHighlightBorder()
+        
+        let accumulatedFrame = self.calculateAccumulatedFrame()
+        let highlightNodeSize = CGSizeMake(accumulatedFrame.width + 30, accumulatedFrame.height + 30)
+        highlightNode = SKShapeNode(rectOfSize: highlightNodeSize, cornerRadius: 5)
+        highlightNode.zPosition = SceneLayer.Background.rawValue
+        highlightNode.position = CGPointMake(0, -1 - TileSize.height / 2)
+        highlightNode.strokeColor = PredicateTileHighlightColor
+        addChild(highlightNode)
+    }
+    
+    func removeHighlightBorder() {
+        if let oldNode = highlightNode {
+            oldNode.removeFromParent()
+            highlightNode = nil
+        }
+    }
+    
+    func unhighlightAllTiles() {
+        if let scene = self.scene {
+            scene.enumerateChildNodesWithName(PredicateTileNodeName, usingBlock: { (node: SKNode!, pointer: UnsafeMutablePointer<ObjCBool>) -> Void in
+                if let predicateNode = node as? PredicateTileNode {
+                    predicateNode.isHighlighted = false
+                }
+            })
+        }
+    }
+    
+    // MARK: Main Radial Menu
+    
     func trashSelected(menu: RadialMenu) {
+        if let group = predicateGroup {
+            group.removePredicate(self)
+            group.updateLayout()
+        }
         removeFromParent()
     }
     
     func notSelected(menu: RadialMenu) {
         if predicateIsNotted {
             predicateIsNotted = false
-            notNode.removeFromParent()
+            notMenu.hidden = true
         } else {
             predicateIsNotted = true
-            addChild(notNode)
+            notMenu.hidden = false
         }
         updateDescription()
     }
     
-    func equalSelected(menu: RadialMenu) {
+    func comparisonSelected(menu: RadialMenu) {
         switch propertyType {
         case .Integer, .Double:
             predicateType = .Value
+            selectedComparison = "="
+            comparisonMenu.setThumbText("=")
+            showComparisonMenu()
         case .String, .DateTime, .BSONObjectID:
             predicateType = .Choice
         default:
@@ -249,6 +395,49 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
         updateDescription()
     }
     
+    // MARK: Not Menu
+    
+    func notTrashSelected(menu: RadialMenu) {
+        notSelected(notMenu)
+    }
+    
+    // MARK: Comparison Menu
+    
+    func showComparisonMenu() {
+        comparisonMenu.hidden = false
+    }
+    
+    func hideComparisonMenu() {
+        comparisonMenu.hidden = true
+    }
+    
+    func comparisonMenuEqualsSelected(menu: RadialMenu) {
+        comparisonMenu.setThumbText("=")
+        selectedComparison = "="
+    }
+    
+    func comparisonMenuLessThanSelected(menu: RadialMenu) {
+        comparisonMenu.setThumbText("<")
+        selectedComparison = "<"
+    }
+    
+    func comparisonMenuLessThanOrEqualSelected(menu: RadialMenu) {
+        comparisonMenu.setThumbText("≤")
+        selectedComparison = "≤"
+    }
+    
+    func comparisonMenuGreaterThanSelected(menu: RadialMenu) {
+        comparisonMenu.setThumbText(">")
+        selectedComparison = ">"
+    }
+    
+    func comparisonMenuGreaterThanOrEqualSelected(menu: RadialMenu) {
+        comparisonMenu.setThumbText("≥")
+        selectedComparison = "≥"
+    }
+    
+    // MARK: Predicate Description
+    
     func updateDescription() {
         var newText = ""
         
@@ -262,6 +451,13 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
         }
         
         descriptionLabel.attributedString = attributedString(newText)
+    }
+    
+    func updateDescriptionLabel() {
+        descriptionLabel = ASAttributedLabelNode(size: CGSizeMake(descriptionTile.size.width - 10, descriptionTile.size.height - 10))
+        descriptionLabel.position = CGPointMake(0, 0)
+        updateDescription()
+        descriptionTile.addChild(descriptionLabel)
     }
     
     func descriptionForChoicePredicate() -> String {
@@ -279,12 +475,12 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
         if let actualValue = selectedValue {
             if propertyType == PredicatePropertyType.Integer {
                 let truncatedValue = String(format: "%.0f", actualValue)
-                return "\(title) = \(truncatedValue)"
+                return "\t\(truncatedValue)"
             } else {
-                return "\(title) = \(actualValue)"
+                return "\t\(actualValue)"
             }
         } else {
-            return "\(title) = ..."
+            return "\t..."
         }
     }
     
@@ -311,6 +507,8 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
         return attrString
     }
     
+    // MARK: Predicate Generation
+    
     func generatePredicateForTile() -> MongoKeyedPredicate? {
         
         let predicate = MongoKeyedPredicate()
@@ -321,8 +519,19 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
                 predicate.keyPath(title, isNotEqualTo: selectedValue)
                 return predicate
             } else {
-                predicate.keyPath(title, isLessThanOrEqualTo: selectedValue)
-                predicate.keyPath(title, isGreaterThanOrEqualTo: selectedValue)
+                if selectedComparison == "=" {
+                    predicate.keyPath(title, isLessThanOrEqualTo: selectedValue)
+                    predicate.keyPath(title, isGreaterThanOrEqualTo: selectedValue)
+                } else if selectedComparison == "<" {
+                    predicate.keyPath(title, isLessThan: selectedValue)
+                } else if selectedComparison == "≤" {
+                    predicate.keyPath(title, isLessThanOrEqualTo: selectedValue)
+                } else if selectedComparison == ">" {
+                    predicate.keyPath(title, isGreaterThan: selectedValue)
+                } else if selectedComparison == "≥" {
+                    predicate.keyPath(title, isGreaterThanOrEqualTo: selectedValue)
+                }
+                
                 return predicate
             }
             
@@ -385,5 +594,15 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
         }
         
         return nil
+    }
+    
+    // MARK: Update
+    
+    func update() {
+        if isHighlighted {
+            addHighlightBorder()
+        } else {
+            removeHighlightBorder()
+        }
     }
 }
