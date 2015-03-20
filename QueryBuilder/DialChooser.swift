@@ -76,9 +76,7 @@ class DialChooser: SKNode, RelativeDialNodeDelegate {
     }
 
     func dialValueChanged(dial: RelativeDialNode) {
-        if let actualDelegate = delegate {
-            actualDelegate.valueChanged(dial.currentValue, valueChooser: self)
-        }
+        delegate?.valueChanged(dial.currentValue, valueChooser: self)
     }
 
 //    func addChoiceNodes() {

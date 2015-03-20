@@ -92,9 +92,7 @@ class RelativeDialNode: SKNode {
             } else {
                 _currentValue = newValue
                 
-                if let actualDelegate = delegate {
-                    actualDelegate.dialValueChanged(self)
-                }
+                delegate?.dialValueChanged(self)
             }
             
             if let label = valueLabelNode {
@@ -116,7 +114,11 @@ class RelativeDialNode: SKNode {
         }
     }
     
-    weak var delegate: RelativeDialNodeDelegate?
+    weak var delegate: RelativeDialNodeDelegate? {
+        didSet {
+            delegate?.dialValueChanged(self)
+        }
+    }
     
     init(min: Double, max: Double, type: RelativeDialNodeType) {
         

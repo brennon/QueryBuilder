@@ -92,6 +92,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
     
     var listChooser: ListChooser? = nil
     var dialChooser: DialChooser? = nil
+    var chooserIsVisible = false
     
     // MARK: Initialization
     
@@ -191,14 +192,18 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
     // MARK: Choosers
     
     func showValueChooser() {
-        switch propertyType {
-        case .Integer, .Double:
-            println(".Integer or .Double")
-            showDialChooser()
-        case .String, .DateTime, .BSONObjectID:
-            showListChooser()
-        case .Unknown:
-            break
+        if !chooserIsVisible {
+            chooserIsVisible = true
+            
+            switch propertyType {
+            case .Integer, .Double:
+                println(".Integer or .Double")
+                showDialChooser()
+            case .String, .DateTime, .BSONObjectID:
+                showListChooser()
+            case .Unknown:
+                break
+            }
         }
     }
     
@@ -216,6 +221,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
                     dialChooser!.position = CGPointMake(0, -calculateAccumulatedFrame().height / 2)
                     dialChooser!.delegate = self
                     addChild(dialChooser!)
+                    selectedValue = 0
                 }
             }
         }
@@ -245,6 +251,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
     }
     
     func hideAllChoosers() {
+        chooserIsVisible = false
         hideDialChooser()
         hideListChooser()
     }
@@ -367,6 +374,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
             predicateIsNotted = false
             notMenu.hidden = true
         } else {
+            notMenu.setThumbText("~")
             predicateIsNotted = true
             notMenu.hidden = false
         }
@@ -480,7 +488,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
                 return "\t\(actualValue)"
             }
         } else {
-            return "\t..."
+            return "\t0"
         }
     }
     
