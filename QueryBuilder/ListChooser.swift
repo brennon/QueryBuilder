@@ -140,6 +140,10 @@ class ListChooser: SKNode {
     }
     
     func layoutChoiceNodes() {
+        
+        if choiceNodes.count <= Int(visibleNumberOfChoices) {
+            return
+        }
 
         // Check if the top tile is running the 'layout-action' action.
         if let topTile = choiceNodes.first {
@@ -240,7 +244,7 @@ class ListChooser: SKNode {
     func scrollChoices(panRecognizer: BBGestureRecognizer?) {
         
         // Don't do anything if all choices can be displayed at once.
-        if CGFloat(choiceNodes.count) <= self.visibleNumberOfChoices {
+        if choiceNodes.count <= Int(visibleNumberOfChoices) {
             return
         }
         

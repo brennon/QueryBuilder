@@ -14,6 +14,7 @@ enum PredicatePropertyType {
     case Double
     case DateTime
     case String
+    case Boolean
     case Unknown
 }
 
@@ -53,9 +54,11 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
                     propertyType = .String
                 case "BSONObjectID":
                     propertyType = .BSONObjectID
+                case "boolean":
+                    propertyType = .Boolean
                 default:
                     propertyType = .Unknown
-                    println("Unknown type: validType")
+                    println("Unknown type: \(validType)")
                 }
             } else {
                 println("No type: \(self)")
@@ -199,7 +202,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
             case .Integer, .Double:
                 println(".Integer or .Double")
                 showDialChooser()
-            case .String, .DateTime, .BSONObjectID:
+            case .String, .DateTime, .BSONObjectID, .Boolean:
                 showListChooser()
             case .Unknown:
                 break
@@ -217,7 +220,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
                         dialType = .FloatingPoint
                     }
                     
-                    dialChooser = DialChooser(max: max, min: min, dialType: dialType, andTitle: "Value for \(title)")
+                    dialChooser = DialChooser(max: max, min: min, dialType: dialType, andTitle: "Value")
                     dialChooser!.position = CGPointMake(0, -calculateAccumulatedFrame().height / 2)
                     dialChooser!.delegate = self
                     addChild(dialChooser!)
@@ -236,7 +239,14 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
     
     func showListChooser() {
         if let values = propertyDict?.valueForKey("values") as? [String] {
-            listChooser = ListChooser(values: values, andTitle: title)
+            listChooser = ListChooser(values: values, andTitle: "Selection(s)")
+            listChooser!.position = CGPointMake(0, -calculateAccumulatedFrame().height / 2)
+            listChooser!.delegate = self
+            addChild(listChooser!)
+        }
+        
+        if propertyType == .Boolean {
+            listChooser = ListChooser(values: ["true", "false"], andTitle: "Selection(s)")
             listChooser!.position = CGPointMake(0, -calculateAccumulatedFrame().height / 2)
             listChooser!.delegate = self
             addChild(listChooser!)
@@ -388,7 +398,7 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
             selectedComparison = "="
             comparisonMenu.setThumbText("=")
             showComparisonMenu()
-        case .String, .DateTime, .BSONObjectID:
+        case .String, .DateTime, .BSONObjectID, .Boolean:
             predicateType = .Choice
         default:
             break
@@ -593,6 +603,36 @@ class PredicateTileNode: TileNode, ListChooserDelegate, DialChooserDelegate {
                         return predicate
                     } else {
                         predicate.keyPath(title, matches: selectedChoices![0])
+                        return predicate
+                    }
+                }
+            case .Boolean:
+                
+                var booleanArray = [Bool]()
+                if let choices = selectedChoices {
+                    for i in choices {
+                        if i == "true" {
+                            booleanArray.append(true)
+                        } else if i == "false" {
+                            booleanArray.append(false)
+                        }
+                    }
+                }
+                
+                if booleanArray.count > 1 {
+                    if predicateIsNotted {
+                        predicate.keyPath(title, doesNotMatchAnyFromArray: booleanArray)
+                        return predicate
+                    } else {
+                        predicate.keyPath(title, matchesAnyFromArray: booleanArray)
+                        return predicate
+                    }
+                } else if booleanArray.count == 1 {
+                    if predicateIsNotted {
+                        predicate.keyPath(title, isNotEqualTo: booleanArray[0])
+                        return predicate
+                    } else {
+                        predicate.keyPath(title, matches: booleanArray[0])
                         return predicate
                     }
                 }
