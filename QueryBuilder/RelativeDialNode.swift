@@ -91,9 +91,9 @@ class RelativeDialNode: SKNode {
                 _currentValue = minimumValue
             } else {
                 _currentValue = newValue
-                
-                delegate?.dialValueChanged(self)
             }
+            
+            delegate?.dialValueChanged(self)
             
             if let label = valueLabelNode {
                 switch dialType {
